@@ -6,3 +6,5 @@ Jenkins credentials:
     DEVELOPER
         login - dev
         password - dev
+
+Another line for checking jenkins
