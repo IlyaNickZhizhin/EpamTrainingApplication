@@ -1,3 +1,5 @@
+[![Build Status](http://localhost:8080/buildStatus/icon?job=piplene-test)](http://localhost:8080/job/piplene-test/)
+
 Jenkins credentials:
 
     ADMIN 
