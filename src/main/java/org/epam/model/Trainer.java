@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-public class Trainer {
+public class Trainer implements Model {
     private int id;
     private String specialization;
 

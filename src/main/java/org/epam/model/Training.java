@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class Training {
+public class Training implements Model {
     private int id;
 
     private int traineeId;
