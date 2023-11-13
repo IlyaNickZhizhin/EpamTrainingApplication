@@ -15,6 +15,17 @@
     <sonar.java.binaries>target/classes</sonar.java.binaries>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+    <spring-core.version>6.0.13</spring-core.version>
+    <spring-context.version>6.0.13</spring-context.version>
+    <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
+    <lombok.version>1.18.30</lombok.version>
+    <jackson-databind.version>2.15.3</jackson-databind.version>
+    <jackson-datatype-jsr310.version>2.15.3</jackson-datatype-jsr310.version>
+    <junit-jupiter-engine.version>5.9.3</junit-jupiter-engine.version>
+    <junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
+    <mockito-core.version>5.3.1</mockito-core.version>
+    <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+    <slf4j-api.version>2.0.9</slf4j-api.version>
   </properties>
 
   <dependencies>
@@ -22,70 +33,59 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>6.0.13</version>
     </dependency>
 
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-context</artifactId>
-          <version>6.0.13</version>
     </dependency>
 
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>2.1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.15.3</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.15.3</version>
     </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.3</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.9.3</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.3.1</version>
       <scope>test</scope>
     </dependency>
     
     <dependency>
       <groupId>org.jacoco</groupId>
       <artifactId>jacoco-maven-plugin</artifactId>
-      <version>0.8.11</version>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.9</version>
     </dependency>
 
   </dependencies>

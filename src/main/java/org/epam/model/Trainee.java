@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @ToString
-public class Trainee {
+public class Trainee implements Model {
     private int id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
