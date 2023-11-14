@@ -6,7 +6,7 @@ import org.epam.model.gymModel.Trainer;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TrainerDao extends GymDaoStorage<Integer, Trainer> {
+public class TrainerDao extends GymDaoStorage<Trainer> {
 
     private static final String NAMESPACE = "trainers";
 

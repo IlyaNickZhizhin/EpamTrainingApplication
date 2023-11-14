@@ -1,10 +1,10 @@
 package org.epam.dao;
 
-public interface Dao<T> {
+public interface Dao<M> {
 
-    void create(T t);
-    void save(T t);
-    void update(int id, T t);
+    void create(M m);
+    void save(M m);
+    void update(int id, M m);
     void delete(int id);
-    T get(int id);
+    M get(int id);
 }

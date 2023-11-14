@@ -2,12 +2,13 @@ package org.epam.model.gymModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.Optional;
 
 @EqualsAndHashCode
+@Getter
 public class Trainee implements Model {
 
     private static final Date DEFAULT_BIRTH_DATE = new Date(0);
@@ -48,10 +49,6 @@ public class Trainee implements Model {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public Date getDateOfBirth() {
         if (dateOfBirth == null) dateOfBirth = Optional.ofNullable(DEFAULT_BIRTH_DATE);
         return dateOfBirth.isPresent() ? dateOfBirth.get() : DEFAULT_BIRTH_DATE;
@@ -68,10 +65,6 @@ public class Trainee implements Model {
 
     public void setAddress(String address) {
         this.address = Optional.ofNullable(address);
-    }
-
-    public int getUserId() {
-        return userId;
     }
 
     public void setUserId(int userId) {

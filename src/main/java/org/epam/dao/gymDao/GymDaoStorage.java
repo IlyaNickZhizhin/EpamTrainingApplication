@@ -7,9 +7,9 @@ import org.epam.model.gymModel.Model;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class GymDaoStorage<Id extends Integer, T extends Model> implements Dao<Model> {
+public abstract class GymDaoStorage<M extends Model> implements Dao<Model> {
 
-    Storage storage;
+    Storage<M> storage;
     private final AtomicInteger AUTO_ID = new AtomicInteger(0);
 
     protected String namespace;

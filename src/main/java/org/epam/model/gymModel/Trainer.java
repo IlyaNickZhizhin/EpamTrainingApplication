@@ -1,7 +1,6 @@
 package org.epam.model.gymModel;
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @EqualsAndHashCode
 public class Trainer implements Model {
