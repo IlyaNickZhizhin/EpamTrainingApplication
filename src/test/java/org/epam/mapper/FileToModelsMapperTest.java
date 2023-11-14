@@ -16,7 +16,7 @@ public class FileToModelsMapperTest {
 
     private static final Storage storage = new Storage();
 
-    private static FileToModelsMapper mapper = new FileToModelsMapper<>(storage, "src/main/resources/initFile.txt");
+    private static final FileToModelsMapper mapper = new FileToModelsMapper<>(storage, "src/main/resources/initFile.txt");
 
     @BeforeAll
     public static void setUp() throws IOException {

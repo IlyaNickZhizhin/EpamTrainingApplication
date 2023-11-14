@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class DataInitializerSaverTest {
 
-    private static Storage storage = new Storage();
+    private static final Storage storage = new Storage();
     private static DataInitializer dataInitializer;
     private static FileToModelsMapper mapper;
     private static DataSaver dataSaver;
