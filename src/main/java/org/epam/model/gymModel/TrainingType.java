@@ -1,8 +1,8 @@
 package org.epam.model.gymModel;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
 
+@Getter
 public enum TrainingType {
     BASIC(1, "Basic"),
     CARDIO(2, "Cardio"),
@@ -17,8 +17,8 @@ public enum TrainingType {
     AEROBICS(11, "Aerobics"),
     ZUMBA(12, "Zumba");
 
-    int id;
-    String name;
+    final int id;
+    final String name;
 
     TrainingType(int id, String name) {
         this.id = id;

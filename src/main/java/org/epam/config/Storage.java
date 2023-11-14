@@ -33,34 +33,26 @@ import java.util.*;
 @Getter
 @Setter
 @PropertySource("classpath:application.properties")
-public class Storage<T extends Model> {
+public class Storage<M extends Model> {
 
     @Value("${initFile}")
     private String initFile;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    private Map<String, Map<Integer, T>> gymModels;
+    private Map<String, Map<Integer, M>> gymModels;
     private Map<String, User> users;
 
     public Storage() {
         this.gymModels = new HashMap<>();
         this.users = new HashMap<>();
-        gymModels.put("trainers", new HashMap<Integer, T>());
-        gymModels.put("trainees", new HashMap<Integer, T>());
-        gymModels.put("trainings", new HashMap<Integer, T>());
+        gymModels.put("trainers", new HashMap<>());
+        gymModels.put("trainees", new HashMap<>());
+        gymModels.put("trainings", new HashMap<>());
     }
 
-    public Map<Integer, Trainer> getTrainers() {
-        return (Map<Integer, Trainer>) gymModels.get("trainers");
-    }
-
-    public Map<Integer, Trainee> getTrainees() {
-        return (Map<Integer, Trainee>) gymModels.get("trainees");
-    }
-
-    public Map<Integer, Training> getTrainings() {
-        return (Map<Integer, Training>) gymModels.get("trainings");
+    public Map<Integer, M> getModels(String namespace) {
+        return gymModels.get(namespace);
     }
 
     Logger logger = LoggerFactory.getLogger(Storage.class);
@@ -88,11 +80,11 @@ public class Storage<T extends Model> {
         Map<String, List<Object>> data = new HashMap<>();
         data.put("users", new ArrayList<>(getUsers().values()));
         logger.info("Users data saved");
-        data.put("trainers", new ArrayList<>(getTrainers().values()));
+        data.put("trainers", new ArrayList<>(getModels("trainers").values()));
         logger.info("Trainers data saved");
-        data.put("trainees", new ArrayList<>(getTrainees().values()));
+        data.put("trainees", new ArrayList<>(getModels("trainees").values()));
         logger.info("Trainees data saved");
-        data.put("trainings", new ArrayList<>(getTrainings().values()));
+        data.put("trainings", new ArrayList<>(getModels("trainings").values()));
         logger.info("Trainings data saved");
 
         try {
@@ -132,7 +124,7 @@ public class Storage<T extends Model> {
         for (Map<String, Object> trainerMap:
                 trainersData) {
             Trainer trainer = objectMapper.convertValue(trainerMap, Trainer.class);
-            getTrainers().put(Integer.valueOf(trainer.getId()), trainer);
+            getModels("trainers").put(trainer.getId(), (M) trainer);
             logger.info("Trainers data read");
         }
     }
@@ -142,7 +134,7 @@ public class Storage<T extends Model> {
         for (Map<String, Object> traineeMap:
                 traineesData) {
             Trainee trainee = objectMapper.convertValue(traineeMap, Trainee.class);
-            getTrainees().put(trainee.getId(), trainee);
+            getModels("trainees").put(trainee.getId(), (M) trainee);
             logger.info("Trainees data read");
         }
     }
@@ -152,7 +144,7 @@ public class Storage<T extends Model> {
         for (Map<String, Object> trainingMap:
                 trainingsData) {
             Training training = objectMapper.convertValue(trainingMap, Training.class);
-            getTrainings().put(training.getId(), training);
+            getModels("trainings").put(training.getId(), (M) training);
             logger.info("Trainings data read");
         }
     }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Map;
 
 @Repository
-public class TrainingDao extends GymDaoStorage<Integer, Training> {
+public class TrainingDao extends GymDaoStorage<Training> {
 
     private static final String NAMESPACE = "trainings";
     @Autowired
@@ -17,8 +17,6 @@ public class TrainingDao extends GymDaoStorage<Integer, Training> {
         super(storage);
         super.namespace = NAMESPACE;
     }
-
-    Map<Integer, Training> trainings = storage.getTrainings();
 
     @Override
     public void update(int id, Model model) {

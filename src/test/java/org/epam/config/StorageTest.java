@@ -2,16 +2,14 @@ package org.epam.config;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class StorageTest {
 
@@ -19,17 +17,17 @@ public class StorageTest {
 
     @Test
     public void testGetTrainers() {
-        assertNotNull(storage.getTrainers());
+        assertNotNull(storage.getModels("trainers"));
     }
 
     @Test
     public void testGetTrainees() {
-        assertNotNull(storage.getTrainees());
+        assertNotNull(storage.getModels("trainees"));
     }
 
     @Test
     public void testGetTrainings() {
-        assertNotNull(storage.getTrainings());
+        assertNotNull(storage.getModels("trainings"));
     }
 
     @Test
