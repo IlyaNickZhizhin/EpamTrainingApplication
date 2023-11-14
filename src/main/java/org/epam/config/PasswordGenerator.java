@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PasswordGenerator {
 
-    private static Logger logger = LoggerFactory.getLogger(PasswordGenerator.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(PasswordGenerator.class.getName());
 
     public static String getDefaultPassword() {
         logger.info("Creating default password for user");
@@ -15,7 +15,7 @@ public class PasswordGenerator {
         for (int i = 0; i < 10; i++) {
             pass.append((char) (Math.random() * 26 + 97));
         }
-        logger.info("Default password for user created as " + pass.toString());
+        logger.info("Default password for user created as " + pass);
         return pass.toString();
     }
 

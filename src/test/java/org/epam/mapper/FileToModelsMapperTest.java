@@ -1,6 +1,5 @@
 package org.epam.mapper;
 
-import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class FileToModelsMapperTest {
 
-    private static Storage storage = new Storage();
+    private static final Storage storage = new Storage();
 
     private static FileToModelsMapper mapper = new FileToModelsMapper<>(storage, "src/main/resources/initFile.txt");
 

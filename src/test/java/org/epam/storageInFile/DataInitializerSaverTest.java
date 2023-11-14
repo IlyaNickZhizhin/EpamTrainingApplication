@@ -6,16 +6,15 @@ import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class DataInitializerSaverTest {
 
-    private static Storage storage = new Storage();;
+    private static Storage storage = new Storage();
     private static DataInitializer dataInitializer;
     private static FileToModelsMapper mapper;
     private static DataSaver dataSaver;
@@ -26,7 +25,7 @@ public class DataInitializerSaverTest {
         mapper = new FileToModelsMapper<>(storage, "src/main/resources/initFile.txt");
         mapper.init();
         dataInitializer = new DataInitializer(mapper);
-        dataSaver = new DataSaver(storage, mapper);
+        dataSaver = new DataSaver(mapper);
     }
 
     @Test

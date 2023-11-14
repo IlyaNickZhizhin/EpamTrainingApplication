@@ -1,17 +1,12 @@
 package org.epam.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.epam.model.User;
 import org.epam.model.gymModel.Model;
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.Training;
 import org.epam.storageInFile.Storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +16,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +33,7 @@ public class FileToModelsMapper<M extends Model> {
     private String initFile;
     private Storage storage;
 
+    @Autowired
     public FileToModelsMapper(Storage storage) {
         this.storage = storage;
     }
