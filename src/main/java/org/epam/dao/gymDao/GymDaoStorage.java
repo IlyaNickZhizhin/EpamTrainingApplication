@@ -1,12 +1,15 @@
 package org.epam.dao.gymDao;
 
-import org.epam.config.Storage;
+import org.epam.storageInFile.Storage;
 import org.epam.dao.Dao;
 import org.epam.model.gymModel.Model;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@DependsOn("dataInitializer")
 public abstract class GymDaoStorage<M extends Model> implements Dao<Model> {
 
     Storage<M> storage;
@@ -15,6 +18,7 @@ public abstract class GymDaoStorage<M extends Model> implements Dao<Model> {
     protected String namespace;
     Map<String, Map<Integer, Model>> models;
 
+    @Autowired
     public GymDaoStorage(Storage storage) {
         this.storage = storage;
         this.models = storage.getGymModels();

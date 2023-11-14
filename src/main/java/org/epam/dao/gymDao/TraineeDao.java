@@ -1,6 +1,6 @@
 package org.epam.dao.gymDao;
 
-import org.epam.config.Storage;
+import org.epam.storageInFile.Storage;
 import org.epam.model.gymModel.Model;
 import org.epam.model.gymModel.Trainee;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TraineeDao extends GymDaoStorage<Trainee> {
 
-    private static final String NAMESPACE = "trainees";
+    private static final String NAMESPACE = Trainee.class.getName();
 
     public TraineeDao(Storage storage) {
         super(storage);

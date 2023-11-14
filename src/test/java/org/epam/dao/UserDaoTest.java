@@ -1,6 +1,6 @@
 package org.epam.dao;
 
-import org.epam.config.Storage;
+import org.epam.storageInFile.Storage;
 import org.epam.model.User;
 import org.junit.jupiter.api.Test;
 
@@ -85,17 +85,6 @@ class UserDaoTest {
         user.setUsername("TestUser");
         int id = userDao.create(user);
         assertEquals(user, userDao.get("TestUser"));
-    }
-
-
-    @Test
-    public void testDefaultPassword() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
-        UserDao userDao = new UserDao(mockStorage);
-        String password = userDao.defaultPassword();
-        assertNotNull(password);
-        assertEquals(10, password.length());
     }
 
     @Test

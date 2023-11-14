@@ -1,13 +1,14 @@
 package org.epam.model;
 
 import lombok.*;
+import org.epam.model.gymModel.Model;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
 @EqualsAndHashCode
-public class User {
+public class User implements Model {
 
     private int id;
 

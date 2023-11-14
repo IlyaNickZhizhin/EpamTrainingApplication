@@ -1,17 +1,23 @@
 package org.epam.dao;
 
-import org.epam.config.Storage;
+import org.epam.storageInFile.Storage;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.epam.config.PasswordGenerator.getDefaultPassword;
+import static org.epam.config.UsernameGenerator.getDefaultUsername;
+
+@DependsOn("dataInitializer")
 @Repository
 public class UserDao {
 
@@ -92,42 +98,14 @@ public class UserDao {
         }
     }
 
-    private String defaultUsername(String firstName, String lastName) {
-        logger.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
-        StringBuffer username = new StringBuffer(firstName.concat("." + lastName));
-        int indexOfUsername = 1;
-        if (users.get(username.toString())!=null) {
-            logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
-            username.append(indexOfUsername);
-            indexOfUsername++;
-        }
-        while (users.get(username.toString())!=null) {
-            username.delete((username.length()-String.valueOf(indexOfUsername).length()),username.length());
-            username.append(indexOfUsername);
-            indexOfUsername++;
-        }
-        logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created as " + username.toString() );
-        return username.toString();
-    }
-
-    public String defaultPassword() {
-        logger.info("Creating default password for user");
-        StringBuffer pass = new StringBuffer();
-        for (int i = 0; i < 10; i++) {
-            pass.append((char) (Math.random() * 26 + 97));
-        }
-        logger.info("Default password for user created as " + pass.toString());
-        return pass.toString();
-    }
-
     public User setNewUser(String firstName, String lastName) {
         logger.info("Creating new user with first name: " + firstName + " and last name: " + lastName);
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        String username = defaultUsername(firstName, lastName);
+        String username = getDefaultUsername(firstName, lastName, new HashSet<>(users.keySet()));
         user.setUsername(username);
-        user.setPassword(defaultPassword());
+        user.setPassword(getDefaultPassword());
         user.setActive(true);
         logger.info("New user with first name: " + firstName + " and last name: " + lastName + " created");
         return user;
