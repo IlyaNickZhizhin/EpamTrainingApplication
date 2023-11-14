@@ -1,4 +1,4 @@
-package org.epam.model;
+package org.epam.model.gymModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -6,10 +6,9 @@ import lombok.*;
 import java.util.Date;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@EqualsAndHashCode
 public class Training implements Model {
     private int id;
 

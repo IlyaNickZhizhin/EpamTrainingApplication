@@ -1,11 +1,9 @@
-package org.epam.model;
+package org.epam.model.gymModel;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@ToString
+@EqualsAndHashCode
 public class Trainer implements Model {
     private int id;
     private String specialization;
@@ -14,6 +12,9 @@ public class Trainer implements Model {
 
     public int getId() {
         return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Trainer() {}

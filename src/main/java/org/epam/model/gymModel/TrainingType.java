@@ -1,8 +1,8 @@
-package org.epam.model;
+package org.epam.model.gymModel;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@ToString
 public enum TrainingType {
     BASIC(1, "Basic"),
     CARDIO(2, "Cardio"),

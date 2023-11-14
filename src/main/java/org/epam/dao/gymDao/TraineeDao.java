@@ -1,29 +1,24 @@
-package org.epam.dao;
+package org.epam.dao.gymDao;
 
 import org.epam.config.Storage;
-import org.epam.model.Model;
-import org.epam.model.Trainee;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.epam.model.gymModel.Model;
+import org.epam.model.gymModel.Trainee;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
-
 @Repository
-public class TraineeDao extends TrainDaoStorage<Integer, Trainee>{
+public class TraineeDao extends GymDaoStorage<Integer, Trainee> {
 
-    Storage storage;
+    private static final String NAMESPACE = "trainees";
 
-    @Autowired
     public TraineeDao(Storage storage) {
-        this.storage = storage;
+        super(storage);
+        super.namespace = NAMESPACE;
     }
-
-    Map<Integer, Trainee> trainees = storage.getTrainees();
 
     @Override
     public void update(int id, Model model) {
         Trainee trainee = (Trainee) model;
-        Trainee traineeToUpdate = trainees.get(id);
+        Trainee traineeToUpdate = (Trainee) models.get(NAMESPACE).get(id);
         traineeToUpdate.setUserId(trainee.getUserId());
         traineeToUpdate.setAddress(trainee.getAddress());
         traineeToUpdate.setAddress(trainee.getAddress());

@@ -1,16 +1,11 @@
 package org.epam.service;
 
-import org.epam.dao.TraineeDao;
+import org.epam.dao.gymDao.TraineeDao;
 import org.epam.dao.UserDao;
-import org.epam.model.Trainee;
-import org.epam.model.Trainer;
-import org.epam.model.TrainingType;
+import org.epam.model.gymModel.Trainee;
 import org.epam.model.User;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 public class TraineeService {
@@ -30,7 +25,7 @@ public class TraineeService {
     public Trainee create (String firstName, String lastName) {
         User user = userDao.setNewUser(firstName, lastName);
         Trainee trainee = new Trainee();
-        trainee.setUserId(userDao.save(user));
+        trainee.setUserId(userDao.create(user));
         traineeDao.save(trainee);
         return trainee;
     }
@@ -44,7 +39,7 @@ public class TraineeService {
         traineeDao.delete(id);
     }
 
-    public void select(int id){
-        traineeDao.get(id);
+    public Trainee select(int id){
+        return (Trainee) traineeDao.get(id);
     }
 }

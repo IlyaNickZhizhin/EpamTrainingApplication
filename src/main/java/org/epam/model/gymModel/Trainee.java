@@ -1,13 +1,18 @@
-package org.epam.model;
+package org.epam.model.gymModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.Date;
 import java.util.Optional;
 
-@ToString
+@EqualsAndHashCode
 public class Trainee implements Model {
+
+    private static final Date DEFAULT_BIRTH_DATE = new Date(0);
+    private static final String DEFAULT_ADDRESS = "not defined yet";
+
     private int id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -38,12 +43,18 @@ public class Trainee implements Model {
         this.address = Optional.ofNullable(address);
     }
 
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
 
     public Date getDateOfBirth() {
-        return dateOfBirth.get();
+        if (dateOfBirth == null) dateOfBirth = Optional.ofNullable(DEFAULT_BIRTH_DATE);
+        return dateOfBirth.isPresent() ? dateOfBirth.get() : DEFAULT_BIRTH_DATE;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
@@ -51,7 +62,8 @@ public class Trainee implements Model {
     }
 
     public String getAddress() {
-        return address.get();
+        if (address == null) address = Optional.ofNullable(DEFAULT_ADDRESS);
+        return address.isPresent() ? address.get() : DEFAULT_ADDRESS;
     }
 
     public void setAddress(String address) {

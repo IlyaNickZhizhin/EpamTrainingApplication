@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
+@EqualsAndHashCode
 public class User {
 
     private int id;
