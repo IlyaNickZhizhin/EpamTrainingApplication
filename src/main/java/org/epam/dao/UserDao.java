@@ -10,18 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class UserDao {
 
-    private Storage storage;
     private Map<String, User> users;
 
     @Autowired
     public UserDao(Storage storage) {
-        this.storage = storage;
         this.users = storage.getUsers();
     }
 
