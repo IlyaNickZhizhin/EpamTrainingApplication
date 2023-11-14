@@ -16,20 +16,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Repository
 public class UserDao {
 
-    private static Storage storage;
+    private Storage storage;
+    private Map<String, User> users;
 
     @Autowired
     public UserDao(Storage storage) {
         this.storage = storage;
+        this.users = storage.getUsers();
     }
 
     private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
-    private static Map<String, User> users = storage.getUsers();
+
     Logger logger = LoggerFactory.getLogger(Storage.class);
 
-    public int save(User user) {
+    public int create(User user) {
+        logger.info("Creating user with first name: " + user.getFirstName() + " and last name: " + user.getLastName());
+        user.setId(AUTO_ID.incrementAndGet());
+        try {
+            save(user);
+        } catch (InvalidDataException e) {
+            logger.error("Invalid data exception: " + e.getMessage());
+            throw new InvalidDataException("create(User user)");
+        }
+        logger.info("User with first name: " + user.getFirstName() + " and last name: " + user.getLastName() + " created");
+        return user.getId();
+    }
+
+
+    public void save(User user) {
         logger.info("Saving user with username: " + user.getUsername());
-        user.setId(AUTO_ID.getAndIncrement());
         try {
         users.put(user.getUsername(), user);
         } catch (InvalidDataException e) {
@@ -37,7 +52,6 @@ public class UserDao {
             throw new InvalidDataException("save(User user)");
         }
         logger.info("User with username: " + user.getUsername() + " saved");
-        return user.getId();
     }
 
     public void update(int id, User user) {

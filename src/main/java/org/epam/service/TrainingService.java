@@ -1,10 +1,10 @@
 package org.epam.service;
 
-import org.epam.dao.TrainingDao;
-import org.epam.model.Trainee;
-import org.epam.model.Trainer;
-import org.epam.model.Training;
-import org.epam.model.TrainingType;
+import org.epam.dao.gymDao.TrainingDao;
+import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.Training;
+import org.epam.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +36,6 @@ public class TrainingService {
     }
 
     public Training select(int id){
-        return trainingDao.get(id);
+        return (Training) trainingDao.get(id);
     }
 }
