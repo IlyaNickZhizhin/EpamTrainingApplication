@@ -68,7 +68,6 @@ class UserDaoTest {
         user.setFirstName("Test");
         user.setLastName("User");
         user.setUsername("TestUser");
-        int id = userDao.create(user);
         userDao.delete("TestUser");
         assertNull(userDao.get("TestUser"));
     }
@@ -82,14 +81,13 @@ class UserDaoTest {
         user.setFirstName("Test");
         user.setLastName("User");
         user.setUsername("TestUser");
-        int id = userDao.create(user);
         assertEquals(user, userDao.get("TestUser"));
     }
 
     @Test
     public void testSetNewUser() {
         Storage<User> mockStorage = mock(Storage.class);
-        UsernameGenerator mockUNG = new UsernameGenerator(mockStorage);
+        new UsernameGenerator(mockStorage);
         when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = userDao.setNewUser("Test", "User");

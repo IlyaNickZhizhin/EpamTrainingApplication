@@ -25,17 +25,17 @@ public class UsernameGenerator {
         logger.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
         StringBuilder username = new StringBuilder(firstName.concat("." + lastName));
         int indexOfUsername = 1;
-        if (storage.getUsers().containsKey(username.toString())) {
+        if (UsernameGenerator.storage.getUsers().containsKey(username.toString())) {
             logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        while (storage.getUsers().containsKey(username.toString())) {
+        while (UsernameGenerator.storage.getUsers().containsKey(username.toString())) {
             username.delete((username.length()-String.valueOf(indexOfUsername).length()),username.length());
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created as " + username.toString() );
+        logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created as " + username. toString() );
         return username.toString();
     }
 
