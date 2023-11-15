@@ -1,25 +1,36 @@
 package org.epam.dao;
 
-import org.epam.config.Storage;
+import org.epam.storageInFile.Storage;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.epam.config.PasswordGenerator.getDefaultPassword;
+import static org.epam.config.UsernameGenerator.getDefaultUsername;
+
+@DependsOn("dataInitializer")
 @Repository
 public class UserDao {
 
-    private Map<String, User> users;
+    /*TODO - логику DAO и например, вычисления пароля лучше разделять - выносить в отдельный класс.
+    *      ********************* ВЫПОЛНИЛ В КЛАССЕ config/PasswordGenerator ***********************
+    *
+    * TODO - Не увидел логику проверки на то, что User с таким же UserName'ом уже существует
+    *      *********** ВЫПОЛНИЛ В КЛАССЕ config/UsernameGenerator (раньше она тут была) **********
+    * */
+
+    private final Storage<User> storage;
 
     @Autowired
-    public UserDao(Storage storage) {
-        this.users = storage.getUsers();
+    public UserDao(Storage<User> storage) {
+        this.storage = storage;
     }
 
     private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
@@ -43,7 +54,7 @@ public class UserDao {
     public void save(User user) {
         logger.info("Saving user with username: " + user.getUsername());
         try {
-        users.put(user.getUsername(), user);
+            storage.getUsers().put(user.getUsername(), user);
         } catch (InvalidDataException e) {
             logger.error("Invalid data exception: " + e.getMessage());
             throw new InvalidDataException("save(User user)");
@@ -51,9 +62,9 @@ public class UserDao {
         logger.info("User with username: " + user.getUsername() + " saved");
     }
 
-    public void update(int id, User user) {
+    public void update(User user) {
         logger.info("Updating user with username: " + user.getUsername());
-        User userToUpdate = users.get(user.getUsername());
+        User userToUpdate = storage.getUsers().get(user.getUsername());
         userToUpdate.setFirstName(user.getFirstName());
         userToUpdate.setLastName(user.getLastName());
         userToUpdate.setUsername(user.getUsername());
@@ -71,7 +82,7 @@ public class UserDao {
     public void delete(String username) {
         logger.info("Deleting user with username: " + username);
         try {
-            users.remove(username);
+            storage.getUsers().remove(username);
         } catch (ResourceNotFoundException e) {
             logger.error("Resource not found exception: " + e.getMessage());
             throw new ResourceNotFoundException("User", username);
@@ -83,7 +94,7 @@ public class UserDao {
     public User get(String username) {
         logger.info("Getting user with username: " + username);
         try {
-            return users.get(username);
+            return storage.getUsers().get(username);
         } catch (ResourceNotFoundException e) {
             logger.error("Resource not found exception: " + e.getMessage());
             throw new ResourceNotFoundException("User", username);
@@ -92,42 +103,14 @@ public class UserDao {
         }
     }
 
-    private String defaultUsername(String firstName, String lastName) {
-        logger.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
-        StringBuffer username = new StringBuffer(firstName.concat("." + lastName));
-        int indexOfUsername = 1;
-        if (users.get(username.toString())!=null) {
-            logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
-            username.append(indexOfUsername);
-            indexOfUsername++;
-        }
-        while (users.get(username.toString())!=null) {
-            username.delete((username.length()-String.valueOf(indexOfUsername).length()),username.length());
-            username.append(indexOfUsername);
-            indexOfUsername++;
-        }
-        logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created as " + username.toString() );
-        return username.toString();
-    }
-
-    public String defaultPassword() {
-        logger.info("Creating default password for user");
-        StringBuffer pass = new StringBuffer();
-        for (int i = 0; i < 10; i++) {
-            pass.append((char) (Math.random() * 26 + 97));
-        }
-        logger.info("Default password for user created as " + pass.toString());
-        return pass.toString();
-    }
-
     public User setNewUser(String firstName, String lastName) {
         logger.info("Creating new user with first name: " + firstName + " and last name: " + lastName);
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        String username = defaultUsername(firstName, lastName);
+        String username = getDefaultUsername(firstName, lastName);
         user.setUsername(username);
-        user.setPassword(defaultPassword());
+        user.setPassword(getDefaultPassword());
         user.setActive(true);
         logger.info("New user with first name: " + firstName + " and last name: " + lastName + " created");
         return user;

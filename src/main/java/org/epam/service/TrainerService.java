@@ -14,6 +14,13 @@ public class TrainerService {
     TrainerDao trainerDao;
     UserDao userDao;
 
+   /* TODO - - в сервисах используй аннотацию @RequiredArgsConstructor (вроде такая)
+             чтобы не писать руками конструктор каждый раз
+   * не стал делать, потому что есть требование "DAO with storage bean should be inserted into services beans
+   * using auto wiring. Services beans should be injected into the facade using
+   * constructor-based injections. The rest of the injections should be done in a setter-based way."
+   * */
+
     @Autowired
     public void setTrainerDao(TrainerDao trainerDao) {
         this.trainerDao = trainerDao;
@@ -39,7 +46,7 @@ public class TrainerService {
     }
 
     public Trainer select(int id){
-        return (Trainer) trainerDao.get(id);
+        return trainerDao.get(id);
     }
 
 }
