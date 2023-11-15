@@ -23,7 +23,7 @@ public class UsernameGenerator {
 
         Logger logger = Logger.getLogger(UsernameGenerator.class.getName());
         logger.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
-        StringBuffer username = new StringBuffer(firstName.concat("." + lastName));
+        StringBuilder username = new StringBuilder(firstName.concat("." + lastName));
         int indexOfUsername = 1;
         if (storage.getUsers().containsKey(username.toString())) {
             logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");

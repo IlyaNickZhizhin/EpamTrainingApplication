@@ -15,8 +15,8 @@ class UserDaoTest {
 
     @Test
     public void testCreateUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -29,9 +29,8 @@ class UserDaoTest {
 
     @Test
     public void testSaveUser() {
-
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -43,8 +42,8 @@ class UserDaoTest {
 
     @Test
     public void testUpdateUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -62,8 +61,8 @@ class UserDaoTest {
 
     @Test
     public void testDeleteUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -76,8 +75,8 @@ class UserDaoTest {
 
     @Test
     public void testGetUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -89,9 +88,9 @@ class UserDaoTest {
 
     @Test
     public void testSetNewUser() {
-        Storage mockStorage = mock(Storage.class);
+        Storage<User> mockStorage = mock(Storage.class);
         UsernameGenerator mockUNG = new UsernameGenerator(mockStorage);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = userDao.setNewUser("Test", "User");
         assertEquals("Test", user.getFirstName());
