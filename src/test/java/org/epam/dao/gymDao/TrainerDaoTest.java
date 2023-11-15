@@ -1,6 +1,6 @@
 package org.epam.dao.gymDao;
 
-import org.epam.config.Storage;
+import org.epam.storageInFile.Storage;
 import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class TrainerDaoTest {
         Storage mockStorage = mock(Storage.class);
         HashMap<Integer, Trainer> trainers = new HashMap<>();
         HashMap<String, HashMap<Integer, Trainer>> models = new HashMap<>();
-        models.put("trainers", trainers);
+        models.put(Trainer.class.getName(), trainers);
         when(mockStorage.getGymModels()).thenReturn(models);
         trainerDao = new TrainerDao(mockStorage);
     }
