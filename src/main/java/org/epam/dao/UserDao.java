@@ -27,10 +27,10 @@ public class UserDao {
     *      *********** ВЫПОЛНИЛ В КЛАССЕ config/UsernameGenerator (раньше она тут была) **********
     * */
 
-    private final Storage storage;
+    private final Storage<User> storage;
 
     @Autowired
-    public UserDao(Storage storage) {
+    public UserDao(Storage<User> storage) {
         this.storage = storage;
     }
 
@@ -55,7 +55,7 @@ public class UserDao {
     public void save(User user) {
         logger.info("Saving user with username: " + user.getUsername());
         try {
-        storage.getUsers().put(user.getUsername(), user);
+            storage.getUsers().put(user.getUsername(), user);
         } catch (InvalidDataException e) {
             logger.error("Invalid data exception: " + e.getMessage());
             throw new InvalidDataException("save(User user)");
@@ -109,7 +109,7 @@ public class UserDao {
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        String username = getDefaultUsername(firstName, lastName, new HashSet<>(storage.getUsers().keySet()));
+        String username = getDefaultUsername(firstName, lastName);
         user.setUsername(username);
         user.setPassword(getDefaultPassword());
         user.setActive(true);

@@ -1,5 +1,6 @@
 package org.epam.dao;
 
+import org.epam.config.UsernameGenerator;
 import org.epam.storageInFile.Storage;
 import org.epam.model.User;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ class UserDaoTest {
 
     @Test
     public void testCreateUser() {
-
         Storage mockStorage = mock(Storage.class);
         when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
         UserDao userDao = new UserDao(mockStorage);
@@ -90,6 +90,7 @@ class UserDaoTest {
     @Test
     public void testSetNewUser() {
         Storage mockStorage = mock(Storage.class);
+        UsernameGenerator mockUNG = new UsernameGenerator(mockStorage);
         when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
         UserDao userDao = new UserDao(mockStorage);
         User user = userDao.setNewUser("Test", "User");

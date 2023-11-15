@@ -9,7 +9,7 @@ public class TraineeDao extends GymDaoStorage<Trainee> {
 
     private static final String NAMESPACE = Trainee.class.getName();
 
-    public TraineeDao(Storage storage) {
+    public TraineeDao(Storage<Trainee> storage) {
         super(storage);
         super.namespace = NAMESPACE;
     }
