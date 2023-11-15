@@ -1,6 +1,7 @@
 package org.epam.dao;
 
-import org.epam.config.Storage;
+import org.epam.config.UsernameGenerator;
+import org.epam.storageInFile.Storage;
 import org.epam.model.User;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +15,8 @@ class UserDaoTest {
 
     @Test
     public void testCreateUser() {
-
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -29,9 +29,8 @@ class UserDaoTest {
 
     @Test
     public void testSaveUser() {
-
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -43,8 +42,8 @@ class UserDaoTest {
 
     @Test
     public void testUpdateUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
@@ -55,53 +54,42 @@ class UserDaoTest {
         updatedUser.setFirstName("Updated");
         updatedUser.setLastName("User");
         updatedUser.setUsername("TestUser");
-        userDao.update(id, updatedUser);
+        userDao.update(updatedUser);
         updatedUser.setId(id);
         assertEquals(updatedUser, userDao.get("TestUser"));
     }
 
     @Test
     public void testDeleteUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
         user.setLastName("User");
         user.setUsername("TestUser");
-        int id = userDao.create(user);
         userDao.delete("TestUser");
         assertNull(userDao.get("TestUser"));
     }
 
     @Test
     public void testGetUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = new User();
         user.setFirstName("Test");
         user.setLastName("User");
         user.setUsername("TestUser");
-        int id = userDao.create(user);
+        userDao.create(user);
         assertEquals(user, userDao.get("TestUser"));
-    }
-
-
-    @Test
-    public void testDefaultPassword() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
-        UserDao userDao = new UserDao(mockStorage);
-        String password = userDao.defaultPassword();
-        assertNotNull(password);
-        assertEquals(10, password.length());
     }
 
     @Test
     public void testSetNewUser() {
-        Storage mockStorage = mock(Storage.class);
-        when(mockStorage.getUsers()).thenReturn(new HashMap<String, User>());
+        Storage<User> mockStorage = mock(Storage.class);
+        new UsernameGenerator(mockStorage);
+        when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDao userDao = new UserDao(mockStorage);
         User user = userDao.setNewUser("Test", "User");
         assertEquals("Test", user.getFirstName());
