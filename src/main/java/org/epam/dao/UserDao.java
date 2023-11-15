@@ -11,7 +11,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.epam.config.PasswordGenerator.getDefaultPassword;
@@ -28,11 +27,11 @@ public class UserDao {
     *      *********** ВЫПОЛНИЛ В КЛАССЕ config/UsernameGenerator (раньше она тут была) **********
     * */
 
-    private Map<String, User> users;
+    private final Storage storage;
 
     @Autowired
     public UserDao(Storage storage) {
-        this.users = storage.getUsers();
+        this.storage = storage;
     }
 
     private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
@@ -56,7 +55,7 @@ public class UserDao {
     public void save(User user) {
         logger.info("Saving user with username: " + user.getUsername());
         try {
-        users.put(user.getUsername(), user);
+        storage.getUsers().put(user.getUsername(), user);
         } catch (InvalidDataException e) {
             logger.error("Invalid data exception: " + e.getMessage());
             throw new InvalidDataException("save(User user)");
@@ -66,7 +65,7 @@ public class UserDao {
 
     public void update(User user) {
         logger.info("Updating user with username: " + user.getUsername());
-        User userToUpdate = users.get(user.getUsername());
+        User userToUpdate = (User) storage.getUsers().get(user.getUsername());
         userToUpdate.setFirstName(user.getFirstName());
         userToUpdate.setLastName(user.getLastName());
         userToUpdate.setUsername(user.getUsername());
@@ -84,7 +83,7 @@ public class UserDao {
     public void delete(String username) {
         logger.info("Deleting user with username: " + username);
         try {
-            users.remove(username);
+            storage.getUsers().remove(username);
         } catch (ResourceNotFoundException e) {
             logger.error("Resource not found exception: " + e.getMessage());
             throw new ResourceNotFoundException("User", username);
@@ -96,7 +95,7 @@ public class UserDao {
     public User get(String username) {
         logger.info("Getting user with username: " + username);
         try {
-            return users.get(username);
+            return (User) storage.getUsers().get(username);
         } catch (ResourceNotFoundException e) {
             logger.error("Resource not found exception: " + e.getMessage());
             throw new ResourceNotFoundException("User", username);
@@ -110,7 +109,7 @@ public class UserDao {
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        String username = getDefaultUsername(firstName, lastName, new HashSet<>(users.keySet()));
+        String username = getDefaultUsername(firstName, lastName, new HashSet<>(storage.getUsers().keySet()));
         user.setUsername(username);
         user.setPassword(getDefaultPassword());
         user.setActive(true);

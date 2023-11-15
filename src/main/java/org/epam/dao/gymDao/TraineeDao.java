@@ -1,7 +1,6 @@
 package org.epam.dao.gymDao;
 
 import org.epam.storageInFile.Storage;
-import org.epam.model.gymModel.Model;
 import org.epam.model.gymModel.Trainee;
 import org.springframework.stereotype.Repository;
 

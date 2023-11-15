@@ -52,6 +52,6 @@ public class TrainingService {
     }
 
     public Training select(int id){
-        return (Training) trainingDao.get(id);
+        return trainingDao.get(id);
     }
 }

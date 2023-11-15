@@ -6,7 +6,6 @@ import org.epam.model.gymModel.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @DependsOn("dataInitializer")
@@ -30,7 +29,7 @@ public abstract class GymDaoStorage<M extends Model> implements Dao<M> {
 
     @Override
     public void save(M model) {
-        storage.getGymModels().get(namespace).put(model.getId(), (M) model);
+        storage.getGymModels().get(namespace).put(model.getId(), model);
     }
 
     @Override

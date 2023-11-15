@@ -46,7 +46,7 @@ public class TrainerService {
     }
 
     public Trainer select(int id){
-        return (Trainer) trainerDao.get(id);
+        return trainerDao.get(id);
     }
 
 }

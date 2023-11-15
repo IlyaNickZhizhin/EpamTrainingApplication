@@ -1,6 +1,5 @@
 package org.epam.service;
 
-import org.epam.dao.UserDao;
 import org.epam.dao.gymDao.TrainingDao;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
@@ -27,7 +26,7 @@ class TrainingServiceTest {
     @Mock
     private static TrainerService mockTrainerService = mock(TrainerService.class);
 
-    private static TrainingService trainingService = new TrainingService();;
+    private static final TrainingService trainingService = new TrainingService();
     @BeforeAll
     static void setUp() {
         trainingService.setTrainingDao(mockTrainingDao);
