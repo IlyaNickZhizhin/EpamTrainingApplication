@@ -17,9 +17,8 @@ public class TrainingDao extends GymDaoStorage<Training> {
     }
 
     @Override
-    public void update(int id, Model model) {
-        Training training = (Training) model;
-        Training trainingToUpdate = (Training) models.get(NAMESPACE).get(id);
+    public void update(int id, Training training) {
+        Training trainingToUpdate = storage.getGymModels().get(NAMESPACE).get(id);
         trainingToUpdate.setTrainingDate(training.getTrainingDate());
         trainingToUpdate.setTrainingName(training.getTrainingName());
         trainingToUpdate.setDuration(training.getDuration());

@@ -3,7 +3,6 @@ package org.epam.storageInFile;
 import jakarta.annotation.PreDestroy;
 import lombok.Getter;
 import jakarta.annotation.PostConstruct;
-import lombok.Setter;
 import org.epam.model.*;
 import org.epam.model.gymModel.Model;
 import org.epam.model.gymModel.Trainee;
@@ -11,7 +10,6 @@ import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -19,9 +17,21 @@ import java.util.Map;
 
 @Component
 @Getter
-@Setter
-@PropertySource("classpath:application.properties")
 public class Storage<M extends Model> {
+
+/*     TODO - не стоит смешивать код с логикой и код с данными (сервисы и дто) -
+        вот тут явно сломан single responsibility принцип, класс и делает логику по сохранению данных,
+        и их же хранит - лучше инит методы вынести в отдельный класс, который будет делать логику
+        по сохранению в некий "persistence" уровень (твой класс Storage с данными)
+        *******************************ВЫПОЛНИЛ КАК СМОГ***********************************
+
+        TODO - и зачем там наследование от некоего базового дто и метод toString?
+         toString - убрал
+         <M extends Model> - пока оставил, использу для объявления Map<String, Map<Integer, M>> в строке 37,
+           планирую обсудить на созвоне.
+
+*/
+
 
     private DataSaver dataSaver;
     private Map<String, Map<Integer, M>> gymModels;

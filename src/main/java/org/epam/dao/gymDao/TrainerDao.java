@@ -16,9 +16,8 @@ public class TrainerDao extends GymDaoStorage<Trainer> {
     }
 
     @Override
-    public void update(int id, Model model) {
-        Trainer trainer = (Trainer) model;
-        Trainer trainerToUpdate = (Trainer) models.get(namespace).get(id);
+    public void update(int id, Trainer trainer) {
+        Trainer trainerToUpdate = storage.getGymModels().get(namespace).get(id);
         trainerToUpdate.setUserId(trainer.getUserId());
         trainerToUpdate.setSpecialization(trainer.getSpecialization());
         save(trainerToUpdate);

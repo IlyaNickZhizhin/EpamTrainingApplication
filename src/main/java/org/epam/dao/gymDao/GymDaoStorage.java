@@ -10,43 +10,41 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @DependsOn("dataInitializer")
-public abstract class GymDaoStorage<M extends Model> implements Dao<Model> {
+public abstract class GymDaoStorage<M extends Model> implements Dao<M> {
 
     Storage<M> storage;
     private final AtomicInteger AUTO_ID = new AtomicInteger(0);
 
     protected String namespace;
-    Map<String, Map<Integer, Model>> models;
 
     @Autowired
     public GymDaoStorage(Storage storage) {
         this.storage = storage;
-        this.models = storage.getGymModels();
     }
 
     @Override
-    public void create(Model model) {
+    public void create(M model) {
         model.setId(AUTO_ID.incrementAndGet());
         save(model);
     }
 
     @Override
-    public void save(Model model) {
-        (models.get(namespace)).put(model.getId(), model);
+    public void save(M model) {
+        storage.getGymModels().get(namespace).put(model.getId(), (M) model);
     }
 
     @Override
-    public abstract void update(int id, Model model);
+    public abstract void update(int id, M model);
 
 
     @Override
     public void delete(int id) {
-        models.get(namespace).remove(id);
+        storage.getGymModels().get(namespace).remove(id);
     }
 
     @Override
-    public Model get(int id) {
-        return models.get(namespace).get(id);
+    public M get(int id) {
+        return storage.getGymModels().get(namespace).get(id);
     }
 
 }

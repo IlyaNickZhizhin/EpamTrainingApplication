@@ -1,8 +1,10 @@
 package org.epam.dao.gymDao;
 
+import org.epam.model.gymModel.Trainer;
 import org.epam.storageInFile.Storage;
 import org.epam.model.gymModel.Training;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

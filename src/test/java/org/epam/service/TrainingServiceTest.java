@@ -1,10 +1,12 @@
 package org.epam.service;
 
+import org.epam.dao.UserDao;
 import org.epam.dao.gymDao.TrainingDao;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -17,15 +19,21 @@ import static org.mockito.Mockito.when;
 class TrainingServiceTest {
 
     @Mock
-    private TrainingDao mockTrainingDao = mock(TrainingDao.class);
+    private static TrainingDao mockTrainingDao = mock(TrainingDao.class);
 
     @Mock
-    private TraineeService mockTraineeService = mock(TraineeService.class);
+    private static TraineeService mockTraineeService = mock(TraineeService.class);
 
     @Mock
-    private TrainerService mockTrainerService = mock(TrainerService.class);
+    private static TrainerService mockTrainerService = mock(TrainerService.class);
 
-    TrainingService trainingService = new TrainingService(mockTrainingDao, mockTraineeService, mockTrainerService);
+    private static TrainingService trainingService = new TrainingService();;
+    @BeforeAll
+    static void setUp() {
+        trainingService.setTrainingDao(mockTrainingDao);
+        trainingService.setTraineeService(mockTraineeService);
+        trainingService.setTrainerService(mockTrainerService);
+    }
 
     @Test
     public void testCreate() {

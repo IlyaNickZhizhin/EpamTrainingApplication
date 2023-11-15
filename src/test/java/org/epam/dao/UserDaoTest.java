@@ -55,7 +55,7 @@ class UserDaoTest {
         updatedUser.setFirstName("Updated");
         updatedUser.setLastName("User");
         updatedUser.setUsername("TestUser");
-        userDao.update(id, updatedUser);
+        userDao.update(updatedUser);
         updatedUser.setId(id);
         assertEquals(updatedUser, userDao.get("TestUser"));
     }

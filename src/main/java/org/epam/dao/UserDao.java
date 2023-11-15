@@ -21,6 +21,13 @@ import static org.epam.config.UsernameGenerator.getDefaultUsername;
 @Repository
 public class UserDao {
 
+    /*TODO - логику DAO и например, вычисления пароля лучше разделять - выносить в отдельный класс.
+    *      ********************* ВЫПОЛНИЛ В КЛАССЕ config/PasswordGenerator ***********************
+    *
+    * TODO - Не увидел логику проверки на то, что User с таким же UserName'ом уже существует
+    *      *********** ВЫПОЛНИЛ В КЛАССЕ config/UsernameGenerator (раньше она тут была) **********
+    * */
+
     private Map<String, User> users;
 
     @Autowired
@@ -57,7 +64,7 @@ public class UserDao {
         logger.info("User with username: " + user.getUsername() + " saved");
     }
 
-    public void update(int id, User user) {
+    public void update(User user) {
         logger.info("Updating user with username: " + user.getUsername());
         User userToUpdate = users.get(user.getUsername());
         userToUpdate.setFirstName(user.getFirstName());
