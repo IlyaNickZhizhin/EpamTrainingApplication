@@ -17,7 +17,7 @@ public abstract class GymDaoStorage<M extends Model> implements Dao<M> {
     protected String namespace;
 
     @Autowired
-    public GymDaoStorage(Storage storage) {
+    public GymDaoStorage(Storage<M> storage) {
         this.storage = storage;
     }
 

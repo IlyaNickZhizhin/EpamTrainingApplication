@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.epam.config.PasswordGenerator.getDefaultPassword;
@@ -65,7 +64,7 @@ public class UserDao {
 
     public void update(User user) {
         logger.info("Updating user with username: " + user.getUsername());
-        User userToUpdate = (User) storage.getUsers().get(user.getUsername());
+        User userToUpdate = storage.getUsers().get(user.getUsername());
         userToUpdate.setFirstName(user.getFirstName());
         userToUpdate.setLastName(user.getLastName());
         userToUpdate.setUsername(user.getUsername());
@@ -95,7 +94,7 @@ public class UserDao {
     public User get(String username) {
         logger.info("Getting user with username: " + username);
         try {
-            return (User) storage.getUsers().get(username);
+            return storage.getUsers().get(username);
         } catch (ResourceNotFoundException e) {
             logger.error("Resource not found exception: " + e.getMessage());
             throw new ResourceNotFoundException("User", username);

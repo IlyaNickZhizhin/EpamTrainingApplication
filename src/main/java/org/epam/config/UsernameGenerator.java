@@ -1,6 +1,5 @@
 package org.epam.config;
 
-import lombok.RequiredArgsConstructor;
 import org.epam.model.User;
 import org.epam.storageInFile.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import java.util.logging.Logger;
 @DependsOn("dataInitializer")
 public class UsernameGenerator {
 
-    static Storage<User> storage;
+    private static Storage<User> storage;
 
     @Autowired
     public UsernameGenerator(Storage<User> storage) {

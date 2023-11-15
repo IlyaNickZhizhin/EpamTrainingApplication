@@ -10,7 +10,7 @@ public class TrainingDao extends GymDaoStorage<Training> {
 
     private static final String NAMESPACE = Training.class.getName();
     @Autowired
-    public TrainingDao(Storage storage) {
+    public TrainingDao(Storage<Training> storage) {
         super(storage);
         super.namespace = NAMESPACE;
     }
