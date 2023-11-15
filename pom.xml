@@ -26,6 +26,7 @@
     <mockito-core.version>5.3.1</mockito-core.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <slf4j-api.version>2.0.9</slf4j-api.version>
+    <modelmapper.version>3.1.1</modelmapper.version>
   </properties>
 
   <dependencies>
@@ -97,6 +98,12 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j-api.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+      <version>${modelmapper.version}</version>
     </dependency>
 
   </dependencies>
