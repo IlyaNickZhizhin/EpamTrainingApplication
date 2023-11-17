@@ -1,4 +1,4 @@
-package org.epam.dao;
+package org.epam.dao.storage;
 
 import org.epam.storageInFile.Storage;
 import org.epam.exceptions.InvalidDataException;
@@ -17,19 +17,12 @@ import static org.epam.config.UsernameGenerator.getDefaultUsername;
 
 @DependsOn("dataInitializer")
 @Repository
-public class UserDao {
-
-    /*TODO - логику DAO и например, вычисления пароля лучше разделять - выносить в отдельный класс.
-    *      ********************* ВЫПОЛНИЛ В КЛАССЕ config/PasswordGenerator ***********************
-    *
-    * TODO - Не увидел логику проверки на то, что User с таким же UserName'ом уже существует
-    *      *********** ВЫПОЛНИЛ В КЛАССЕ config/UsernameGenerator (раньше она тут была) **********
-    * */
+public class UserDaoStorageImpl {
 
     private final Storage<User> storage;
 
     @Autowired
-    public UserDao(Storage<User> storage) {
+    public UserDaoStorageImpl(Storage<User> storage) {
         this.storage = storage;
     }
 
@@ -37,7 +30,7 @@ public class UserDao {
 
     Logger logger = LoggerFactory.getLogger(Storage.class);
 
-    public int create(User user) {
+    public User create(User user) {
         logger.info("Creating user with first name: " + user.getFirstName() + " and last name: " + user.getLastName());
         user.setId(AUTO_ID.incrementAndGet());
         try {
@@ -47,7 +40,7 @@ public class UserDao {
             throw new InvalidDataException("create(User user)");
         }
         logger.info("User with first name: " + user.getFirstName() + " and last name: " + user.getLastName() + " created");
-        return user.getId();
+        return user;
     }
 
 
@@ -114,5 +107,18 @@ public class UserDao {
         user.setActive(true);
         logger.info("New user with first name: " + firstName + " and last name: " + lastName + " created");
         return user;
+    }
+
+    public User getById(int userId) {
+        logger.info("Getting user with id: " + userId);
+        for (User user :
+                storage.getUsers().values()) {
+            if (user.getId() == userId) {
+                logger.info("User with id: " + userId + " found");
+                return user;
+            }
+        }
+        logger.error("Resource not found exception: " + userId);
+        throw new ResourceNotFoundException("User", "User id#" + userId);
     }
 }

@@ -35,77 +35,329 @@
     "password" : "password05",
     "active" : true
   } ],
-  "trainers" : [ {
+  "trainingtypes" : [ {
     "id" : 1,
-    "specialization" : "Crossfit",
-    "userId" : 1
+    "trainingName" : "BASIC"
   }, {
     "id" : 2,
-    "specialization" : "Yoga",
-    "userId" : 2
+    "trainingName" : "CARDIO"
+  }, {
+    "id" : 3,
+    "trainingName" : "STRENGTH"
+  }, {
+    "id" : 4,
+    "trainingName" : "WORKOUT"
+  }, {
+    "id" : 5,
+    "trainingName" : "YOGA"
+  }, {
+    "id" : 6,
+    "trainingName" : "PILATES"
+  }, {
+    "id" : 7,
+    "trainingName" : "DANCE"
+  }, {
+    "id" : 8,
+    "trainingName" : "BOXING"
+  }, {
+    "id" : 9,
+    "trainingName" : "BODYBUILDING"
+  }, {
+    "id" : 10,
+    "trainingName" : "CROSSFIT"
+  }, {
+    "id" : 11,
+    "trainingName" : "AEROBICS"
+  }, {
+    "id" : 12,
+    "trainingName" : "ZUMBA"
+  } ],
+  "trainers" : [ {
+    "id" : 1,
+    "specialization" : {
+      "id" : 1,
+      "trainingName" : "BASIC"
+    },
+    "user" : {
+      "id" : 1,
+      "firstName" : "Ivan",
+      "lastName" : "Ivanov",
+      "username" : "Ivan.Ivanov",
+      "password" : "password01",
+      "active" : true
+    }
+  }, {
+    "id" : 2,
+    "specialization" : {
+      "id" : 2,
+      "trainingName" : "CARDIO"
+    },
+    "user" : {
+      "id" : 2,
+      "firstName" : "Petr",
+      "lastName" : "Petrov",
+      "username" : "Petr.Petrov",
+      "password" : "password02",
+      "active" : true
+    }
   } ],
   "trainees" : [ {
     "id" : 1,
     "dateOfBirth" : "2000-01-01",
     "address" : "Address 1",
-    "userId" : 3
+    "user" : {
+      "id" : 3,
+      "firstName" : "Sergey",
+      "lastName" : "Sergeev",
+      "username" : "Sergey.Sergeev",
+      "password" : "password03",
+      "active" : true
+    }
   }, {
     "id" : 2,
     "dateOfBirth" : "2001-01-01",
     "address" : "Address 2",
-    "userId" : 4
+    "user" : {
+      "id" : 4,
+      "firstName" : "Alexey",
+      "lastName" : "Alexeev",
+      "username" : "Alexey.Alexeev",
+      "password" : "password04",
+      "active" : true
+    }
   }, {
     "id" : 3,
     "dateOfBirth" : "2002-01-01",
     "address" : "Address 3",
-    "userId" : 5
+    "user" : {
+      "id" : 5,
+      "firstName" : "Nickolay",
+      "lastName" : "Nikolaev",
+      "username" : "Nickolay.Nikolaev",
+      "password" : "password05",
+      "active" : true
+    }
   } ],
   "trainings" : [ {
     "id" : 1,
-    "traineeId" : 1,
-    "trainerId" : 1,
-    "trainingName" : "Crossfit 1",
-    "trainingTypeId" : 10,
+    "trainee" : {
+      "id" : 1,
+      "dateOfBirth" : "2000-01-01",
+      "address" : "Address 1",
+      "user" : {
+        "id" : 3,
+        "firstName" : "Sergey",
+        "lastName" : "Sergeev",
+        "username" : "Sergey.Sergeev",
+        "password" : "password03",
+        "active" : true
+      }
+    },
+    "trainer" : {
+      "id" : 1,
+      "specialization" : {
+        "id" : 1,
+        "trainingName" : "BASIC"
+      },
+      "user" : {
+        "id" : 1,
+        "firstName" : "Ivan",
+        "lastName" : "Ivanov",
+        "username" : "Ivan.Ivanov",
+        "password" : "password01",
+        "active" : true
+      }
+    },
+    "trainingName" : "BASIC 1",
+    "trainingType" : {
+      "id" : 1,
+      "trainingName" : "BASIC"
+    },
     "trainingDate" : "2023-01-01",
     "duration" : 1.0
   }, {
     "id" : 2,
-    "traineeId" : 1,
-    "trainerId" : 2,
-    "trainingName" : "Yoga 2",
-    "trainingTypeId" : 5,
+    "trainee" : {
+      "id" : 1,
+      "dateOfBirth" : "2000-01-01",
+      "address" : "Address 1",
+      "user" : {
+        "id" : 3,
+        "firstName" : "Sergey",
+        "lastName" : "Sergeev",
+        "username" : "Sergey.Sergeev",
+        "password" : "password03",
+        "active" : true
+      }
+    },
+    "trainer" : {
+      "id" : 2,
+      "specialization" : {
+        "id" : 2,
+        "trainingName" : "CARDIO"
+      },
+      "user" : {
+        "id" : 2,
+        "firstName" : "Petr",
+        "lastName" : "Petrov",
+        "username" : "Petr.Petrov",
+        "password" : "password02",
+        "active" : true
+      }
+    },
+    "trainingName" : "CARDIO 2",
+    "trainingType" : {
+      "id" : 2,
+      "trainingName" : "CARDIO"
+    },
     "trainingDate" : "2023-01-02",
     "duration" : 1.0
   }, {
     "id" : 3,
-    "traineeId" : 2,
-    "trainerId" : 1,
-    "trainingName" : "Crossfit 3",
-    "trainingTypeId" : 10,
+    "trainee" : {
+      "id" : 2,
+      "dateOfBirth" : "2001-01-01",
+      "address" : "Address 2",
+      "user" : {
+        "id" : 4,
+        "firstName" : "Alexey",
+        "lastName" : "Alexeev",
+        "username" : "Alexey.Alexeev",
+        "password" : "password04",
+        "active" : true
+      }
+    },
+    "trainer" : {
+      "id" : 1,
+      "specialization" : {
+        "id" : 1,
+        "trainingName" : "BASIC"
+      },
+      "user" : {
+        "id" : 1,
+        "firstName" : "Ivan",
+        "lastName" : "Ivanov",
+        "username" : "Ivan.Ivanov",
+        "password" : "password01",
+        "active" : true
+      }
+    },
+    "trainingName" : "BASIC 3",
+    "trainingType" : {
+      "id" : 1,
+      "trainingName" : "BASIC"
+    },
     "trainingDate" : "2023-01-03",
     "duration" : 1.0
   }, {
     "id" : 4,
-    "traineeId" : 2,
-    "trainerId" : 2,
-    "trainingName" : "Yoga 4",
-    "trainingTypeId" : 5,
+    "trainee" : {
+      "id" : 2,
+      "dateOfBirth" : "2001-01-01",
+      "address" : "Address 2",
+      "user" : {
+        "id" : 4,
+        "firstName" : "Alexey",
+        "lastName" : "Alexeev",
+        "username" : "Alexey.Alexeev",
+        "password" : "password04",
+        "active" : true
+      }
+    },
+    "trainer" : {
+      "id" : 2,
+      "specialization" : {
+        "id" : 2,
+        "trainingName" : "CARDIO"
+      },
+      "user" : {
+        "id" : 2,
+        "firstName" : "Petr",
+        "lastName" : "Petrov",
+        "username" : "Petr.Petrov",
+        "password" : "password02",
+        "active" : true
+      }
+    },
+    "trainingName" : "CARDIO 4",
+    "trainingType" : {
+      "id" : 2,
+      "trainingName" : "CARDIO"
+    },
     "trainingDate" : "2023-01-04",
     "duration" : 1.0
   }, {
     "id" : 5,
-    "traineeId" : 3,
-    "trainerId" : 1,
-    "trainingName" : "Crossfit 5",
-    "trainingTypeId" : 10,
+    "trainee" : {
+      "id" : 3,
+      "dateOfBirth" : "2002-01-01",
+      "address" : "Address 3",
+      "user" : {
+        "id" : 5,
+        "firstName" : "Nickolay",
+        "lastName" : "Nikolaev",
+        "username" : "Nickolay.Nikolaev",
+        "password" : "password05",
+        "active" : true
+      }
+    },
+    "trainer" : {
+      "id" : 1,
+      "specialization" : {
+        "id" : 1,
+        "trainingName" : "BASIC"
+      },
+      "user" : {
+        "id" : 1,
+        "firstName" : "Ivan",
+        "lastName" : "Ivanov",
+        "username" : "Ivan.Ivanov",
+        "password" : "password01",
+        "active" : true
+      }
+    },
+    "trainingName" : "BASIC 5",
+    "trainingType" : {
+      "id" : 1,
+      "trainingName" : "BASIC"
+    },
     "trainingDate" : "2023-01-05",
     "duration" : 1.0
   }, {
     "id" : 6,
-    "traineeId" : 3,
-    "trainerId" : 2,
-    "trainingName" : "Yoga 6",
-    "trainingTypeId" : 5,
+    "trainee" : {
+      "id" : 3,
+      "dateOfBirth" : "2002-01-01",
+      "address" : "Address 3",
+      "user" : {
+        "id" : 5,
+        "firstName" : "Nickolay",
+        "lastName" : "Nikolaev",
+        "username" : "Nickolay.Nikolaev",
+        "password" : "password05",
+        "active" : true
+      }
+    },
+    "trainer" : {
+      "id" : 2,
+      "specialization" : {
+        "id" : 2,
+        "trainingName" : "CARDIO"
+      },
+      "user" : {
+        "id" : 2,
+        "firstName" : "Petr",
+        "lastName" : "Petrov",
+        "username" : "Petr.Petrov",
+        "password" : "password02",
+        "active" : true
+      }
+    },
+    "trainingName" : "CARDIO 6",
+    "trainingType" : {
+      "id" : 2,
+      "trainingName" : "CARDIO"
+    },
     "trainingDate" : "2023-01-06",
     "duration" : 1.0
   } ]

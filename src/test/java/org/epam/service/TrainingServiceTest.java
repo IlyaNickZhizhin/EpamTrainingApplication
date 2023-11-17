@@ -1,30 +1,28 @@
 package org.epam.service;
 
-import org.epam.dao.gymDao.TrainingDao;
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
+import org.epam.Supplier;
+import org.epam.dao.TrainingDaoImpl;
 import org.epam.model.gymModel.Training;
-import org.epam.model.gymModel.TrainingType;
+import org.epam.service.TraineeService;
+import org.epam.service.TrainerService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class TrainingServiceTest {
 
     @Mock
-    private static TrainingDao mockTrainingDao = mock(TrainingDao.class);
-
-    @Mock
-    private static TraineeService mockTraineeService = mock(TraineeService.class);
+    private static TrainingDaoImpl mockTrainingDao = mock(TrainingDaoImpl.class);
 
     @Mock
     private static TrainerService mockTrainerService = mock(TrainerService.class);
+
+    @Mock
+    private static TraineeService mockTraineeService = mock(TraineeService.class);
 
     private static final TrainingService trainingService = new TrainingService();
     @BeforeAll
@@ -36,17 +34,16 @@ class TrainingServiceTest {
 
     @Test
     public void testCreate() {
-        Training training = new Training();
-        training.setId(1);
-        String name = "Test";
-        Date trainingDate = new Date();
-        Number duration = 60;
-        Trainer trainer = new Trainer(TrainingType.CARDIO.getName(), 1);
-        Trainee trainee = new Trainee();
-        trainee.setId(1);
-        TrainingType trainingType = TrainingType.CARDIO;
+        Training training = Supplier.training1;
         when(mockTrainingDao.get(1)).thenReturn(training);
-        trainingService.create(name, trainingDate, duration, trainer, trainee, trainingType);
+        trainingService.create(
+                Supplier.training1.getTrainingName(),
+                Supplier.training1.getTrainingDate(),
+                Supplier.training1.getDuration(),
+                Supplier.training1.getTrainer(),
+                Supplier.training1.getTrainee(),
+                Supplier.training1.getTrainingType()
+        );
         assertEquals(training, trainingService.select(1));
     }
 

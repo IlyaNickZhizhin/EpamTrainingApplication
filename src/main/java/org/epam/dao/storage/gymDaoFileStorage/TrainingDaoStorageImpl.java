@@ -1,4 +1,4 @@
-package org.epam.dao.gymDao;
+package org.epam.dao.storage.gymDaoFileStorage;
 
 import org.epam.storageInFile.Storage;
 import org.epam.model.gymModel.Training;
@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TrainingDao extends GymDaoStorage<Training> {
+public class TrainingDaoStorageImpl extends GymDaoStorage<Training> {
 
     private static final String NAMESPACE = Training.class.getName();
     @Autowired
-    public TrainingDao(Storage<Training> storage) {
+    public TrainingDaoStorageImpl(Storage<Training> storage) {
         super(storage);
         super.namespace = NAMESPACE;
     }
@@ -21,9 +21,9 @@ public class TrainingDao extends GymDaoStorage<Training> {
         trainingToUpdate.setTrainingDate(training.getTrainingDate());
         trainingToUpdate.setTrainingName(training.getTrainingName());
         trainingToUpdate.setDuration(training.getDuration());
-        trainingToUpdate.setTrainingTypeId(training.getTrainingTypeId());
-        trainingToUpdate.setTrainerId(training.getTrainerId());
-        trainingToUpdate.setTraineeId(training.getTraineeId());
+        trainingToUpdate.setTrainingType(training.getTrainingType());
+        trainingToUpdate.setTrainer(training.getTrainer());
+        trainingToUpdate.setTrainee(training.getTrainee());
         save(trainingToUpdate);
     }
 }

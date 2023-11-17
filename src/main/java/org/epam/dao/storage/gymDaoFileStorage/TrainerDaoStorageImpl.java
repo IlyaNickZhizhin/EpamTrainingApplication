@@ -1,15 +1,15 @@
-package org.epam.dao.gymDao;
+package org.epam.dao.storage.gymDaoFileStorage;
 
 import org.epam.storageInFile.Storage;
 import org.epam.model.gymModel.Trainer;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TrainerDao extends GymDaoStorage<Trainer> {
+public class TrainerDaoStorageImpl extends GymDaoStorage<Trainer> {
 
     private static final String NAMESPACE = Trainer.class.getName();
 
-    public TrainerDao(Storage<Trainer> storage) {
+    public TrainerDaoStorageImpl(Storage<Trainer> storage) {
         super(storage);
         super.namespace = NAMESPACE;
     }
@@ -17,7 +17,7 @@ public class TrainerDao extends GymDaoStorage<Trainer> {
     @Override
     public void update(int id, Trainer trainer) {
         Trainer trainerToUpdate = storage.getGymModels().get(namespace).get(id);
-        trainerToUpdate.setUserId(trainer.getUserId());
+        trainerToUpdate.setUser(trainer.getUser());
         trainerToUpdate.setSpecialization(trainer.getSpecialization());
         save(trainerToUpdate);
     }

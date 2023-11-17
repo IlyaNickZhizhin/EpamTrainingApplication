@@ -3,6 +3,7 @@ package org.epam.mapper;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
+import org.epam.model.gymModel.TrainingType;
 import org.epam.storageInFile.Storage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,11 @@ public class FileToModelsMapperTest {
         assertFalse(storage.getUsers().isEmpty());
     }
 
+
+    //отказался от хранения в файле и тест не нужен
     @Test
     public void testInitModels() {
+        mapper.initModels(TrainingType.class);
         mapper.initModels(Trainer.class);
         mapper.initModels(Trainee.class);
         mapper.initModels(Training.class);

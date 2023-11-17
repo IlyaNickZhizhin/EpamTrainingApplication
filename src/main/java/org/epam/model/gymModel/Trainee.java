@@ -1,73 +1,42 @@
 package org.epam.model.gymModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.*;
+import org.epam.model.User;
 
 import java.util.Date;
 import java.util.Optional;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @EqualsAndHashCode
 @Getter
-public class Trainee implements Model {
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "trainees")
+public class Trainee implements Model, UserSetter {
 
-    private static final Date DEFAULT_BIRTH_DATE = new Date(0);
-    private static final String DEFAULT_ADDRESS = "not defined yet";
-
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private int id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Optional<Date> dateOfBirth;
+    @Column(name = "date_of_birth")
+    private Date dateOfBirth;
 
-    private Optional<String> address;
+    @Column(name = "address")
+    private String address;
 
-    private int userId;
-
-    public Trainee() {}
-
-    public Trainee(int userId) {
-        this.userId = userId;
-    }
-
-    public Trainee(Date dateOfBirth, int userId) {
-        this (userId);
-        this.dateOfBirth = Optional.ofNullable(dateOfBirth);
-    }
-
-    public Trainee(String address, int userId) {
-        this (userId);
-        this.address = Optional.ofNullable(address);
-    }
-
-    public Trainee(Date dateOfBirth, String address, int userId) {
-        this (dateOfBirth, userId);
-        this.address = Optional.ofNullable(address);
-    }
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User user;
 
     @Override
-    public void setId(int id) {
-        this.id = id;
+    public String getEntityName() {
+        return "trainees";
     }
 
-    public Date getDateOfBirth() {
-        if (dateOfBirth == null) dateOfBirth = Optional.ofNullable(DEFAULT_BIRTH_DATE);
-        return dateOfBirth.isPresent() ? dateOfBirth.get() : DEFAULT_BIRTH_DATE;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = Optional.ofNullable(dateOfBirth);
-    }
-
-    public String getAddress() {
-        if (address == null) address = Optional.ofNullable(DEFAULT_ADDRESS);
-        return address.isPresent() ? address.get() : DEFAULT_ADDRESS;
-    }
-
-    public void setAddress(String address) {
-        this.address = Optional.ofNullable(address);
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 }

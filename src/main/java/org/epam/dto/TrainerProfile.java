@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -25,5 +24,4 @@ public class TrainerProfile {
     private String specialization;
 
     private boolean isActive;
-
 }

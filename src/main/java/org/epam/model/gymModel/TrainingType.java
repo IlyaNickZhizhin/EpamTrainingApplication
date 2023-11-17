@@ -1,27 +1,46 @@
 package org.epam.model.gymModel;
 
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Entity
+@Table(name = "training_types")
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
-public enum TrainingType {
-    BASIC(1, "Basic"),
-    CARDIO(2, "Cardio"),
-    STRENGTH(3, "Strength"),
-    WORKOUT(4, "Workout"),
-    YOGA(5, "Yoga"),
-    PILATES(6, "Pilates"),
-    DANCE(7, "Dance"),
-    BOXING(8, "Boxing"),
-    BODYBUILDING(9, "Bodybuilding"),
-    CROSSFIT(10, "Crossfit"),
-    AEROBICS(11, "Aerobics"),
-    ZUMBA(12, "Zumba");
+@Setter
+public class TrainingType implements Model {
 
-    final int id;
-    final String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int id;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "training_name", nullable = false)
+    private TrainingName trainingName;
+    public TrainingType(TrainingName trainingName) {
+        this.trainingName = trainingName;
+    }
 
-    TrainingType(int id, String name) {
-        this.id = id;
-        this.name = name;
+    @Override
+    public String getEntityName() {
+        return "training_types";
+    }
+
+    public static enum TrainingName {
+        BASIC,
+        CARDIO,
+        STRENGTH,
+        WORKOUT,
+        YOGA,
+        PILATES,
+        DANCE,
+        BOXING,
+        BODYBUILDING,
+        CROSSFIT,
+        AEROBICS,
+        ZUMBA;
     }
 }
+
+

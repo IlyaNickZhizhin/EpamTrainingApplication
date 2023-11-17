@@ -1,0 +1,14 @@
+initFile: src/main/resources/initFile.txt
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/epam_training_app
+    username: epamtrainee
+    password: epamtraineepassword
+    driver-class-name: org.postgresql.Driver
+#    TODO ? отказаться от hibernate.cfg.xml и оставить один файл конфигурации
+#    hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+#    hibernate.ddl-auto: create-drop
+#    hibernate.show-sql: true
+#    hibernate.current_session_context_class: true
+  liquibase:
+    enabled: true

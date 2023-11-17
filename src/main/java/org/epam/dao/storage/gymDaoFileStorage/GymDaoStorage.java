@@ -1,4 +1,4 @@
-package org.epam.dao.gymDao;
+package org.epam.dao.storage.gymDaoFileStorage;
 
 import org.epam.storageInFile.Storage;
 import org.epam.dao.Dao;

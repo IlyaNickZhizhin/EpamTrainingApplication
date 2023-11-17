@@ -1,15 +1,19 @@
 package org.epam;
 
+import org.epam.config.Config;
+import org.epam.model.User;
+import org.hibernate.Session;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 public class App
 {
     public static void main(String[] args)
     {
-        /*TODO - Здесь подумать, что может пойти не так в определённых условиях:
-        */
-//        ConfigurableApplicationContext context = new org.springframework.context.annotation.AnnotationConfigApplicationContext(Storage.class);
-//        Storage storage = context.getBean(Storage.class);
-//        storage.getUsers().put("Vasilii", new User(98, "Vasilii", "Vasilii", "Vasilii", "password98", true));
-//        System.out.println(storage);
-//        context.close();
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        Session session = context.getBean("getSessionFactory", org.hibernate.SessionFactory.class).openSession();
+        User user = Supplier.user1;
+        session.save(user);
+        session.close();
+        context.close();
     }
 }

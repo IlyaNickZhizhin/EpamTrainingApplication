@@ -4,10 +4,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.Getter;
 import jakarta.annotation.PostConstruct;
 import org.epam.model.*;
-import org.epam.model.gymModel.Model;
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.Training;
+import org.epam.model.gymModel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -47,6 +44,7 @@ public class Storage<M extends Model> {
     public void init() {
         gymModels = new HashMap<>();
         users = new HashMap<>();
+        gymModels.put(TrainingType.class.getName(), new HashMap<>());
         gymModels.put(Trainer.class.getName(), new HashMap<>());
         gymModels.put(Trainee.class.getName(), new HashMap<>());
         gymModels.put(Training.class.getName(), new HashMap<>());

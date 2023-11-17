@@ -1,41 +1,45 @@
 package org.epam.model.gymModel;
 
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+import lombok.*;
+import org.epam.model.User;
+
+import java.util.List;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @EqualsAndHashCode
-public class Trainer implements Model {
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "trainers")
+public class Trainer implements Model, UserSetter {
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private int id;
-    private String specialization;
 
-    private int userId;
+    @OneToOne
+    @JoinColumn(name = "specialization")
+    private TrainingType specialization;
 
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User user;
 
-    public Trainer() {}
-
-    public Trainer(String specialization, int userId) {
+    public Trainer(TrainingType specialization, User user) {
         this.specialization = specialization;
-        this.userId = userId;
+        this.user = user;
     }
 
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
+    public void setSpecialization(TrainingType specialization) {
         this.specialization = specialization;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    @Override
+    public String getEntityName() {
+        return "trainers";
     }
 }

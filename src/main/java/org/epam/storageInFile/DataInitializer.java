@@ -6,6 +6,7 @@ import org.epam.mapper.FileToModelsMapper;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
+import org.epam.model.gymModel.TrainingType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
@@ -23,6 +24,7 @@ public class DataInitializer {
     public void init() {
         logger.info("Begin reading initial file");
             mapper.initUsers();
+            mapper.initModels(TrainingType.class);
             mapper.initModels(Trainer.class);
             mapper.initModels(Trainee.class);
             mapper.initModels(Training.class);
