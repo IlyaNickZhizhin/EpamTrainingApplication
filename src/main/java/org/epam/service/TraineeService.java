@@ -24,6 +24,8 @@ public class TraineeService extends GymAbstractService<Trainee> {
         return trainee;
     }
 
+    //TODO я не понял зачем этот метод и сделал его НЕ верно.
+
     public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
         return ((TraineeDaoImpl) super.gymDao).updateTrainersList(id, traineeForUpdateList);
     }

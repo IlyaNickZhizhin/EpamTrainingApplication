@@ -7,7 +7,6 @@ import org.epam.dao.GymAbstractDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.model.User;
 import org.epam.model.gymModel.Model;
-import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.UserSetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ public abstract class GymAbstractService<M extends Model> {
                 return upadatedModel;
             }
             throw new AccessDeniedException("Wrong password");
-        };
+        }
 
         @Transactional
         public void delete(int id, String username, String password) throws AccessDeniedException {
@@ -61,7 +60,7 @@ public abstract class GymAbstractService<M extends Model> {
                 gymDao.delete(id);
             }
             throw new AccessDeniedException("Wrong password");
-        };
+        }
 
         public M select(int id, String username, String password) throws AccessDeniedException {
             if (passwordChecker.checkPassword(username, password)) {

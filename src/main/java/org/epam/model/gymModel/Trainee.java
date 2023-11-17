@@ -6,7 +6,6 @@ import lombok.*;
 import org.epam.model.User;
 
 import java.util.Date;
-import java.util.Optional;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 

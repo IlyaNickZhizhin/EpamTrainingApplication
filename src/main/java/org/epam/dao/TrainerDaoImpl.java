@@ -1,6 +1,5 @@
 package org.epam.dao;
 
-import lombok.RequiredArgsConstructor;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;

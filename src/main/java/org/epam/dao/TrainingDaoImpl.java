@@ -1,6 +1,5 @@
 package org.epam.dao;
 
-import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
@@ -25,16 +24,13 @@ public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
     }
 
     public List<Training> getAllByTraineeAndTrainingTypes(Trainee trainee, List<TrainingType> trainingTypes) {
-        Session session = sessionFactory.openSession();
-        try {
+        try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Training where trainee = :trainee", Training.class)
                     .setParameter("trainee", trainee)
                     .getResultStream().filter(training -> trainingTypes.contains(training.getTrainingType()))
                     .collect(Collectors.toList());
         } catch (HibernateException e) {
             throw new RuntimeException("Something went wrong while getting the list of trainings", e);
-        } finally {
-            session.close();
         }
     }
 }

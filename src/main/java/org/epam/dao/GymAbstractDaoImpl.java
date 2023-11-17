@@ -1,11 +1,11 @@
 package org.epam.dao;
 
 import jakarta.transaction.Transactional;
+import org.epam.model.User;
 import org.epam.model.gymModel.Model;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +18,9 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
     protected Class<M> modelClass;
     @Autowired
     protected SessionFactory sessionFactory;
+
+    @Autowired
+    private UserDaoImpl userDao;
 
     @Override
     public void create(M model) {
@@ -45,10 +48,11 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
     }
 
     public M getByUserId(int userId) {
+        User user = userDao.get(userId);
         Session session = sessionFactory.getCurrentSession();
         try {
-            return session.createQuery("from " + entity.getEntityName()+ " where user_id = :userId", modelClass)
-                    .setParameter("userId", userId)
+            return session.createQuery("from " + entity.getEntityName()+ " where User = :user", modelClass)
+                    .setParameter("user", user)
                     .getSingleResult();
         } catch (HibernateException e) {
             throw new RuntimeException("Can't get" + entity.getEntityName() + "by user id", e);
@@ -58,6 +62,6 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
     }
     public List<M> getAll(){
         return sessionFactory.getCurrentSession()
-                .createQuery("from " + entity.getEntityName() + "where *", modelClass).list();
+                .createQuery("from " + entity.getEntityName(), modelClass).list();
     }
 }

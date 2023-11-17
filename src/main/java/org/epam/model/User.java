@@ -38,4 +38,8 @@ public class User implements Model {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
+    @Override
+    public String getEntityName() {
+        return "users";
+    }
 }

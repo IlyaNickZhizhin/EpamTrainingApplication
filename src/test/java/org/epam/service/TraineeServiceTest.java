@@ -7,7 +7,6 @@ import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
-import org.epam.service.storage.TraineeStorageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

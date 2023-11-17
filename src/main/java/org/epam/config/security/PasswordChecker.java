@@ -1,9 +1,7 @@
 package org.epam.config.security;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.epam.dao.UserDaoImpl;
-import org.epam.storageInFile.Storage;
 import org.epam.model.User;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,5 @@
 package org.epam.service;
 
-import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.model.gymModel.Trainee;

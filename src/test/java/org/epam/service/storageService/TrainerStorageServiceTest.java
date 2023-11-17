@@ -6,7 +6,6 @@ import org.epam.dao.storage.UserDaoStorageImpl;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.User;
 
-import org.epam.service.TrainerService;
 import org.epam.service.storage.TrainerStorageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

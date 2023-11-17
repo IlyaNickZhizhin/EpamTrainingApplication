@@ -3,8 +3,6 @@ package org.epam.service;
 import org.epam.Supplier;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.model.gymModel.Training;
-import org.epam.service.TraineeService;
-import org.epam.service.TrainerService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

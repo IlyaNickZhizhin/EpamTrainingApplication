@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.epam.model.User;
 
-import java.util.List;
-
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @EqualsAndHashCode
