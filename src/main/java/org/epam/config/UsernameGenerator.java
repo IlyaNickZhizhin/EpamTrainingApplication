@@ -1,8 +1,6 @@
 package org.epam.config;
 
 import org.epam.dao.UserDaoImpl;
-import org.epam.model.User;
-import org.epam.storageInFile.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;

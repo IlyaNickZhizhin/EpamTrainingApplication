@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
-import org.epam.model.gymModel.TrainingType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

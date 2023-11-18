@@ -1,10 +1,8 @@
 package org.epam.service;
 
 import org.epam.dao.TrainingDaoImpl;
-import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.exceptions.ProhibitedAction;
 import org.epam.exceptions.VerificationException;
-import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
