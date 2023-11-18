@@ -11,7 +11,7 @@ class PasswordGeneratorTest {
     @Test
     public void testDefaultPassword() {
         PasswordGenerator mockGenerator = mock(PasswordGenerator.class);
-        String password = mockGenerator.getDefaultPassword();
+        String password = PasswordGenerator.getDefaultPassword();
         assertNotNull(password);
         assertEquals(10, password.length());
     }

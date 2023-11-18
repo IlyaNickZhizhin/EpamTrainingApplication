@@ -56,9 +56,4 @@ public class Trainee implements Model, UserSetter {
         trainings = new ArrayList<>();
     }
 
-    @Override
-    public String getEntityName() {
-        return "trainees";
-    }
-
 }

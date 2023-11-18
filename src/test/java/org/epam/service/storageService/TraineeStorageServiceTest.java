@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import org.epam.Supplier;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -63,7 +65,7 @@ class TraineeStorageServiceTest {
 
     @Test
     public void testDelete() {
-        Trainee trainee = Supplier.trainee2;
+        Trainee trainee = Supplier.trainee4;
         String name = Supplier.user4.getFirstName();
         String surname = Supplier.user4.getLastName();
         when(mockUserDaoStorageImpl.setNewUser(name, surname)).thenReturn(Supplier.user4);

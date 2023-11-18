@@ -37,11 +37,6 @@ public class TrainingType implements Model {
         this.trainingName = trainingName;
     }
 
-    @Override
-    public String getEntityName() {
-        return "training_types";
-    }
-
     public static enum TrainingName {
         BASIC,
         CARDIO,

@@ -37,16 +37,15 @@ class TrainingServiceTest {
         Training training = Supplier.training1;
         when(mockTrainingDao.get(1)).thenReturn(training);
         trainingService.create(
-                Supplier.training1.getTrainingName(),
-                Supplier.training1.getTrainingDate(),
-                Supplier.training1.getDuration(),
-                Supplier.training1.getTrainer(),
-                Supplier.training1.getTrainee(),
-                Supplier.training1.getTrainingType()
-        );
-        assertEquals(training, trainingService.select(1,
                 Supplier.training1.getTrainer().getUser().getUsername(),
-                Supplier.training1.getTrainer().getUser().getPassword()));
+                Supplier.training1.getTrainer().getUser().getPassword(),
+                Supplier.training1.getTrainee().getUser().getUsername(),
+                Supplier.training1.getTrainee().getUser().getPassword(),
+                Supplier.training1.getTrainingName(),
+                Supplier.training1.getTrainingType(),
+                Supplier.training1.getTrainingDate(),
+                Supplier.training1.getDuration());
+        assertEquals(training, trainingService.select(1));
     }
 
     @Test
@@ -56,8 +55,6 @@ class TrainingServiceTest {
         training.setTrainer(Supplier.training1.getTrainer());
         training.setTrainee(Supplier.training1.getTrainee());
         when(mockTrainingDao.get(1)).thenReturn(training);
-        assertEquals(training, trainingService.select(1,
-                Supplier.training1.getTrainer().getUser().getUsername(),
-                Supplier.training1.getTrainer().getUser().getPassword()));
+        assertEquals(training, trainingService.select(1));
     }
 }

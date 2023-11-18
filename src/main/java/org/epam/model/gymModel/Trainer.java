@@ -47,9 +47,5 @@ public class Trainer implements Model, UserSetter {
         this.specialization = specialization;
     }
 
-    @Override
-    public String getEntityName() {
-        return "trainers";
-    }
 
 }

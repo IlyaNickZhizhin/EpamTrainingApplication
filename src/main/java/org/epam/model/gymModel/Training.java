@@ -52,8 +52,4 @@ public class Training implements Model {
     @Column(name = "duration", nullable = false)
     private Number duration;
 
-    @Override
-    public String getEntityName() {
-        return "trainings";
-    }
 }
