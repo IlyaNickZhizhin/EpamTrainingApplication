@@ -1,5 +1,6 @@
 package org.epam.service.storageService;
 
+import org.epam.Supplier;
 import org.epam.dao.storage.UserDaoStorageImpl;
 import org.epam.dao.storage.gymDaoFileStorage.TraineeDaoStorageImpl;
 import org.epam.model.User;
@@ -8,8 +9,6 @@ import org.epam.service.storage.TraineeStorageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-
-import org.epam.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
