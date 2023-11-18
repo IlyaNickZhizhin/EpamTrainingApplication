@@ -1,14 +1,16 @@
 package org.epam.dao.storage.gymDaoFileStorage;
 
+import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;
 import org.epam.storageInFile.Storage;
-import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

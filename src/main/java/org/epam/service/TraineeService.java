@@ -2,16 +2,13 @@ package org.epam.service;
 
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
-import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;
-import org.epam.model.gymModel.Trainee;
 import org.epam.model.User;
+import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
 

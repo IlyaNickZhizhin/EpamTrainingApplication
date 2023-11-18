@@ -1,8 +1,8 @@
 package org.epam.dao.storage.gymDaoFileStorage;
 
-import org.epam.storageInFile.Storage;
 import org.epam.dao.Dao;
 import org.epam.model.gymModel.Model;
+import org.epam.storageInFile.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 

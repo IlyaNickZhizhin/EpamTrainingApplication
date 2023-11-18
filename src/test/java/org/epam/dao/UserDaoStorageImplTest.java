@@ -3,13 +3,16 @@ package org.epam.dao;
 import org.epam.Supplier;
 import org.epam.config.UsernameGenerator;
 import org.epam.dao.storage.UserDaoStorageImpl;
-import org.epam.storageInFile.Storage;
 import org.epam.model.User;
+import org.epam.storageInFile.Storage;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

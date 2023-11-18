@@ -1,8 +1,6 @@
 package org.epam.mapper;
 
-import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 import org.epam.storageInFile.Storage;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class FileToModelsMapperTest {
 

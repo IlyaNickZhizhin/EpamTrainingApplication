@@ -1,11 +1,10 @@
 package org.epam.service.storageService;
 
 import org.epam.Supplier;
-import org.epam.dao.storage.gymDaoFileStorage.TrainerDaoStorageImpl;
 import org.epam.dao.storage.UserDaoStorageImpl;
-import org.epam.model.gymModel.Trainer;
+import org.epam.dao.storage.gymDaoFileStorage.TrainerDaoStorageImpl;
 import org.epam.model.User;
-
+import org.epam.model.gymModel.Trainer;
 import org.epam.service.storage.TrainerStorageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,9 @@ import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class TrainerStorageServiceTest {
 

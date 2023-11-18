@@ -1,22 +1,18 @@
 package org.epam.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.GymAbstractDaoImpl;
 import org.epam.dao.UserDaoImpl;
-import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.exceptions.ProhibitedAction;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Model;
-import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.UserSetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.ParameterizedType;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 

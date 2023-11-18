@@ -7,6 +7,7 @@ import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 
 import java.time.LocalDate;
+
 import static org.epam.model.gymModel.TrainingType.TrainingName.BASIC;
 import static org.epam.model.gymModel.TrainingType.TrainingName.CARDIO;
 

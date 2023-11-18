@@ -4,9 +4,8 @@ package org.epam.service;
 import org.epam.Supplier;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDaoImpl;
-import org.epam.model.gymModel.Trainer;
 import org.epam.model.User;
-
+import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,7 +14,9 @@ import java.nio.file.AccessDeniedException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class TrainerServiceTest {
 

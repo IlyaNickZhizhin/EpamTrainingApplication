@@ -1,9 +1,9 @@
 package org.epam.dao.storage;
 
-import org.epam.storageInFile.Storage;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
+import org.epam.storageInFile.Storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

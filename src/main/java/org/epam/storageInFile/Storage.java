@@ -1,10 +1,14 @@
 package org.epam.storageInFile;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.Getter;
-import jakarta.annotation.PostConstruct;
-import org.epam.model.*;
-import org.epam.model.gymModel.*;
+import org.epam.model.User;
+import org.epam.model.gymModel.Model;
+import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.Training;
+import org.epam.model.gymModel.TrainingType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

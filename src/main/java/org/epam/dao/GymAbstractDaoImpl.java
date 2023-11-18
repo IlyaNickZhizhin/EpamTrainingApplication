@@ -3,8 +3,6 @@ package org.epam.dao;
 import jakarta.transaction.Transactional;
 import org.epam.model.User;
 import org.epam.model.gymModel.Model;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
