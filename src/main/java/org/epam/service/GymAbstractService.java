@@ -83,8 +83,7 @@ public abstract class GymAbstractService<M extends Model> {
 
     protected void changeActive(String username){
         User user = userDao.getByUsername(username);
-        if (user.isActive()) user.setActive(false);
-        else user.setActive(true);
+        user.setActive(!user.isActive());
         userDao.update(user.getId(), user);
     }
 

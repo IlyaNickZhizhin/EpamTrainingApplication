@@ -36,7 +36,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    public void testCreate() throws AccessDeniedException {
+    public void testCreate(){
         Trainee trainee = new Trainee();
         trainee.setId(1);
         String name = "Test";
@@ -48,7 +48,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    public void testUpdate() throws AccessDeniedException {
+    public void testUpdate(){
         Trainee trainee = new Trainee();
         trainee.setId(1);
         String name = "Test";
@@ -64,7 +64,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    public void testDelete() throws AccessDeniedException {
+    public void testDelete() {
         Trainee trainee = Supplier.trainee4;
         String name = Supplier.user4.getFirstName();
         String surname = Supplier.user4.getLastName();
@@ -76,7 +76,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    public void testSelect() throws AccessDeniedException {
+    public void testSelect() {
         Trainee trainee = new Trainee();
         trainee.setId(1);
         trainee.setUser(Supplier.user1);

@@ -51,16 +51,14 @@ public class UserDaoImpl {
 
     public User get(int id) {
         Session session = factory.getCurrentSession();
-        User user = session.get(User.class, id);
-        return user;
+        return session.get(User.class, id);
     }
 
     public User getByUsername(String username) {
         Session session = factory.getCurrentSession();
-        User user = session.createQuery("from User where username = :username", User.class)
+        return session.createQuery("from User where username = :username", User.class)
                 .setParameter("username", username)
                 .getSingleResultOrNull();
-        return user;
     }
 
     public User setNewUser(String firstName, String lastName) {

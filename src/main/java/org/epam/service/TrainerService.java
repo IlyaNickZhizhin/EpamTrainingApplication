@@ -35,7 +35,7 @@ public class TrainerService extends GymAbstractService<Trainer> {
     @Override
     protected Trainer createModel(Object user, Object... parameters) {
         Trainer trainer = new Trainer();
-        trainer.setUser((User) user);;
+        trainer.setUser((User) user);
         trainer.setSpecialization((TrainingType) parameters[0]);
         return trainer;
     }

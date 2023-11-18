@@ -42,7 +42,7 @@ public class TrainingService extends GymAbstractService<Training> {
     }
 
     public List<Training> getTrainingsByTraineeAndTrainingTypesForTrainee(
-            List<TrainingType> types, String traineeUsername, String traineePassword) throws AccessDeniedException {
+            List<TrainingType> types, String traineeUsername, String traineePassword) {
         Trainee trainee = traineeService.selectByUsername(traineeUsername, traineePassword);
         return ((TrainingDaoImpl) gymDao).getAllByTraineeAndTrainingTypes(trainee, types);
     }
@@ -75,11 +75,11 @@ public class TrainingService extends GymAbstractService<Training> {
             ee = (Trainee) parameters[0];
             existing = TRAINERgetTrainingsByTrainerAndTrainingTypesPRIVATE(er, List.of(type));
         }
-        existing.stream()
+        long numOfTrainings = existing.stream()
                 .filter(tr -> tr.getTrainingDate().equals(date))
                 .filter(tr -> tr.getDuration().equals(duration))
-                .filter(tr -> tr.getTrainingName().equals(ingName));
-        if (existing.size()>0) {
+                .filter(tr -> tr.getTrainingName().equals(ingName)).count();
+        if (numOfTrainings > 0) {
             throw new ProhibitedAction("This training already exists");
         }
         training.setTrainer(er);

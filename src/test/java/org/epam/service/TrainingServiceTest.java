@@ -33,7 +33,7 @@ class TrainingServiceTest {
     }
 
     @Test
-    public void testCreate() throws AccessDeniedException {
+    public void testCreate() {
         Training training = Supplier.training1;
         when(mockTrainingDao.get(1)).thenReturn(training);
         trainingService.create(
@@ -49,7 +49,7 @@ class TrainingServiceTest {
     }
 
     @Test
-    public void testSelect() throws AccessDeniedException {
+    public void testSelect() {
         Training training = new Training();
         training.setId(1);
         training.setTrainer(Supplier.training1.getTrainer());
