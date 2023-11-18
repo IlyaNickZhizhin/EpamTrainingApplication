@@ -7,9 +7,6 @@ import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 
 import java.time.LocalDate;
-
-import static org.epam.Supplier.trainee3;
-import static org.epam.Supplier.trainee4;
 import static org.epam.model.gymModel.TrainingType.TrainingName.BASIC;
 import static org.epam.model.gymModel.TrainingType.TrainingName.CARDIO;
 
@@ -45,6 +42,12 @@ public interface Supplier {
     User user4 =
             new User(4, trainee4_FirstName, trainee4_LastName, trainee4_Username, trainee4_Password, trainee4_Active);
 
+    User user5 =
+            new User(5, trainee5_FirstName, trainee5_LastName, trainee5_Username, trainee5_Password, trainee5_Active);
+
+    User user6 =
+            new User(6, trainee6_FirstName, trainee6_LastName, trainee6_Username, trainee6_Password, trainee6_Active);
+
     TrainingType.TrainingName trainingName1 = BASIC; TrainingType trainingType1 = new TrainingType(1, trainingName1);
     TrainingType.TrainingName trainingName2 = CARDIO; TrainingType trainingType2 = new TrainingType(2, trainingName2);
 
@@ -52,9 +55,15 @@ public interface Supplier {
 
     Trainer trainer2 = new Trainer(2, trainingType2, user2);
 
-    Trainee trainee1 = new Trainee(1, LocalDate.of(2000, 1, 1), "Tashkent", user3);
+    Trainee trainee3 = new Trainee(1, trainee3_Birthday, trainee3_Address, user3);
 
-    Trainee trainee2 = new Trainee(2, LocalDate.of(2000, 2, 2), "Samarkand", user4);
+    Trainee trainee4 = new Trainee(2, trainee4_Birthday, trainee4_Address, user4);
+
+    Trainee trainee5 = new Trainee(3, trainee5_Birthday, null, user5);
+
+    Trainee trainee6 = new Trainee(4, null, trainee6_Address, user6);
+
+
 
     Training training1 = new Training(1, trainee3, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
 

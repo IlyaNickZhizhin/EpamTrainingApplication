@@ -1,7 +1,22 @@
 package org.epam.model.gymModel;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "training_types")
@@ -13,7 +28,7 @@ import lombok.*;
 public class TrainingType implements Model {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     int id;
     @Enumerated(EnumType.STRING)
     @Column(name = "training_name", nullable = false)
@@ -40,6 +55,10 @@ public class TrainingType implements Model {
         CROSSFIT,
         AEROBICS,
         ZUMBA;
+
+        public static List<TrainingName> gelList() {
+            return Arrays.asList(values());
+        }
     }
 }
 

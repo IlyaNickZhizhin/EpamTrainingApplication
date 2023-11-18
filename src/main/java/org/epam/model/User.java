@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.epam.model.gymModel.Model;
 
 import static jakarta.persistence.GenerationType.IDENTITY;

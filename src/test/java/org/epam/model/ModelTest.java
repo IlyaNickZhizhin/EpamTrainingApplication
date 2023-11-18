@@ -15,7 +15,7 @@ public class ModelTest {
     @Test
     public void testUserEqualsAndHashCode() {
         User user1 = Supplier.user1;
-        User user2 = Supplier.user1;
+        User user2 = user1;
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
         user2 = Supplier.user2;
@@ -45,11 +45,11 @@ public class ModelTest {
 
     @Test
     public void testTraineeEqualsAndHashCode() {
-        Trainee trainee1 = Supplier.trainee1;
-        Trainee trainee2 = Supplier.trainee1;
+        Trainee trainee1 = Supplier.trainee3;
+        Trainee trainee2 = Supplier.trainee3;
         assertEquals(trainee1, trainee2);
         assertEquals(trainee1.hashCode(), trainee2.hashCode());
-        trainee2 = Supplier.trainee2;
+        trainee2 = Supplier.trainee4;
         assertNotEquals(trainee1, trainee2);
         assertNotEquals(trainee1.hashCode(), trainee2.hashCode());
     }

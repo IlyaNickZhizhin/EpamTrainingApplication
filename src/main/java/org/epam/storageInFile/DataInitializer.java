@@ -26,8 +26,8 @@ public class DataInitializer {
             mapper.initUsers();
             mapper.initModels(TrainingType.class);
             mapper.initModels(Trainer.class);
-            mapper.initModels(Trainee.class);
-            mapper.initModels(Training.class);
+            //mapper.initModels(Training.class);
+            //mapper.initModels(Trainee.class);
     }
 
 }

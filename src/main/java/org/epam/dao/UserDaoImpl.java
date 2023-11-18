@@ -6,6 +6,9 @@ import lombok.extern.java.Log;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.model.User;
+import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.UserSetter;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,96 +25,44 @@ public class UserDaoImpl {
 
     public User create(User user) {
         log.info("Creating user with first name: " + user.getFirstName() + " and last name: " + user.getLastName());
-        try {
-            save(user);
-        } catch (HibernateException e) {
-            throw new RuntimeException("Can't create user", e);
-        }
+        factory.getCurrentSession().persist(user);
         return user;
     }
 
     public void save(User user) {
-        Session session = factory.openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            session.persist(user);
-            transaction.commit();
-        } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-                throw new RuntimeException("Can't save user", e);
-            }
-        } finally {
-            session.close();
-        }
+        log.info("Creating user with first name: " + user.getFirstName() + " and last name: " + user.getLastName());
+        factory.getCurrentSession().persist(user);
     }
 
     public void update(int id, User user) {
-        Session session = factory.openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            User userToUpdate = session.get(User.class, id);
-            userToUpdate.setFirstName(user.getFirstName());
-            userToUpdate.setLastName(user.getLastName());
-            userToUpdate.setUsername(user.getUsername());
-            userToUpdate.setPassword(user.getPassword());
-            userToUpdate.setActive(user.isActive());
-            session.merge(userToUpdate);
-            transaction.commit();
-        } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-                throw new RuntimeException("Can't update user", e);
-            }
-        } finally {
-            session.close();
-        }
+        Session session = factory.getCurrentSession();
+        User userToUpdate = session.get(User.class, id);
+        userToUpdate.setFirstName(user.getFirstName());
+        userToUpdate.setLastName(user.getLastName());
+        userToUpdate.setUsername(user.getUsername());
+        userToUpdate.setPassword(user.getPassword());
+        userToUpdate.setActive(user.isActive());
+        session.merge(userToUpdate);
     }
 
     public void delete(int id) {
-        Session session = factory.openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            User userToDelete = session.get(User.class, id);
-            session.remove(userToDelete);
-            transaction.commit();
-        } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-                throw new RuntimeException("Can't delete user", e);
-            }
-        } finally {
-            session.close();
-        }
+        Session session = factory.getCurrentSession();
+        User user = session.get(User.class, id);
+        session.delete(user);
     }
 
     public User get(int id) {
-        Session session = factory.openSession();
-        try {
-            User user = session.get(User.class, id);
-            return user;
-        } catch (HibernateException e) {
-            throw new RuntimeException("Can't get user", e);
-        } finally {
-            session.close();
-        }
+        Session session = factory.getCurrentSession();
+        User user = session.get(User.class, id);
+        return user;
     }
 
-    public User get(String username) {
-        Session session = factory.openSession();
-        try {
-            User user = session.createQuery("from User where username = :username", User.class)
-                    .setParameter("username", username)
-                    .getSingleResult();
-            return user;
-        } catch (HibernateException e) {
-            throw new RuntimeException("Can't get user", e);
-        } finally {
-            session.close();
-        }
+    public User getByUsername(String username) {
+        Session session = factory.getCurrentSession();
+        User user = session.createQuery("from User where username = :username", User.class)
+                .setParameter("username", username)
+                .getSingleResultOrNull();
+        return user;
     }
 
     public User setNewUser(String firstName, String lastName) {
@@ -121,7 +72,19 @@ public class UserDaoImpl {
         user.setUsername(UsernameGenerator.getDefaultUsername(firstName, lastName));
         user.setPassword(PasswordGenerator.getDefaultPassword());
         user.setActive(true);
-        save(user);
-        return user;
+        return create(user);
+    }
+
+    public UserSetter whoIsUser(String username) {
+        User principal = getByUsername(username);
+        Session session = factory.getCurrentSession();
+        UserSetter userSetter = session.createQuery("from Trainee where user = :user", Trainee.class)
+                .setParameter("user", principal)
+                .getSingleResultOrNull();
+        return userSetter == null ?
+                session.createQuery("from Trainer where user = :user", Trainer.class)
+                        .setParameter("user", principal)
+                        .getSingleResult() :
+                userSetter;
     }
 }

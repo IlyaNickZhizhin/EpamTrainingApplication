@@ -9,15 +9,22 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Repository
 public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
 
-    protected M entity;
     protected Class<M> modelClass;
     @Autowired
     protected SessionFactory sessionFactory;
+
+    public GymAbstractDaoImpl() {
+        this.modelClass = (Class<M>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+
 
     @Autowired
     private UserDaoImpl userDao;
@@ -49,19 +56,13 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
 
     public M getByUserId(int userId) {
         User user = userDao.get(userId);
-        Session session = sessionFactory.getCurrentSession();
-        try {
-            return session.createQuery("from " + entity.getEntityName()+ " where User = :user", modelClass)
-                    .setParameter("user", user)
-                    .getSingleResult();
-        } catch (HibernateException e) {
-            throw new RuntimeException("Can't get" + entity.getEntityName() + "by user id", e);
-        } finally {
-            session.close();
-        }
+        return sessionFactory.getCurrentSession()
+                .createQuery("from " + modelClass.getSimpleName() + " where user = :user", modelClass)
+                .setParameter("user", user)
+                .getSingleResult();
     }
     public List<M> getAll(){
         return sessionFactory.getCurrentSession()
-                .createQuery("from " + entity.getEntityName(), modelClass).list();
+                .createQuery("from " + modelClass.getName(), modelClass).list();
     }
 }

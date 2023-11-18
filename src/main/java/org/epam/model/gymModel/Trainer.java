@@ -1,7 +1,17 @@
 package org.epam.model.gymModel;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.epam.model.User;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -12,6 +22,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
 @Table(name = "trainers")
 public class Trainer implements Model, UserSetter {
 
@@ -40,4 +51,5 @@ public class Trainer implements Model, UserSetter {
     public String getEntityName() {
         return "trainers";
     }
+
 }

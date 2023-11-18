@@ -1,15 +1,20 @@
 package org.epam.service;
 
 import org.epam.dao.TrainingDaoImpl;
+import org.epam.exceptions.InvaildDeveloperException;
+import org.epam.exceptions.ProhibitedAction;
+import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
+import org.epam.model.gymModel.UserSetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -32,43 +37,11 @@ public class TrainingService extends GymAbstractService<Training> {
         this.trainerService = trainerService;
     }
 
-    public Training createByTrainer(String Name, Date trainingDate, Number duration, Trainer trainer,
-                                    Trainee trainee, TrainingType trainingType,
-                                    String trainerUsername, String trainerPassword) throws AccessDeniedException {
-        if (super.passwordChecker.checkPassword(trainerUsername, trainerPassword)) {
-            return create(Name, trainingDate, duration, trainer, trainee, trainingType);
-        }
-        throw new AccessDeniedException("Wrong password");
-    }
-
-    public Training createByTrainee(String Name, Date trainingDate, Number duration, Trainer trainer,
-                                    Trainee trainee, TrainingType trainingType,
-                                    String traineeUsername, String traineePassword) throws AccessDeniedException {
-        if (super.passwordChecker.checkPassword(traineeUsername, traineePassword)) {
-            return create(Name, trainingDate, duration, trainer, trainee, trainingType);
-        }
-        throw new AccessDeniedException("Wrong password");
-    }
-
-    public Training create(String Name, Date trainingDate, Number duration, Trainer trainer, Trainee trainee, TrainingType trainingType) {
-        Training training = new Training();
-        training.setTrainingName(Name);
-        training.setTrainingDate(trainingDate);
-        training.setDuration(duration);
-        training.setTrainer(trainer);
-        training.setTrainee(trainee);
-        training.setTrainingType(trainingType);
-        gymDao.save(training);
-        return training;
-    }
-
-    public List<Training> getTrainingsByTraineeAndTrainingTypesForTrainer(Trainee trainee, List<TrainingType> types,
-                                                                          String trainerUsername, String trainerPassword)
-            throws AccessDeniedException {
-        if (super.passwordChecker.checkPassword(trainerUsername, trainerPassword)) {
-            return ((TrainingDaoImpl) gymDao).getAllByTraineeAndTrainingTypes(trainee, types);
-        }
-        throw new AccessDeniedException("Wrong password");
+    public List<Training> getTrainingsByTrainerAndTrainingTypesForTrainer(
+            List<TrainingType> types, String trainerUsername, String trainerPassword) throws VerificationException {
+        super.verify(trainerUsername, trainerPassword);
+        Trainer trainer = trainerService.selectByUsername(trainerUsername, trainerPassword);
+        return TRAINERgetTrainingsByTrainerAndTrainingTypesPRIVATE(trainer, types);
     }
 
     public List<Training> getTrainingsByTraineeAndTrainingTypesForTrainee(
@@ -77,28 +50,57 @@ public class TrainingService extends GymAbstractService<Training> {
         return ((TrainingDaoImpl) gymDao).getAllByTraineeAndTrainingTypes(trainee, types);
     }
 
-    @Override
-    public Training update(int id, Training upadatedModel, String oldUsername, String oldPassword) {
-        throw new UnsupportedOperationException("No it is not possible to update training");
+
+    //TODO сделать так, чтоб если такая тренировка в базе уже есть, он не создавалась второй раз, а только обновляла
+    public Training create(String username, String password,
+                           UserSetter opponent, String trainingName,
+                           TrainingType trainingType, LocalDate trainingDate,
+                           Number duration) {
+        return super.create(username, password, opponent, trainingName, trainingType, trainingDate, duration);
     }
 
     @Override
-    public void delete(int id, String username, String password) {
-        throw new UnsupportedOperationException("No it is not possible to delete training");
+    protected Training createModel(Object who, Object... parameters) {
+        Training training = new Training();
+        List<Training> existing;
+        Trainee ee;
+        Trainer er;
+        String ingName = (String) parameters[1];
+        TrainingType type = (TrainingType) parameters[2];
+        LocalDate date = (LocalDate) parameters[3];
+        Number duration = (Number) parameters[4];
+        if (who.getClass().equals(Trainee.class)) {
+            ee = (Trainee) who;
+            er = (Trainer) parameters[0];
+            existing = TRAINEEgetTrainingsByTraineeAndTrainingTypesPRIVATE(ee, List.of(type));
+        } else {
+            er = (Trainer) who;
+            ee = (Trainee) parameters[0];
+            existing = TRAINERgetTrainingsByTrainerAndTrainingTypesPRIVATE(er, List.of(type));
+        }
+        existing.stream()
+                .filter(tr -> tr.getTrainingDate().equals(date))
+                .filter(tr -> tr.getDuration().equals(duration))
+                .filter(tr -> tr.getTrainingName().equals(ingName));
+        if (existing.size()>0) {
+            throw new ProhibitedAction("This training already exists");
+        }
+        training.setTrainer(er);
+        training.setTrainee(ee);
+        training.setTrainingName(ingName);
+        training.setTrainingType(type);
+        training.setTrainingDate(date);
+        training.setDuration(duration);
+        return training;
     }
 
-    @Override
-    protected Training createUserSetter(User user) {
-        throw new UnsupportedOperationException("No it is not possible to create user setter for training");
+    private List<Training> TRAINERgetTrainingsByTrainerAndTrainingTypesPRIVATE(Trainer trainer,
+                                                                               List<TrainingType> types) {
+            return ((TrainingDaoImpl) gymDao).getAllByTrainerAndTrainingTypes(trainer, types);
     }
 
-    @Override
-    public Training selectByUsername(String username, String password) {
-        throw new UnsupportedOperationException("No it is not possible to select training by username");
-    }
-
-    @Override
-    public void changePassword(String username, String password) {
-        throw new UnsupportedOperationException("No it is not possible to select training by username");
+    private List<Training> TRAINEEgetTrainingsByTraineeAndTrainingTypesPRIVATE (Trainee trainee,
+                                                                                List<TrainingType> types) {
+        return ((TrainingDaoImpl) gymDao).getAllByTraineeAndTrainingTypes(trainee, types);
     }
 }

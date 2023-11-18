@@ -81,7 +81,8 @@ class UserDaoStorageImplTest {
     @Test
     public void testSetNewUser() {
         Storage<User> mockStorage = mock(Storage.class);
-        new UsernameGenerator(mockStorage);
+        UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
+        new UsernameGenerator(mockUserDao);
         when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDaoStorageImpl userDaoStorageImpl = new UserDaoStorageImpl(mockStorage);
         User user = userDaoStorageImpl.setNewUser("Test", "User");

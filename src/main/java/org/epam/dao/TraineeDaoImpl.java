@@ -1,5 +1,6 @@
 package org.epam.dao;
 
+import jakarta.transaction.Transactional;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -9,7 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee>{
+@Transactional
+public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
 
     @Override
     public void update(int id, Trainee updatedTrainee) {

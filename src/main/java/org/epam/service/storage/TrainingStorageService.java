@@ -8,6 +8,7 @@ import org.epam.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -31,7 +32,7 @@ public class TrainingStorageService {
 
 
 
-    public Training create(String Name, Date trainingDate, Number duration, Trainer trainer, Trainee trainee, TrainingType trainingType) {
+    public Training create(String Name, LocalDate trainingDate, Number duration, Trainer trainer, Trainee trainee, TrainingType trainingType) {
         Training training = new Training();
         training.setTrainingName(Name);
         training.setTrainingDate(trainingDate);

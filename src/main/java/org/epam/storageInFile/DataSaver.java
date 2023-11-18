@@ -35,12 +35,12 @@ public class DataSaver {
         data.put(mapper.takeDataName(Trainer.class.getName()),
                 new ArrayList<>(mapper.getStorage().getModels(Trainer.class.getName()).values()));
         logger.info("Trainers data saved");
-        data.put(mapper.takeDataName(Trainee.class.getName()),
-                new ArrayList<>(mapper.getStorage().getModels(Trainee.class.getName()).values()));
-        logger.info("Trainees data saved");
-        data.put(mapper.takeDataName(Training.class.getName()),
-                new ArrayList<>(mapper.getStorage().getModels(Training.class.getName()).values()));
-        logger.info("Trainings data saved");
+//        data.put(mapper.takeDataName(Trainee.class.getName()),
+//                new ArrayList<>(mapper.getStorage().getModels(Trainee.class.getName()).values()));
+//        logger.info("Trainees data saved");
+//        data.put(mapper.takeDataName(Training.class.getName()),
+//                new ArrayList<>(mapper.getStorage().getModels(Training.class.getName()).values()));
+//        logger.info("Trainings data saved");
 
         try {
             logger.info("Begin saving data");

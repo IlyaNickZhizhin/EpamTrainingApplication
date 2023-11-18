@@ -1,7 +1,5 @@
 package org.epam.service;
 
-import org.epam.service.TraineeService;
-
 import org.epam.Supplier;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDaoImpl;
@@ -10,6 +8,8 @@ import org.epam.model.gymModel.Trainee;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+
+import java.nio.file.AccessDeniedException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -36,7 +36,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    public void testCreate() {
+    public void testCreate() throws AccessDeniedException {
         Trainee trainee = new Trainee();
         trainee.setId(1);
         String name = "Test";
@@ -44,11 +44,11 @@ class TraineeServiceTest {
         when(mockUserDao.setNewUser(name, suname)).thenReturn(new User(1, name, suname, (name+"."+suname), "password01", true));
         when(mockTraineeDao.get(1)).thenReturn(trainee);
         traineeService.create("Test", "Trainee");
-        assertEquals(trainee, traineeService.select(1));
+        assertEquals(trainee, traineeService.select((name+"."+suname), "password01", 1));
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws AccessDeniedException {
         Trainee trainee = new Trainee();
         trainee.setId(1);
         String name = "Test";
@@ -58,28 +58,30 @@ class TraineeServiceTest {
         updatedTrainee.setAddress("Test address");
         when(mockTraineeDao.get(1)).thenReturn(updatedTrainee);
         traineeService.create("Test", "Trainee");
-        traineeService.update(1, updatedTrainee);
-        assertEquals(updatedTrainee, traineeService.select(1));
-        assertNotEquals(trainee, traineeService.select(1));
+        traineeService.update((name+"."+surname), "password01", 1, updatedTrainee);
+        assertEquals(updatedTrainee, traineeService.select((name+"."+surname), "password01", 1 ));
+        assertNotEquals(trainee, traineeService.select((name+"."+surname), "password01", 1 ));
     }
 
     @Test
-    public void testDelete() {
-        Trainee trainee = Supplier.trainee2;
+    public void testDelete() throws AccessDeniedException {
+        Trainee trainee = Supplier.trainee4;
         String name = Supplier.user4.getFirstName();
         String surname = Supplier.user4.getLastName();
         when(mockUserDao.setNewUser(name, surname)).thenReturn(Supplier.user4);
         when(mockUserDao.create(any(User.class))).thenReturn(Supplier.user4);
         traineeService.create(name, surname);
-        traineeService.delete(2);
-        assertNull(traineeService.select(2));
+        traineeService.delete(Supplier.user4.getUsername(), Supplier.user4.getPassword(), 2);
+        assertNull(traineeService.select(Supplier.user4.getUsername(), Supplier.user4.getPassword(), 2));
     }
 
     @Test
-    public void testSelect() {
+    public void testSelect() throws AccessDeniedException {
         Trainee trainee = new Trainee();
         trainee.setId(1);
-        assertEquals(trainee, traineeService.select(1));
+        trainee.setUser(Supplier.user1);
+        when(mockTraineeDao.get(1)).thenReturn(trainee);
+        assertEquals(trainee, traineeService.select( Supplier.user1.getUsername(), Supplier.user1.getPassword(),1));
     }
 }
 

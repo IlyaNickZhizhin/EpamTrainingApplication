@@ -26,7 +26,7 @@ import java.util.Map;
 @Component
 @Getter
 @Setter
-@PropertySource("classpath:application.yaml")
+@PropertySource("classpath:application.properties")
 public class FileToModelsMapper<M extends Model> {
 
     @Value("${initFile}")

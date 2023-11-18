@@ -1,5 +1,6 @@
 package org.epam.config;
 
+import org.epam.dao.UserDaoImpl;
 import org.epam.model.User;
 import org.epam.storageInFile.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,11 @@ import java.util.logging.Logger;
 @DependsOn("dataInitializer")
 public class UsernameGenerator {
 
-    private static Storage<User> storage;
+    private static UserDaoImpl userDao;
 
     @Autowired
-    public UsernameGenerator(Storage<User> storage) {
-        this.storage = storage;
+    public UsernameGenerator(UserDaoImpl userDao) {
+        this.userDao = userDao;
     }
 
     public static String getDefaultUsername(String firstName, String lastName) {
@@ -25,12 +26,12 @@ public class UsernameGenerator {
         logger.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
         StringBuilder username = new StringBuilder(firstName.concat("." + lastName));
         int indexOfUsername = 1;
-        if (UsernameGenerator.storage.getUsers().containsKey(username.toString())) {
+        if (userDao.getByUsername(username.toString())!=null) {
             logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        while (UsernameGenerator.storage.getUsers().containsKey(username.toString())) {
+        while (userDao.getByUsername(username.toString())!=null) {
             username.delete((username.length()-String.valueOf(indexOfUsername).length()),username.length());
             username.append(indexOfUsername);
             indexOfUsername++;

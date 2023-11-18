@@ -1,11 +1,26 @@
 package org.epam.model.gymModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
 import org.epam.model.User;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -13,7 +28,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "trainees")
 public class Trainee implements Model, UserSetter {
@@ -24,7 +38,7 @@ public class Trainee implements Model, UserSetter {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "address")
     private String address;
@@ -32,6 +46,17 @@ public class Trainee implements Model, UserSetter {
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Training> trainings;
+
+    public Trainee(int i, LocalDate of, String address, User user) {
+        this.id = i;
+        this.dateOfBirth = of;
+        this.address = address;
+        this.user = user;
+        trainings = new ArrayList<>();
+    }
 
     @Override
     public String getEntityName() {
