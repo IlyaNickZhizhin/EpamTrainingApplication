@@ -22,9 +22,10 @@ public abstract class GymDaoStorage<M extends Model> implements Dao<M> {
     }
 
     @Override
-    public void create(M model) {
+    public M create(M model) {
         model.setId(AUTO_ID.incrementAndGet());
         save(model);
+        return model;
     }
 
     @Override

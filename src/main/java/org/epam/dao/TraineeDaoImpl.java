@@ -1,6 +1,8 @@
 package org.epam.dao;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -11,22 +13,52 @@ import java.util.stream.Collectors;
 
 @Repository
 @Transactional
+@Slf4j
 public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
 
+    /**
+     * This method updates a Trainee in the database using its ID and an updated Trainee object. It logs an informational message before the update operation.
+     * If the Trainee to be updated is not found, it logs an error message and throws a ResourceNotFoundException.
+     * @param id The ID of the Trainee to be updated.
+     * @param updatedTrainee The Trainee object containing the updated data.
+     */
     @Override
     public void update(int id, Trainee updatedTrainee) {
+        log.info("Updating trainee with id: " + id);
         Trainee trainee = get(id);
         if (trainee != null) {
             trainee.setUser(updatedTrainee.getUser());
             trainee.setAddress(updatedTrainee.getAddress());
             trainee.setDateOfBirth(updatedTrainee.getDateOfBirth());
-            sessionFactory.getCurrentSession().merge(trainee);
+            try {
+                sessionFactory.getCurrentSession().merge(trainee);
+            } catch (Exception e) {
+                log.error("Error updating trainee with id: " + id, e);
+            }
+        } else {
+            log.error("Trainee with id: " + id + " not found");
+            throw new ResourceNotFoundException(Trainee.class.getSimpleName(), id);
         }
     }
 
+    // TODO я не понял зачем этот метод, и вероятно сделал его не корректно.
+
+    /**
+     * This method updates the list of Trainers for a Trainee. It logs an informational message before the update operation.
+     * If an exception occurs during the update operation, it logs an error message and throws a ResourceNotFoundException.
+     * @param id The ID of the Trainee.
+     * @param traineeForUpdateList The Trainee object for which the list of Trainers is to be updated.
+     * @return The updated list of Trainers.
+     */
     public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
-        return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
+        log.info("Updating trainers list for trainee with id: " + id);
+        try {
+            return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
                 .setParameter("trainee", traineeForUpdateList)
                 .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error updating trainers list for trainee with id: " + id, e);
+            throw new ResourceNotFoundException("List<Trainer>", id);
+        }
     }
 }

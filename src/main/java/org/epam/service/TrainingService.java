@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.exceptions.ProhibitedAction;
 import org.epam.exceptions.VerificationException;
@@ -32,6 +33,7 @@ public class TrainingService extends GymAbstractService<Training> {
     public void setTrainerService(TrainerService trainerService) {
         this.trainerService = trainerService;
     }
+
 
     public List<Training> getTrainingsByTrainerAndTrainingTypesForTrainer(
             List<TrainingType> types, String trainerUsername, String trainerPassword) throws VerificationException {
