@@ -26,8 +26,6 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
                 .getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
-
-
     @Autowired
     private UserDaoImpl userDao;
 

@@ -21,13 +21,6 @@ public class TrainerService extends GymAbstractService<Trainer> {
         super.gymDao = trainerDao;
     }
 
-    public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, String username, String password) {
-        if (passwordChecker.checkPassword(username, password)) {
-            return ((TrainerDaoImpl) super.gymDao).getAllTrainersAvalibleForTrainee(trainee, super.gymDao.getAll());
-        }
-        throw new InvaildDeveloperException("It is not possible to be here!!!");
-    }
-
     public Trainer create(String firstName, String lastName, TrainingType trainingType) {
         return super.create(firstName, lastName, trainingType);
     }
@@ -48,6 +41,11 @@ public class TrainerService extends GymAbstractService<Trainer> {
     public Trainer select(String username, String password, int id) throws VerificationException {
         super.verify(username, password);
         return super.select(id);
+    }
+
+    protected List<Trainer> selectAll(String username, String password) throws VerificationException {
+        super.verify(username, password);
+        return super.selectAll();
     }
 
     public Trainer selectByUsername(String username, String password) throws VerificationException {

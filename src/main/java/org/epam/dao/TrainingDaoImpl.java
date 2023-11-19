@@ -35,6 +35,51 @@ public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
         }
     }
 
+    // TODO я не понял зачем этот метод, и вероятно сделал его не корректно.
+
+    /**
+     * This method updates the list of Trainers for a Trainee. It logs an informational message before the update operation.
+     * If an exception occurs during the update operation, it logs an error message and throws a ResourceNotFoundException.
+     * @param id The ID of the Trainee.
+     * @param traineeForUpdateList The Trainee object for which the list of Trainers is to be updated.
+     * @return The updated list of Trainers.
+     */
+    public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
+        log.info("Updating trainers list for trainee with id: " + id);
+        try {
+            return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
+                    .setParameter("trainee", traineeForUpdateList)
+                    .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error updating trainers list for trainee with id: " + id, e);
+            throw new ResourceNotFoundException("List<Trainer>", id);
+        }
+    }
+
+    /**
+     * This method gets all available active Trainers, have not set for a Trainee yet.
+     * @param trainee
+     * @param trainers
+     */
+    public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, List<Trainer> trainers) {
+        try {
+            log.info("Getting all trainers avalible for trainee with id: " + trainee.getId());
+            //return from list of All trainers
+            return trainers.stream()
+                    //only active trainers
+                    .filter(er -> er.getUser().isActive()
+                            //trainers who are not in trainee's training list
+                            && !(sessionFactory.getCurrentSession()
+                            .createQuery("from Training where trainee = :trainee", Training.class)
+                            .setParameter("trainee", trainee)
+                            .getResultStream().map(Training::getTrainer).collect(Collectors.toList()))
+                            .contains(er)).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error getting all trainers avalible for trainee with id: " + trainee.getId(), e);
+            throw new ResourceNotFoundException(Trainee.class.getSimpleName(), trainee.getId());
+        }
+    }
+
 
     /**
      * This method gets all the Trainings for a Trainer, by current trainee and list of trainingTypes.

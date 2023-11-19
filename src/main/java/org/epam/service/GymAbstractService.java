@@ -67,7 +67,7 @@ public abstract class GymAbstractService<M extends Model> {
         return gymDao.get(id);
     }
 
-    protected List<M> selectAll() {
+    List<M> selectAll() {
         return gymDao.getAll();
     }
 

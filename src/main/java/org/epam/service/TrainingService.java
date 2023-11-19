@@ -1,7 +1,9 @@
 package org.epam.service;
 
 import org.epam.dao.TraineeDaoImpl;
+import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.TrainingDaoImpl;
+import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.exceptions.ProhibitedAction;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.gymModel.Trainee;
@@ -34,6 +36,17 @@ public class TrainingService extends GymAbstractService<Training> {
         this.trainerService = trainerService;
     }
 
+    //TODO я не понял зачем этот метод и сделал его НЕ верно.
+    public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
+        return ((TrainingDaoImpl) super.gymDao).updateTrainersList(id, traineeForUpdateList);
+    }
+
+    public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, String username, String password) {
+        if (passwordChecker.checkPassword(username, password)) {
+            return ((TrainingDaoImpl) super.gymDao).getAllTrainersAvalibleForTrainee(trainee, trainerService.selectAll());
+        }
+        throw new InvaildDeveloperException("It is not possible to be here!!!");
+    }
 
     public List<Training> getTrainingsByTrainerAndTrainingTypesForTrainer(
             List<TrainingType> types, String trainerUsername, String trainerPassword) throws VerificationException {

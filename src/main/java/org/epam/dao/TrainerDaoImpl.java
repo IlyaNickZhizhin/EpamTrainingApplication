@@ -35,29 +35,4 @@ public class TrainerDaoImpl extends GymAbstractDaoImpl<Trainer>{
             throw new ResourceNotFoundException(Trainer.class.getSimpleName(), id);
         }
     }
-
-    /**
-     * This method gets all available active Trainers, have not set for a Trainee yet.
-     * @param trainee
-     * @param trainers
-     * @return List<Trainer>
-     */
-    public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, List<Trainer> trainers) {
-        try {
-            log.info("Getting all trainers avalible for trainee with id: " + trainee.getId());
-            //return from list of All trainers
-            return trainers.stream()
-                    //only active trainers
-                    .filter(er -> er.getUser().isActive()
-                            //trainers who are not in trainee's training list
-                            && !(sessionFactory.getCurrentSession()
-                            .createQuery("from Training where trainee = :trainee", Training.class)
-                            .setParameter("trainee", trainee)
-                            .getResultStream().map(Training::getTrainer).collect(Collectors.toList()))
-                            .contains(er)).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error getting all trainers avalible for trainee with id: " + trainee.getId(), e);
-            throw new ResourceNotFoundException(Trainee.class.getSimpleName(), trainee.getId());
-        }
-    }
 }

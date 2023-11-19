@@ -40,25 +40,4 @@ public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
             throw new ResourceNotFoundException(Trainee.class.getSimpleName(), id);
         }
     }
-
-    // TODO я не понял зачем этот метод, и вероятно сделал его не корректно.
-
-    /**
-     * This method updates the list of Trainers for a Trainee. It logs an informational message before the update operation.
-     * If an exception occurs during the update operation, it logs an error message and throws a ResourceNotFoundException.
-     * @param id The ID of the Trainee.
-     * @param traineeForUpdateList The Trainee object for which the list of Trainers is to be updated.
-     * @return The updated list of Trainers.
-     */
-    public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
-        log.info("Updating trainers list for trainee with id: " + id);
-        try {
-            return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
-                .setParameter("trainee", traineeForUpdateList)
-                .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error updating trainers list for trainee with id: " + id, e);
-            throw new ResourceNotFoundException("List<Trainer>", id);
-        }
-    }
 }
