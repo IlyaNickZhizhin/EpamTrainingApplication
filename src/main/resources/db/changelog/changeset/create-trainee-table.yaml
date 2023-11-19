@@ -1,5 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: create-trainee
-      author: IlyaZhizhin
-      changes:

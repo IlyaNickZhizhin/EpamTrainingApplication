@@ -46,8 +46,6 @@ public class TrainingService extends GymAbstractService<Training> {
         return ((TrainingDaoImpl) gymDao).getAllByTraineeAndTrainingTypes(trainee, types);
     }
 
-
-    //TODO сделать так, чтоб если такая тренировка в базе уже есть, он не создавалась второй раз, а только обновляла
     public Training create(String username, String password,
                            UserSetter opponent, String trainingName,
                            TrainingType trainingType, LocalDate trainingDate,

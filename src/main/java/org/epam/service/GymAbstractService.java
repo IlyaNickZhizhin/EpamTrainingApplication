@@ -58,7 +58,9 @@ public abstract class GymAbstractService<M extends Model> {
     }
 
     protected void delete(int id) {
+        UserSetter model = (UserSetter) gymDao.get(id);
         gymDao.delete(id);
+        userDao.delete(model.getUser().getId());
     }
 
     protected M select(int id) {

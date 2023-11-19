@@ -1,14 +1,18 @@
 package org.epam.config;
 
+import liquibase.integration.spring.SpringLiquibase;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @PropertySource("classpath:application.properties")
 public class LiquibaseConfig {
 
 
-    /*    @Value("${spring.datasource.url}")
+    @Value("${spring.datasource.url}")
     private String url;
 
     @Value("${spring.datasource.username}")
@@ -30,7 +34,7 @@ public class LiquibaseConfig {
         dataSource.setPassword(password);
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog("src/main/resources/db/changelog/db.changelog-master.xml");
+        liquibase.setChangeLog("db/changelog/db.changelog-master.xml");
         return liquibase;
-    }*/
+    }
 }

@@ -1,0 +1,18 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="create-trainees" author="IlyaZhizhin">
+        <createTable tableName="trainees">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="date_of_birth" type="date"/>
+            <column name="address" type="varchar(255)"/>
+            <column name="user_id" type="int">
+                <constraints foreignKeyName="fk_user_id" references="users(id)" unique="true" nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
