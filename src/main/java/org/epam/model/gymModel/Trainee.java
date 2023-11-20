@@ -22,6 +22,11 @@ import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+/**
+ * This class is used to store information about trainees.
+ * @see Model
+ * @see UserSetter
+ */
 @EqualsAndHashCode
 @Getter
 @Setter

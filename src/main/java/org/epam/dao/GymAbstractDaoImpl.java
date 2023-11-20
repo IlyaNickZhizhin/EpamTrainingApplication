@@ -1,7 +1,6 @@
 package org.epam.dao;
 
 import jakarta.transaction.Transactional;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
@@ -13,21 +12,37 @@ import org.springframework.stereotype.Repository;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+/**
+ * This class is the abstract superclass for all DAO classes.
+ * It contains methods for creating, saving, updating, deleting, and retrieving models.
+ * @param <M>
+ * @see org.epam.model.gymModel.Model
+ * @see org.epam.dao.GymAbstractDaoImpl#create(Model)
+ * @see org.epam.dao.GymAbstractDaoImpl#save(Model)
+ * @see org.epam.dao.GymAbstractDaoImpl#update(int, Model)
+ * @see org.epam.dao.GymAbstractDaoImpl#delete(int)
+ * @see org.epam.dao.GymAbstractDaoImpl#get(int)
+ * @see org.epam.dao.GymAbstractDaoImpl#getByUserId(int)
+ * @see org.epam.dao.GymAbstractDaoImpl#getAll()
+ * @see org.epam.dao.UserDaoImpl
+ * @see org.epam.dao.TraineeDaoImpl
+ * @see org.epam.dao.TrainerDaoImpl
+ * @see org.epam.dao.TrainingDaoImpl
+ */
 @Repository
 @Slf4j
 public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
 
     protected Class<M> modelClass;
-    @Autowired
     protected SessionFactory sessionFactory;
+    private UserDaoImpl userDao;
 
-    public GymAbstractDaoImpl() {
+    public GymAbstractDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+        this.sessionFactory = sessionFactory;
+        this.userDao = userDao;
         this.modelClass = (Class<M>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
     }
-
-    @Autowired
-    private UserDaoImpl userDao;
 
     /**
      * This method creates a new model in the database. It logs an informational message before saving the model.
@@ -118,18 +133,14 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
      * @param userId The ID of the User.
      * @return The model that was retrieved.
      */
-    public M getByUserId(int userId) {
+    public M getByUserId(int userId) throws ResourceNotFoundException{
         User user = userDao.get(userId);
-        try {
-            log.info("Getting " + modelClass.getSimpleName() + " with user id " + userId);
-            return sessionFactory.getCurrentSession()
-                    .createQuery("from " + modelClass.getSimpleName() + " where user = :user", modelClass)
-                    .setParameter("user", user)
-                    .getSingleResult();
-        } catch (Exception e) {
-            log.error("Error getting " + modelClass.getSimpleName() + " with user id " + userId, e);
-            throw new ResourceNotFoundException(modelClass.getSimpleName(), userId);
-        }
+        return getByUser(user);
+    }
+
+    public M getByUsername(String username) throws ResourceNotFoundException{
+        User user = userDao.getByUsername(username);
+        return getByUser(user);
     }
 
     /**
@@ -145,6 +156,20 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
         } catch (Exception e) {
             log.error("Error getting all " + modelClass.getSimpleName() + "s", e);
             throw new ResourceNotFoundException(modelClass.getSimpleName(), -1);
+        }
+    }
+
+    private M getByUser(User user) {
+        try {
+            log.info("Getting " + modelClass.getSimpleName() + " with user №" + user.getId() + " " + user.getUsername());
+            return sessionFactory.getCurrentSession()
+                    .createQuery("from " + modelClass.getSimpleName() + " where user = :user", modelClass)
+                    .setParameter("user", user)
+                    .getSingleResult();
+        } catch (Exception e) {
+            log.error("Error getting " + modelClass.getSimpleName()
+                    + " with user №" + user.getId() + " " + user.getUsername(), e);
+            throw new ResourceNotFoundException(modelClass.getSimpleName(), user.getId());
         }
     }
 }

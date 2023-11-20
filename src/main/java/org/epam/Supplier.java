@@ -71,5 +71,4 @@ public interface Supplier {
     Training training2 = new Training(
             1, trainee4, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
 
-
 }

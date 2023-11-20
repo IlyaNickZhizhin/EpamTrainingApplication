@@ -17,6 +17,10 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
+/**
+ * This class is used to store information about trainings.
+ * @see Model
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

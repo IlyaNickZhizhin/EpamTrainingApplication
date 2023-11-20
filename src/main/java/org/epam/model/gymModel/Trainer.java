@@ -16,6 +16,11 @@ import org.epam.model.User;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+/**
+ * This class is used to store information about trainers.
+ * @see Model
+ * @see UserSetter
+ */
 @EqualsAndHashCode
 @Setter
 @Getter

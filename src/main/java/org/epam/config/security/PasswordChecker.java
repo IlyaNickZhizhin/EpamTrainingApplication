@@ -6,6 +6,10 @@ import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is the simplest realization to check password for user.
+ * @see org.epam.model.User
+ */
 @Component
 @AllArgsConstructor
 public class PasswordChecker {

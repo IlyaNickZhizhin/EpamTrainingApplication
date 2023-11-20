@@ -4,17 +4,24 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.Training;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+/**
+ * This class is the DAO for Training objects.
+ * It contains methods for creating, saving, updating, deleting, and retrieving Training objects.
+ * @see org.epam.model.gymModel.Trainee
+ * @see org.epam.dao.GymAbstractDaoImpl
+ * @see org.epam.dao.TraineeDaoImpl#update(int, Trainee)
+ */
 @Repository
 @Transactional
 @Slf4j
 public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
+
+    public TraineeDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+        super(sessionFactory, userDao);
+    }
 
     /**
      * This method updates a Trainee in the database using its ID and an updated Trainee object. It logs an informational message before the update operation.

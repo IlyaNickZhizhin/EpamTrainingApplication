@@ -1,7 +1,7 @@
 package org.epam.service.storage;
 
-import org.epam.dao.storage.UserDaoStorageImpl;
-import org.epam.dao.storage.gymDaoFileStorage.TrainerDaoStorageImpl;
+import org.epam.dao.gymStorage.UserDaoStorageImpl;
+import org.epam.dao.gymStorage.gymDaoFileStorage.TrainerDaoStorageImpl;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;

@@ -6,15 +6,26 @@ import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is the DAO for Trainer models.
+ * @see org.epam.model.gymModel.Trainer
+ * @see org.epam.dao.GymAbstractDaoImpl
+ * @see org.epam.dao.TrainerDaoImpl#update(int, Trainer)
+ */
 @Repository
 @Transactional
 @Slf4j
 public class TrainerDaoImpl extends GymAbstractDaoImpl<Trainer>{
+
+    public TrainerDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+        super(sessionFactory, userDao);
+    }
 
     /**
      * This method updates a Trainer in the database using its ID and an updated Trainer object.

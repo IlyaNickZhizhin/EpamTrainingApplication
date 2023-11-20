@@ -14,6 +14,9 @@ import org.epam.model.gymModel.Model;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+/**
+ * This class is used to store information about users.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter

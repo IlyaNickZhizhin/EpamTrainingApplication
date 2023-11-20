@@ -19,6 +19,7 @@
     <spring-context.version>6.0.13</spring-context.version>
     <spring-orm.version>6.0.13</spring-orm.version>
     <spring-jdbc.version>6.0.13</spring-jdbc.version>
+    <spring-test.version>6.0.13</spring-test.version>
     <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
     <lombok.version>1.18.30</lombok.version>
     <jackson-databind.version>2.15.3</jackson-databind.version>
@@ -34,6 +35,7 @@
     <liquibase-core.version>4.23.0</liquibase-core.version>
     <postgres.version>42.6.0</postgres.version>
     <commons-dbcp.version>1.4</commons-dbcp.version>
+
   </properties>
 
   <dependencies>
@@ -155,6 +157,14 @@
       <artifactId>commons-dbcp</artifactId>
       <version>${commons-dbcp.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>5.3.10</version>
+      <scope>test</scope>
+    </dependency>
+
 
 
   </dependencies>

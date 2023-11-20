@@ -9,15 +9,31 @@ import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is the DAO for Training objects.
+ * It contains methods for creating, saving, updating, deleting, and retrieving Training objects.
+ * @see org.epam.model.gymModel.Training
+ * @see org.epam.dao.GymAbstractDaoImpl
+ * @see org.epam.dao.TrainingDaoImpl#update(int, Training)
+ * @see org.epam.dao.TrainingDaoImpl#updateTrainersList(int, Trainee)
+ * @see org.epam.dao.TrainingDaoImpl#getAllTrainersAvalibleForTrainee(Trainee, List)
+ * @see org.epam.dao.TrainingDaoImpl#getAllByTraineeAndTrainingTypes(Trainee, List)
+ * @see org.epam.dao.TrainingDaoImpl#getAllByTrainerAndTrainingTypes(Trainer, List)
+ */
 @Repository
 @Transactional
 @Slf4j
 public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
+
+    public TrainingDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+        super(sessionFactory, userDao);
+    }
 
     /**
      * This method updates a Training in the database using its ID and an updated Training object.

@@ -1,5 +1,6 @@
-package org.epam.dao.storage.gymDaoFileStorage;
+package org.epam.dao.gymStorage.storage.gymDaoFileStorage;
 
+import org.epam.dao.gymStorage.gymDaoFileStorage.TrainingDaoStorageImpl;
 import org.epam.model.gymModel.Training;
 import org.epam.storageInFile.Storage;
 import org.junit.jupiter.api.BeforeAll;

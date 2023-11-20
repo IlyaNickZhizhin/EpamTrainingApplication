@@ -18,6 +18,11 @@ import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+/**
+ * This class is used to store information about training types.
+ * @see Model
+ * @see TrainingType.TrainingName
+ */
 @Entity
 @Table(name = "training_types")
 @NoArgsConstructor
@@ -37,6 +42,9 @@ public class TrainingType implements Model {
         this.trainingName = trainingName;
     }
 
+    /**
+     * This enum is used to store information about training names.
+     */
     public static enum TrainingName {
         BASIC,
         CARDIO,

@@ -11,14 +11,14 @@ import java.util.logging.Logger;
 @DependsOn("dataInitializer")
 public class UsernameGenerator {
 
-    private static UserDaoImpl userDao;
+    private UserDaoImpl userDao;
 
     @Autowired
     public UsernameGenerator(UserDaoImpl userDao) {
         this.userDao = userDao;
     }
 
-    public static String getDefaultUsername(String firstName, String lastName) {
+    public String getDefaultUsername(String firstName, String lastName) {
 
         Logger logger = Logger.getLogger(UsernameGenerator.class.getName());
         logger.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);

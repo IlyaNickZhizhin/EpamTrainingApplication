@@ -17,23 +17,8 @@ import org.springframework.context.annotation.PropertySource;
 @ComponentScan("org.epam")
 @PropertySource("classpath:application.properties")
 public class Config {
-
-    @Bean
-    public GymAbstractDaoImpl<Trainee> traineeDao() {
-        return new TraineeDaoImpl();
-    }
-    @Bean
-    public GymAbstractDaoImpl<Trainer> trainerDao() {
-        return new TrainerDaoImpl();
-    }
-    @Bean
-    public GymAbstractDaoImpl<Training> trainingDao() {
-        return new TrainingDaoImpl();
-    }
-
     @Bean
     public ModelMapper getMapper() {
         return new ModelMapper();
     }
-
 }

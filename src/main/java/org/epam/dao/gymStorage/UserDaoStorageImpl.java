@@ -1,5 +1,7 @@
-package org.epam.dao.storage;
+package org.epam.dao.gymStorage;
 
+import org.epam.config.PasswordGenerator;
+import org.epam.config.UsernameGenerator;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
@@ -9,21 +11,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
-
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.epam.config.PasswordGenerator.getDefaultPassword;
-import static org.epam.config.UsernameGenerator.getDefaultUsername;
 
 @DependsOn("dataInitializer")
 @Repository
 public class UserDaoStorageImpl {
 
     private final Storage<User> storage;
+    private final UsernameGenerator usernameGenerator;
+    private final PasswordGenerator passwordGenerator;
 
     @Autowired
-    public UserDaoStorageImpl(Storage<User> storage) {
+    public UserDaoStorageImpl(Storage<User> storage, UsernameGenerator usernameGenerator, PasswordGenerator passwordGenerator) {
         this.storage = storage;
+        this.usernameGenerator = usernameGenerator;
+        this.passwordGenerator = passwordGenerator;
     }
 
     private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
@@ -101,9 +103,9 @@ public class UserDaoStorageImpl {
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        String username = getDefaultUsername(firstName, lastName);
+        String username = usernameGenerator.getDefaultUsername(firstName, lastName);
         user.setUsername(username);
-        user.setPassword(getDefaultPassword());
+        user.setPassword(passwordGenerator.getDefaultPassword());
         user.setActive(true);
         logger.info("New user with first name: " + firstName + " and last name: " + lastName + " created");
         return user;
