@@ -78,10 +78,10 @@ public abstract class GymAbstractService<M extends Model> {
             model = createModel(user, parameters);
             ((UserSetter) model).setUser(user);
         } else {
-            UserSetter userSetter = (UserSetter) gymDao.getByUsername(name);
+            UserSetter userSetter = gymDao.getModelByUsername(name);
             log.info("Creating " + modelClass.getSimpleName() + " with user "
                     + name + "who is" + userSetter.getClass().getSimpleName());
-                        model = createModel(userSetter, parameters);
+            model = createModel(userSetter, parameters);
         }
         log.info("Created " + modelClass.getSimpleName() + "and parametrized");
         try {

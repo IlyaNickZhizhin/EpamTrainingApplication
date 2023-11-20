@@ -2,11 +2,14 @@ package org.epam.dao;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Model;
+import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.UserSetter;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.ParameterizedType;
@@ -102,7 +105,7 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
             log.info("Deleting " + modelClass.getSimpleName() + " with id " + id);
             M model = get(id);
             sessionFactory.getCurrentSession().remove(model);
-        } catch (Exception e) {
+        } catch (ResourceNotFoundException e) {
             log.error("Error deleting " + modelClass.getSimpleName() + " with id " + id, e);
             throw new ResourceNotFoundException(modelClass.getSimpleName(), id);
         }
@@ -119,30 +122,17 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
     public M get(int id) {
         try {
             log.info("Getting " + modelClass.getSimpleName() + " with id " + id);
-            return sessionFactory.getCurrentSession().get(modelClass, id);
+            M model = sessionFactory.getCurrentSession().get(modelClass, id);
+            if (model == null) {
+                throw new ResourceNotFoundException(modelClass.getSimpleName(), id);
+            }
+            return model;
         } catch (Exception e) {
             log.error("Error getting " + modelClass.getSimpleName() + " with id " + id, e);
-            throw new ResourceNotFoundException(modelClass.getSimpleName(), id);
+            throw e;
         }
 
     }
-
-    /**
-     * This method retrieves a model from the database using the ID of a User. It logs an informational message before the retrieval operation.
-     * If an exception occurs during the retrieval operation, it logs an error message and throws a ResourceNotFoundException.
-     * @param userId The ID of the User.
-     * @return The model that was retrieved.
-     */
-    public M getByUserId(int userId) throws ResourceNotFoundException{
-        User user = userDao.get(userId);
-        return getByUser(user);
-    }
-
-    public M getByUsername(String username) throws ResourceNotFoundException{
-        User user = userDao.getByUsername(username);
-        return getByUser(user);
-    }
-
     /**
      * This method retrieves all models from the database. It logs an informational message before the retrieval operation.
      * If an exception occurs during the retrieval operation, it logs an error message and throws a ResourceNotFoundException.
@@ -151,25 +141,91 @@ public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
     public List<M> getAll(){
         try {
             log.info("Getting all " + modelClass.getSimpleName() + "s");
-            return sessionFactory.getCurrentSession()
+            List<M> models = sessionFactory.getCurrentSession()
                     .createQuery("from " + modelClass.getName(), modelClass).list();
+            if (models.isEmpty()) {
+                throw new ResourceNotFoundException(modelClass.getSimpleName(), -1);
+            }
+            return models;
         } catch (Exception e) {
             log.error("Error getting all " + modelClass.getSimpleName() + "s", e);
-            throw new ResourceNotFoundException(modelClass.getSimpleName(), -1);
+            throw e;
         }
     }
 
-    private M getByUser(User user) {
+    /**
+     * This method retrieves a model from the database using the ID of a User. It logs an informational message before the retrieval operation.
+     * If an exception occurs during the retrieval operation, it logs an error message and throws a ResourceNotFoundException.
+     * @param userId The ID of the User.
+     * @return The model that was retrieved.
+     * @throws ResourceNotFoundException when nothing was founded
+     */
+    public M getByUserId(int userId) throws ResourceNotFoundException{
+        log.info("Getting " + modelClass.getSimpleName() + " with user №" + userId);
+        User user = userDao.get(userId);
+        if (user == null) {
+            throw new ResourceNotFoundException("User", userId);
+        }
+        return getByUserFast(user);
+    }
+
+    /**
+     * This method retrieves a model from the database using the username of a User.
+     * It logs an informational message before the retrieval operation.
+     * @param username
+     * @return The model that was retrieved.
+     * @throws ResourceNotFoundException when nothing was founded
+     */
+    public UserSetter getModelByUsername(String username) throws ResourceNotFoundException{
+        User user = userDao.getByUsername(username);
+        return getUserSetterByUser(user);
+    }
+
+    private UserSetter getUserSetterByUser(User user) {
+        log.info("Getting UserSetter with user №" + user.getId() + " " + user.getUsername());
         try {
-            log.info("Getting " + modelClass.getSimpleName() + " with user №" + user.getId() + " " + user.getUsername());
-            return sessionFactory.getCurrentSession()
+            if (UserSetter.class.isAssignableFrom(modelClass)) {
+                log.info("Model is User Setter");
+                return (UserSetter) getByUserFast(user);
+            } else {
+                log.info("Model not UserSetter");
+                Trainer trainer = sessionFactory.getCurrentSession()
+                        .createQuery("from Trainer where user = :user", Trainer.class)
+                        .setParameter("user", user)
+                        .getSingleResultOrNull();
+                Trainee trainee = sessionFactory.getCurrentSession()
+                        .createQuery("from Trainee where user = :user", Trainee.class)
+                        .setParameter("user", user)
+                        .getSingleResultOrNull();
+                return trainee == null ? trainer : trainee;
+            }
+        } catch (Exception e) {
+            log.error("Getting UserSetter with user №" + user.getId() + " " + user.getUsername(), e);
+            throw new InvalidDataException("getUserSetterByUser()");
+        }
+    }
+    /**
+     * Private method for simplify code of getByUserId(int) getModelByUsername(String)
+     * @see org.epam.dao.GymAbstractDaoImpl#getByUserId(int)
+     * @see org.epam.dao.GymAbstractDaoImpl#getModelByUsername(String)
+     * @param user
+     * @return model
+     * @trows ResourceNotFoundException when nothing was founded
+     */
+    private M getByUserFast(User user) {
+        log.info("Getting " + modelClass.getSimpleName() + " with user №" + user.getId() + " " + user.getUsername());
+        try {
+            M model = sessionFactory.getCurrentSession()
                     .createQuery("from " + modelClass.getSimpleName() + " where user = :user", modelClass)
                     .setParameter("user", user)
                     .getSingleResult();
+            if (model == null) throw new ResourceNotFoundException(modelClass.getSimpleName(), user.getId());
+            return model;
         } catch (Exception e) {
             log.error("Error getting " + modelClass.getSimpleName()
                     + " with user №" + user.getId() + " " + user.getUsername(), e);
-            throw new ResourceNotFoundException(modelClass.getSimpleName(), user.getId());
+            throw e;
         }
     }
+
 }

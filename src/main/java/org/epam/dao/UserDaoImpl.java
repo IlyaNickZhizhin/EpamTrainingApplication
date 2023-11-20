@@ -2,17 +2,14 @@ package org.epam.dao;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.UserSetter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,7 +27,6 @@ import org.springframework.stereotype.Repository;
  * @see org.epam.dao.UserDaoImpl#get(int)
  * @see org.epam.dao.UserDaoImpl#getByUsername(String)
  * @see org.epam.dao.UserDaoImpl#setNewUser(String, String)
- * @see org.epam.dao.UserDaoImpl#whoIsUser(String)
  */
 @Repository
 @AllArgsConstructor
@@ -42,6 +38,7 @@ public class UserDaoImpl {
     PasswordGenerator passwordGenerator;
     UsernameGenerator usernameGenerator;
 
+    @Autowired
     public UserDaoImpl(SessionFactory factory, UsernameGenerator usernameGenerator, PasswordGenerator passwordGenerator) {
         this.factory = factory;
         this.passwordGenerator = passwordGenerator;
@@ -170,30 +167,6 @@ public class UserDaoImpl {
         } catch (ResourceNotFoundException e) {
             log.error("Error setting new user with first name: " + firstName + " and last name: " + lastName, e);
             throw e;
-        }
-    }
-
-    /**
-     * This method gets a UserSetter from the database using its username.
-     * @param username
-     * @return The UserSetter with the specified username.
-     */
-    public UserSetter whoIsUser(String username) {
-        User principal = getByUsername(username);
-        Session session = factory.getCurrentSession();
-        log.info("Getting user with username: " + username);
-        try {
-            UserSetter userSetter = session.createQuery("from Trainee where user = :user", Trainee.class)
-                    .setParameter("user", principal)
-                    .getSingleResultOrNull();
-            return userSetter == null ?
-                    session.createQuery("from Trainer where user = :user", Trainer.class)
-                            .setParameter("user", principal)
-                            .getSingleResult() :
-                    userSetter;
-        } catch (Exception e) {
-            log.error("Error getting user with username: " + username, e);
-            throw new ResourceNotFoundException(User.class.getSimpleName(), username);
         }
     }
 }

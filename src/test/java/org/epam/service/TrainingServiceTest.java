@@ -16,18 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.epam.Supplier.trainee3;
-import static org.epam.Supplier.trainee3_Password;
-import static org.epam.Supplier.trainee3_Username;
-import static org.epam.Supplier.trainer1;
-import static org.epam.Supplier.trainer1_Password;
-import static org.epam.Supplier.trainer1_Username;
-import static org.epam.Supplier.trainer2;
-import static org.epam.Supplier.trainingName1;
-import static org.epam.Supplier.trainingType1;
-import static org.epam.Supplier.traning1_Date;
-import static org.epam.Supplier.traning1_Duration;
-import static org.epam.Supplier.user1;
+import static org.epam.Supplier.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -67,38 +56,44 @@ class TrainingServiceTest {
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer1);
         trainers.add(trainer2);
-        when(mockTrainingDao.getAllTrainersAvalibleForTrainee(trainee3, trainers));
+        when(mockUserDao.getByUsername(trainee3_Username)).thenReturn(user3);
+        when(mockTrainerService.selectAll()).thenReturn(trainers);
+        when(mockTrainingDao.getAllTrainersAvalibleForTrainee(trainee3, trainers)).thenReturn(List.of(trainer2));
         assertEquals(List.of(trainer2), trainingService.getAllTrainersAvalibleForTrainee(trainee3, trainee3_Username, trainee3_Password));
     }
 
     @Test
-    public void testGetTrainingsByTrainerAndTrainingTypesForTrainer() {
-
-        assertEquals(trainer1,trainingService.getTrainingsByTrainerAndTrainingTypesForTrainer(trainer1_Username, trainer1_Password, List.of(trainingType1)));
+    public void testGetTrainingsByTRAINERusernameAndTrainingTypes() {
+        when(mockUserDao.getByUsername(trainer2_Username)).thenReturn(user2);
+        when(mockTrainingDao.getAllByUsernameAndTrainingTypes(trainer2_Username, List.of(trainingType2))).thenReturn(List.of(training2));
+        assertEquals(List.of(training2),
+                trainingService
+                        .getTrainingsByUsernameAndTrainingTypes(
+                                trainer2_Username,
+                                trainer2_Password,
+                                List.of(trainingType2)));
     }
 
     @Test
-    public void testGetTrainingsByTraineeAndTrainingTypesForTrainee() {
-        List<TrainingType> trainingTypes = new ArrayList<>();
-        trainingTypes.add(new TrainingType());
-        trainingTypes.add(new TrainingType());
-        String username = "username";
-        String password = "password";
-        List<Training> trainings = new ArrayList<>();
-        trainings.add(new Training());
-        trainings.add(new Training());
-        when(trainerDao.getTrainingsByTraineeAndTrainingTypesForTrainee(trainingTypes, username, password)).thenReturn(trainings);
-        assertEquals(trainings, trainerService.getTrainingsByTraineeAndTrainingTypesForTrainee(trainingTypes, username, password));
+    public void testGetTrainingsByTRAINEEusernameAndTrainingTypesForTrainee() {
+        when(mockUserDao.getByUsername(trainee4_Username)).thenReturn(user4);
+        when(mockTrainingDao.getAllByUsernameAndTrainingTypes(trainee4_Username, List.of(trainingType2))).thenReturn(List.of(training2));
+        assertEquals(List.of(training2),
+                trainingService
+                        .getTrainingsByUsernameAndTrainingTypes(
+                                trainee4_Username,
+                                trainee4_Password,
+                                List.of(trainingType2)));
     }
 
 
     @Test
     public void testCreate() {
-        Training training = Supplier.training1;
+        Training training = training1;
         when(mockTrainingDao.get(1)).thenReturn(training);
-        when(mockUserDao.whoIsUser(trainer1_Username)).thenReturn(trainer1);
+        when(mockTrainingDao.getModelByUsername(trainer1_Username)).thenReturn(trainer1);
         trainingService.create(trainer1_Username, trainer1_Password,
-                trainee3, trainingName1.name(), trainingType1, traning1_Date,
+                trainee6, trainingName1.name(), trainingType1, traning1_Date,
                 traning1_Duration);
         assertEquals(training, trainingService.select(1));
     }
@@ -107,8 +102,8 @@ class TrainingServiceTest {
     public void testSelect() {
         Training training = new Training();
         training.setId(1);
-        training.setTrainer(Supplier.training1.getTrainer());
-        training.setTrainee(Supplier.training1.getTrainee());
+        training.setTrainer(training1.getTrainer());
+        training.setTrainee(training1.getTrainee());
         when(mockTrainingDao.get(1)).thenReturn(training);
         assertEquals(training, trainingService.select(1));
     }

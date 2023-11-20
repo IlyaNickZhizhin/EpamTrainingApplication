@@ -1,5 +1,6 @@
 package org.epam.dao;
 
+import org.hibernate.query.Query;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.model.User;
@@ -77,6 +78,17 @@ public class UserDaoImplTest {
         when(session.get(User.class, user1.getId())).thenReturn(user1);
         assertEquals(user1, userDao.get(user1.getId()));
     }
+
+    @Test
+    public void testGetByUsername() {
+        String username = user1.getUsername();
+        Query query = mock(Query.class);
+        when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
+        when(query.setParameter("username", username)).thenReturn(query);
+        when(query.getSingleResultOrNull()).thenReturn(user1);
+        assertEquals(user1, userDao.getByUsername(username));
+    }
+
 
     @Test
     public void testSetNewUser() {

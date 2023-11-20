@@ -1,5 +1,7 @@
 package org.epam.dao;
 
+import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,9 +13,22 @@ import org.mockito.Mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static org.epam.Supplier.trainee3;
+import static org.epam.Supplier.trainee3_Username;
+import static org.epam.Supplier.trainee4;
+import static org.epam.Supplier.trainer1;
+import static org.epam.Supplier.trainer1_Username;
+import static org.epam.Supplier.trainer2;
 import static org.epam.Supplier.training1;
+import static org.epam.Supplier.training2;
+import static org.epam.Supplier.trainingType1;
+import static org.epam.Supplier.user1;
+import static org.epam.Supplier.user2;
+import static org.epam.Supplier.user3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -34,6 +49,7 @@ public class TrainingDaoImplTest {
     @BeforeEach
     public void setup() {
         when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(sessionFactory.openSession()).thenReturn(session);
     }
 
     @Test
@@ -78,4 +94,68 @@ public class TrainingDaoImplTest {
         when(query.list()).thenReturn(trainings);
         assertEquals(trainings, trainingDao.getAll());
     }
+
+    @Test
+    public void testUpdateTrainersList() {
+        Query query = mock(Query.class);
+        List<Training> ts =  new ArrayList<>();
+        ts.add(training1);
+        ts.add(training2);
+        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getResultStream()).thenReturn(ts.stream());
+        assertEquals(List.of(trainer1, trainer2), trainingDao.updateTrainersList(trainee3));
+    }
+
+    @Test
+    public void testGetAllTrainersAvalibleForTrainee() {
+        Query query = mock(Query.class);
+        List<Trainer> ts =  new ArrayList<>();
+        ts.add(trainer2);
+        ts.add(trainer1);
+        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getResultStream()).thenReturn(Stream.of(training2));
+        assertEquals(List.of(trainer1),
+                trainingDao.getAllTrainersAvalibleForTrainee(trainee4, ts));
+    }
+
+    @Test
+    public void testGetAllByTRAINERUsernameAndTrainingTypes() {
+        when(userDao.getByUsername(trainer1_Username)).thenReturn(user1);
+        Query query = mock(Query.class);
+        Query query1 = mock(Query.class);
+        Query query2 = mock(Query.class);
+        when(userDao.getByUsername(trainer1_Username)).thenReturn(user1);
+        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getResultStream()).thenReturn(Stream.of(training1));
+        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query1);
+        when(query1.setParameter(anyString(), any())).thenReturn(query1);
+        when(query1.getSingleResultOrNull()).thenReturn(null);
+        when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
+        when(query2.setParameter(anyString(), any())).thenReturn(query2);
+        when(query2.getSingleResultOrNull()).thenReturn(trainer1);
+        assertEquals(List.of(training1), trainingDao.getAllByUsernameAndTrainingTypes(trainer1_Username, List.of(trainingType1)));
+    }
+
+    @Test
+    public void testGetAllByTRAINEEUsernameAndTrainingTypes() {
+        when(userDao.getByUsername(trainee3_Username)).thenReturn(user3);
+        Query query = mock(Query.class);
+        Query query1 = mock(Query.class);
+        Query query2 = mock(Query.class);
+        when(userDao.getByUsername(trainee3_Username)).thenReturn(user3);
+        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getResultStream()).thenReturn(Stream.of(training1));
+        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query1);
+        when(query1.setParameter(anyString(), any())).thenReturn(query1);
+        when(query1.getSingleResultOrNull()).thenReturn(trainee3);
+        when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
+        when(query2.setParameter(anyString(), any())).thenReturn(query2);
+        when(query2.getSingleResultOrNull()).thenReturn(null);
+        assertEquals(List.of(training1), trainingDao.getAllByUsernameAndTrainingTypes(trainee3_Username, List.of(trainingType1)));
+    }
+
 }

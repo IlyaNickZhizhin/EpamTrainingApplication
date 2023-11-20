@@ -7,6 +7,7 @@ import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
+import org.epam.model.gymModel.UserSetter;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -60,71 +61,46 @@ public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
      * @param traineeForUpdateList The Trainee object for which the list of Trainers is to be updated.
      * @return The updated list of Trainers.
      */
-    public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
-        log.info("Updating trainers list for trainee with id: " + id);
+    public List<Trainer> updateTrainersList(Trainee traineeForUpdateList) {
+        log.info("Updating trainers list for trainee №" + traineeForUpdateList.getId());
         try {
             return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
                     .setParameter("trainee", traineeForUpdateList)
                     .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
         } catch (Exception e) {
-            log.error("Error updating trainers list for trainee with id: " + id, e);
-            throw new ResourceNotFoundException("List<Trainer>", id);
+            log.error("Error updating trainers list for trainee №" + traineeForUpdateList.getId(), e);
+            throw new ResourceNotFoundException("List<Trainer> fo trainee №", traineeForUpdateList.getId());
         }
     }
 
     /**
      * This method gets all available active Trainers, have not set for a Trainee yet.
      * @param trainee
-     * @param trainers
+     * @param trainers - all existing in gym trainers
      */
     public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, List<Trainer> trainers) {
         try {
             log.info("Getting all trainers avalible for trainee with id: " + trainee.getId());
-            //return from list of All trainers
-            return trainers.stream()
-                    //only active trainers
-                    .filter(er -> er.getUser().isActive()
-                            //trainers who are not in trainee's training list
-                            && !(sessionFactory.getCurrentSession()
-                            .createQuery("from Training where trainee = :trainee", Training.class)
-                            .setParameter("trainee", trainee)
-                            .getResultStream().map(Training::getTrainer).collect(Collectors.toList()))
-                            .contains(er)).collect(Collectors.toList());
+            List<Trainer> onTrainee = sessionFactory.getCurrentSession()
+                    .createQuery("from Training where trainee = :trainee", Training.class)
+                    .setParameter("trainee", trainee)
+                    .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
+            trainers.removeAll(onTrainee);
+            return trainers;
         } catch (Exception e) {
             log.error("Error getting all trainers avalible for trainee with id: " + trainee.getId(), e);
             throw new ResourceNotFoundException(Trainee.class.getSimpleName(), trainee.getId());
         }
     }
 
-
-    /**
-     * This method gets all the Trainings for a Trainer, by current trainee and list of trainingTypes.
-     * @param trainee
-     * @param trainingTypes
-     * @return List<Training>
-     */
-    public List<Training> getAllByTraineeAndTrainingTypes(Trainee trainee, List<TrainingType> trainingTypes) {
+    public List<Training> getAllByUsernameAndTrainingTypes(String username, List<TrainingType> types) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Training where trainee = :trainee", Training.class)
-                    .setParameter("trainee", trainee)
-                    .getResultStream().filter(training -> trainingTypes.contains(training.getTrainingType()))
-                    .collect(Collectors.toList());
-        } catch (HibernateException e) {
-            throw new RuntimeException("Something went wrong while getting the list of trainings", e);
-        }
-    }
-
-    /**
-     * This method gets all the Trainings for a Trainee, by current TrainingType.
-     * @param trainer
-     * @param trainingTypes
-     * @return List<Training>
-     */
-    public List<Training> getAllByTrainerAndTrainingTypes(Trainer trainer, List<TrainingType> trainingTypes) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Training where trainer = :trainer", Training.class)
-                    .setParameter("trainer", trainer)
-                    .getResultStream().filter(training -> trainingTypes.contains(training.getTrainingType()))
+            UserSetter userSetter = getModelByUsername(username);
+            return session.createQuery("from Training where" +
+                            userSetter.getClass().getSimpleName().toLowerCase() +
+                            "= :userSetter", Training.class)
+                    .setParameter(userSetter.getClass().getSimpleName().toLowerCase(), userSetter)
+                    .getResultStream().filter(training -> types.contains(training.getTrainingType()))
                     .collect(Collectors.toList());
         } catch (HibernateException e) {
             throw new RuntimeException("Something went wrong while getting the list of trainings", e);
