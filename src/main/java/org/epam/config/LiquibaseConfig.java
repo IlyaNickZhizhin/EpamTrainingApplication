@@ -27,7 +27,6 @@ public class LiquibaseConfig {
     public SpringLiquibase liquibase() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        //TODO не понимаю как найти драйвер для postgresql, hibernate находит, а liquibase нет
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);
         dataSource.setUsername(username);
