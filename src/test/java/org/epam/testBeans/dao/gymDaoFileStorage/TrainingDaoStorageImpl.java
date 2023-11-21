@@ -1,7 +1,7 @@
-package org.epam.dao.gymStorage.gymDaoFileStorage;
+package org.epam.testBeans.dao.gymDaoFileStorage;
 
 import org.epam.model.gymModel.Training;
-import org.epam.storageInFile.Storage;
+import org.epam.testBeans.storageInFile.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

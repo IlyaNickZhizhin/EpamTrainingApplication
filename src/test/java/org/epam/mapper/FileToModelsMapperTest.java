@@ -4,7 +4,8 @@ import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
-import org.epam.storageInFile.Storage;
+import org.epam.testBeans.filereader.FileToModelsMapper;
+import org.epam.testBeans.storageInFile.Storage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

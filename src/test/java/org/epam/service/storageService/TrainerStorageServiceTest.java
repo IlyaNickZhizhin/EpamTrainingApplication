@@ -1,11 +1,11 @@
 package org.epam.service.storageService;
 
 import org.epam.TestDatabaseInitializer;
-import org.epam.dao.gymStorage.UserDaoStorageImpl;
-import org.epam.dao.gymStorage.gymDaoFileStorage.TrainerDaoStorageImpl;
+import org.epam.testBeans.dao.UserDaoStorageImpl;
+import org.epam.testBeans.dao.gymDaoFileStorage.TrainerDaoStorageImpl;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
-import org.epam.service.storage.TrainerStorageService;
+import org.epam.testBeans.service.TrainerStorageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

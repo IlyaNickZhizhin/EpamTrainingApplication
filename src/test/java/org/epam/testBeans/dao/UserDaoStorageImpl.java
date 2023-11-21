@@ -1,11 +1,11 @@
-package org.epam.dao.gymStorage;
+package org.epam.testBeans.dao;
 
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
-import org.epam.storageInFile.Storage;
+import org.epam.testBeans.storageInFile.Storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

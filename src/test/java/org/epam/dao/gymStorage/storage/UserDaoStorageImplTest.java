@@ -4,9 +4,9 @@ import org.epam.TestDatabaseInitializer;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.dao.UserDaoImpl;
-import org.epam.dao.gymStorage.UserDaoStorageImpl;
+import org.epam.testBeans.dao.UserDaoStorageImpl;
 import org.epam.model.User;
-import org.epam.storageInFile.Storage;
+import org.epam.testBeans.storageInFile.Storage;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

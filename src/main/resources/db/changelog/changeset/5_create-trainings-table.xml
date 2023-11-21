@@ -23,7 +23,7 @@
             <column name="training_date" type="date">
                 <constraints nullable="false" />
             </column>
-            <column name="duration" type="bytea"> <!--TODO: не уверен, что это правильное решение....-->
+            <column name="duration" type="float">
                 <constraints nullable="false" />
             </column>
         </createTable>

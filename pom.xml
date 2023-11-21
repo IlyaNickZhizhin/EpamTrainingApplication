@@ -15,11 +15,7 @@
     <sonar.java.binaries>target/classes</sonar.java.binaries>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <spring-core.version>6.0.13</spring-core.version>
-    <spring-context.version>6.0.13</spring-context.version>
-    <spring-orm.version>6.0.13</spring-orm.version>
-    <spring-jdbc.version>6.0.13</spring-jdbc.version>
-    <spring-test.version>6.0.13</spring-test.version>
+    <spring.version>6.0.13</spring.version>
     <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
     <lombok.version>1.18.30</lombok.version>
     <jackson-databind.version>2.15.3</jackson-databind.version>
@@ -43,19 +39,19 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>${spring-core.version}</version>
+      <version>${spring.version}</version>
     </dependency>
 
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-context</artifactId>
-          <version>${spring-context.version}</version>
+          <version>${spring.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
-      <version>${spring-orm.version}</version>
+      <version>${spring.version}</version>
     </dependency>
 
     <dependency>
@@ -149,7 +145,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-      <version>${spring-jdbc.version}</version>
+      <version>${spring.version}</version>
     </dependency>
 
     <dependency>
@@ -161,7 +157,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>${spring-test.version}</version>
+      <version>${spring.version}</version>
       <scope>test</scope>
     </dependency>
 

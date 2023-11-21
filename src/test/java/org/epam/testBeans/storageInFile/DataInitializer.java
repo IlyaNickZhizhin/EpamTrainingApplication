@@ -1,12 +1,8 @@
-package org.epam.storageInFile;
+package org.epam.testBeans.storageInFile;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.epam.mapper.FileToModelsMapper;
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.Training;
-import org.epam.model.gymModel.TrainingType;
+import org.epam.testBeans.filereader.FileToModelsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;

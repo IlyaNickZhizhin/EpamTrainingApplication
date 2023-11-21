@@ -1,4 +1,4 @@
-package org.epam.storageInFile;
+package org.epam.testBeans.storageInFile;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
