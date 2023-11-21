@@ -113,21 +113,6 @@ class TrainerServiceTest {
     }
 
     @Test
-    public void testChangeActive() {
-        User upDated = new User(3, trainer1_FirstName, trainer1_LastName, trainer1_Username, trainer1_Password, false);
-        when(mockUserDao.getByUsername(trainee3_Username)).thenReturn(user3);
-        doNothing().when(mockUserDao).update(user3.getId(), upDated);
-        trainerService.changeActive(trainee3_Username, trainee3_Password);
-        assertEquals(upDated.isActive(), user3.isActive());
-    }
-
-    @Test
-    public void testSetActiveException() {
-        when(mockUserDao.getByUsername(trainer2_Username)).thenReturn(user2);
-        assertThrows(ProhibitedAction.class, () -> trainerService.setActive(trainer2_Username, trainer2_Password, true));
-    }
-
-    @Test
     public void testSetActiveSucssed() {
         User user = new User(2, trainer2_FirstName, trainer2_LastName, trainer2_Username, trainer2_Password, true);
         when(mockUserDao.getByUsername(trainer2_Username)).thenReturn(user);

@@ -158,28 +158,5 @@ class TraineeServiceTest {
         verify(mockPasswordChecker, times(1)).checkPassword(trainee6_Username, trainee6_Password);
     }
 
-    @Test
-    public void testChangeActive() {
-        User upDated = new User(5, trainee5_FirstName, trainee5_LastName, trainee5_Username, trainee5_Password, false);
-        when(mockUserDao.getByUsername(trainee5_Username)).thenReturn(user5);
-        doNothing().when(mockUserDao).update(user5.getId(), upDated);
-        traineeService.changeActive(trainee5_Username, trainee5_Password);
-        assertEquals(upDated.isActive(), user3.isActive());
-    }
-
-    @Test
-    public void testSetActiveException() {
-        when(mockUserDao.getByUsername(trainee4_Username)).thenReturn(user4);
-        assertThrows(ProhibitedAction.class, () -> traineeService.setActive(trainee4_Username, trainee4_Password, true));
-    }
-
-    @Test
-    public void testSetActiveSucssed() {
-        User user = new User(3, trainee3_FirstName, trainee3_LastName, trainee3_Username, trainee3_Password, true);
-        when(mockUserDao.getByUsername(trainee3_Username)).thenReturn(user);
-        assertNotEquals(user, trainee3);
-    }
-
-
 }
 

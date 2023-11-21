@@ -199,17 +199,6 @@ public class TraineeService extends GymAbstractService<Trainee> {
      * This method selects all Trainees from the database.
      * @param username (String)
      * @param password (String)
-     * @throws VerificationException when username and password are incorrect
-     */
-    public void changeActive(String username, String password) throws VerificationException {
-        super.verify(username, password);
-        super.changeActive(username);
-    }
-
-    /**
-     * This method selects all Trainees from the database.
-     * @param username (String)
-     * @param password (String)
      * @param isActive (boolean)
      * @throws VerificationException when username and password are incorrect
      */

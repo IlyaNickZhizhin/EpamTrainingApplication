@@ -119,16 +119,6 @@ public class TrainerService extends GymAbstractService<Trainer> {
         super.changePassword(username, newPassword);
     }
 
-    /**
-     * Changes active status for user with username
-     * @param username (String)
-     * @param password (String)
-     * @throws VerificationException if username or password is incorrect
-     */
-    public void changeActive(String username, String password) throws VerificationException {
-        super.verify(username, password);
-        super.changeActive(username);
-    }
 
     /**
      * Changes active status for user with username

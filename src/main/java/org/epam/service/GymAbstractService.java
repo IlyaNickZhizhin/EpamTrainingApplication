@@ -198,25 +198,6 @@ public abstract class GymAbstractService<M extends Model> {
     }
 
     /**
-     * This method changes active for user with username.
-     * @param username (String)
-     */
-    protected void changeActive(String username){
-        log.info("Changing active for " + username);
-        User user = userDao.getByUsername(username);
-        user.setActive(!user.isActive());
-        try {
-            userDao.update(user.getId(), user);
-        } catch (ResourceNotFoundException e) {
-            log.error("Error changing active for " + username, e);
-            throw e;
-        }
-    }
-
-    // TODO не понимаю какой из двух вариантов выше или ниже - корректный?
-    //   НЕ идемпотентная операция — это действие, многократное повторение которого НЕ эквивалентно однократному.
-
-    /**
      * This method sets active for user with username.
      * @param username (String)
      * @param isActive (boolean)
@@ -225,9 +206,6 @@ public abstract class GymAbstractService<M extends Model> {
         try {
             User user = userDao.getByUsername(username);
             if (user.isActive() != isActive) userDao.update(user.getId(), user);
-            else //return;
-                throw new ProhibitedAction("It is not possible to set active to "
-                        + isActive + " for user it is already " + user.isActive());
         } catch (ResourceNotFoundException e) {
             log.error("Error setting active for " + username, e);
             throw e;
