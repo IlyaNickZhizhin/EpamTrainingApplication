@@ -1,6 +1,6 @@
 package org.epam.dao.gymStorage.storage;
 
-import org.epam.Supplier;
+import org.epam.TestDatabaseInitializer;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.dao.UserDaoImpl;
@@ -27,9 +27,9 @@ class UserDaoStorageImplTest {
         PasswordGenerator mockPasswordGenerator = mock(PasswordGenerator.class);
         when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDaoStorageImpl userDaoStorageImpl = new UserDaoStorageImpl(mockStorage, mockUsernameGenerator, mockPasswordGenerator);
-        User user = Supplier.user1;
+        User user = TestDatabaseInitializer.user1;
         int id = userDaoStorageImpl.create(user).getId();
-        assertEquals(user, userDaoStorageImpl.get(Supplier.user1.getUsername()));
+        assertEquals(user, userDaoStorageImpl.get(TestDatabaseInitializer.user1.getUsername()));
         assertEquals(id, user.getId());
     }
 
@@ -55,12 +55,12 @@ class UserDaoStorageImplTest {
         PasswordGenerator mockPasswordGenerator = mock(PasswordGenerator.class);
         when(mockStorage.getUsers()).thenReturn(new HashMap<>());
         UserDaoStorageImpl userDaoStorageImpl = new UserDaoStorageImpl(mockStorage, mockUsernameGenerator, mockPasswordGenerator);
-        User user = Supplier.user1;
+        User user = TestDatabaseInitializer.user1;
         int id = userDaoStorageImpl.create(user).getId();
-        User updatedUser = Supplier.user1;
+        User updatedUser = TestDatabaseInitializer.user1;
         updatedUser.setFirstName("Updated");
         userDaoStorageImpl.update(updatedUser);
-        assertEquals(updatedUser, userDaoStorageImpl.get(Supplier.user1.getUsername()));
+        assertEquals(updatedUser, userDaoStorageImpl.get(TestDatabaseInitializer.user1.getUsername()));
     }
 
     @Test

@@ -1,6 +1,6 @@
 package org.epam.service;
 
-import org.epam.Supplier;
+import org.epam.TestDatabaseInitializer;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDaoImpl;
@@ -14,7 +14,7 @@ import org.mockito.Mock;
 
 import java.time.LocalDate;
 
-import static org.epam.Supplier.*;
+import static org.epam.TestDatabaseInitializer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -120,7 +120,7 @@ class TraineeServiceTest {
 
     @Test
     public void testDelete() {
-        Trainee trainee = Supplier.trainee4;
+        Trainee trainee = TestDatabaseInitializer.trainee4;
         String name = user4.getFirstName();
         String surname = user4.getLastName();
         when(mockUserDao.setNewUser(name, surname)).thenReturn(user4);
@@ -134,9 +134,9 @@ class TraineeServiceTest {
     public void testSelect() {
         Trainee trainee = new Trainee();
         trainee.setId(1);
-        trainee.setUser(Supplier.user1);
+        trainee.setUser(TestDatabaseInitializer.user1);
         when(mockTraineeDao.get(1)).thenReturn(trainee);
-        assertEquals(trainee, traineeService.select( Supplier.user1.getUsername(), Supplier.user1.getPassword(),1));
+        assertEquals(trainee, traineeService.select( TestDatabaseInitializer.user1.getUsername(), TestDatabaseInitializer.user1.getPassword(),1));
     }
 
     @Test

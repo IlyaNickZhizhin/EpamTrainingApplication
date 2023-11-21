@@ -1,7 +1,7 @@
 package org.epam.service;
 
 
-import org.epam.Supplier;
+import org.epam.TestDatabaseInitializer;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDaoImpl;
@@ -16,7 +16,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.epam.Supplier.*;
+import static org.epam.TestDatabaseInitializer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -55,7 +55,7 @@ class TrainerServiceTest {
                 .thenReturn(user1);
         when(mockUserDao.create(any(User.class))).thenReturn(user1);
         when(mockTrainerDao.get(1)).thenReturn(trainer);
-        trainerService.create(user1.getFirstName(), user1.getLastName(), Supplier.trainingType1);
+        trainerService.create(user1.getFirstName(), user1.getLastName(), TestDatabaseInitializer.trainingType1);
         when(mockTrainerDao.get(1)).thenReturn(trainer);
         assertEquals(trainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
     }
@@ -70,7 +70,7 @@ class TrainerServiceTest {
         when(mockTrainerDao.get(1)).thenReturn(trainer);
         Trainer updatedTrainer = new Trainer(trainer1.getId(), trainer1.getSpecialization(), user1);
         assertEquals(updatedTrainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
-        updatedTrainer.setSpecialization(Supplier.trainingType2);
+        updatedTrainer.setSpecialization(TestDatabaseInitializer.trainingType2);
         trainerService.update(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1, updatedTrainer);
         when(mockTrainerDao.get(1)).thenReturn(updatedTrainer);
         assertEquals(updatedTrainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));

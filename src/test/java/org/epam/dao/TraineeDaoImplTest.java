@@ -3,22 +3,19 @@ package org.epam.dao;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.hibernate.query.internal.NativeQueryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import static org.epam.Supplier.trainee3;
-import static org.epam.Supplier.trainee4;
-import static org.epam.Supplier.user3;
+import static org.epam.TestDatabaseInitializer.trainee3;
+import static org.epam.TestDatabaseInitializer.trainee4;
+import static org.epam.TestDatabaseInitializer.user3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;

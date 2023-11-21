@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import static org.epam.model.gymModel.TrainingType.TrainingName.BASIC;
 import static org.epam.model.gymModel.TrainingType.TrainingName.CARDIO;
 
-public interface Supplier {
+public interface TestDatabaseInitializer {
 
     String trainer1_FirstName = "Petr"; String trainer1_LastName = "Petrov";  boolean trainer1_Active = true;
     String trainer1_Username = "Petr.Petrov"; String trainer1_Password = "password01";
@@ -63,8 +63,6 @@ public interface Supplier {
     Trainee trainee5 = new Trainee(3, trainee5_Birthday, null, user5);
 
     Trainee trainee6 = new Trainee(4, null, trainee6_Address, user6);
-
-
 
     Training training1 = new Training(1, trainee3, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
 

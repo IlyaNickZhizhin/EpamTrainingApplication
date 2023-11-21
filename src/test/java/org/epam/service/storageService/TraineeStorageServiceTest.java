@@ -1,6 +1,6 @@
 package org.epam.service.storageService;
 
-import org.epam.Supplier;
+import org.epam.TestDatabaseInitializer;
 import org.epam.dao.gymStorage.UserDaoStorageImpl;
 import org.epam.dao.gymStorage.gymDaoFileStorage.TraineeDaoStorageImpl;
 import org.epam.model.User;
@@ -64,11 +64,11 @@ class TraineeStorageServiceTest {
 
     @Test
     public void testDelete() {
-        Trainee trainee = Supplier.trainee4;
-        String name = Supplier.user4.getFirstName();
-        String surname = Supplier.user4.getLastName();
-        when(mockUserDaoStorageImpl.setNewUser(name, surname)).thenReturn(Supplier.user4);
-        when(mockUserDaoStorageImpl.create(any(User.class))).thenReturn(Supplier.user4);
+        Trainee trainee = TestDatabaseInitializer.trainee4;
+        String name = TestDatabaseInitializer.user4.getFirstName();
+        String surname = TestDatabaseInitializer.user4.getLastName();
+        when(mockUserDaoStorageImpl.setNewUser(name, surname)).thenReturn(TestDatabaseInitializer.user4);
+        when(mockUserDaoStorageImpl.create(any(User.class))).thenReturn(TestDatabaseInitializer.user4);
         traineeService.create(name, surname);
         traineeService.delete(2);
         assertNull(traineeService.select(2));

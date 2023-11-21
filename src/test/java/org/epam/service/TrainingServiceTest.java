@@ -1,22 +1,19 @@
 package org.epam.service;
 
-import org.epam.Supplier;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
-import org.epam.model.gymModel.TrainingType;
 import org.epam.model.gymModel.UserSetter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.epam.Supplier.*;
+import static org.epam.TestDatabaseInitializer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

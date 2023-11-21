@@ -6,14 +6,13 @@ import org.epam.config.UsernameGenerator;
 import org.epam.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static org.epam.Supplier.trainer2_FirstName;
-import static org.epam.Supplier.trainer2_LastName;
-import static org.epam.Supplier.user1;
+import static org.epam.TestDatabaseInitializer.trainer2_FirstName;
+import static org.epam.TestDatabaseInitializer.trainer2_LastName;
+import static org.epam.TestDatabaseInitializer.user1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;

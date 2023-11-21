@@ -1,6 +1,6 @@
 package org.epam.model;
 
-import org.epam.Supplier;
+import org.epam.TestDatabaseInitializer;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -14,11 +14,11 @@ public class ModelTest {
 
     @Test
     public void testUserEqualsAndHashCode() {
-        User user1 = Supplier.user1;
+        User user1 = TestDatabaseInitializer.user1;
         User user2 = user1;
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
-        user2 = Supplier.user2;
+        user2 = TestDatabaseInitializer.user2;
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
@@ -45,22 +45,22 @@ public class ModelTest {
 
     @Test
     public void testTraineeEqualsAndHashCode() {
-        Trainee trainee1 = Supplier.trainee3;
-        Trainee trainee2 = Supplier.trainee3;
+        Trainee trainee1 = TestDatabaseInitializer.trainee3;
+        Trainee trainee2 = TestDatabaseInitializer.trainee3;
         assertEquals(trainee1, trainee2);
         assertEquals(trainee1.hashCode(), trainee2.hashCode());
-        trainee2 = Supplier.trainee4;
+        trainee2 = TestDatabaseInitializer.trainee4;
         assertNotEquals(trainee1, trainee2);
         assertNotEquals(trainee1.hashCode(), trainee2.hashCode());
     }
 
     @Test
     public void testTrainingEqualsAndHashCode() {
-        Training training1 = Supplier.training1;
-        Training training2 = Supplier.training1;
+        Training training1 = TestDatabaseInitializer.training1;
+        Training training2 = TestDatabaseInitializer.training1;
         assertEquals(training1, training2);
         assertEquals(training1.hashCode(), training2.hashCode());
-        training2 = Supplier.training2;
+        training2 = TestDatabaseInitializer.training2;
         assertNotEquals(training1, training2);
         assertNotEquals(training1.hashCode(), training2.hashCode());
     }

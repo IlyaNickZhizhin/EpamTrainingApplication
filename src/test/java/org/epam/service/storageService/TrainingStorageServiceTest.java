@@ -1,6 +1,6 @@
 package org.epam.service.storageService;
 
-import org.epam.Supplier;
+import org.epam.TestDatabaseInitializer;
 import org.epam.dao.gymStorage.gymDaoFileStorage.TrainingDaoStorageImpl;
 import org.epam.model.gymModel.Training;
 import org.epam.service.storage.TraineeStorageService;
@@ -34,15 +34,15 @@ class TrainingStorageServiceTest {
 
     @Test
     public void testCreate() {
-        Training training = Supplier.training1;
+        Training training = TestDatabaseInitializer.training1;
         when(mockTrainingDaoStorageImpl.get(1)).thenReturn(training);
         trainingService.create(
-            Supplier.training1.getTrainingName(),
-            Supplier.training1.getTrainingDate(),
-            Supplier.training1.getDuration(),
-            Supplier.training1.getTrainer(),
-            Supplier.training1.getTrainee(),
-            Supplier.training1.getTrainingType()
+            TestDatabaseInitializer.training1.getTrainingName(),
+            TestDatabaseInitializer.training1.getTrainingDate(),
+            TestDatabaseInitializer.training1.getDuration(),
+            TestDatabaseInitializer.training1.getTrainer(),
+            TestDatabaseInitializer.training1.getTrainee(),
+            TestDatabaseInitializer.training1.getTrainingType()
         );
         assertEquals(training, trainingService.select(1));
     }

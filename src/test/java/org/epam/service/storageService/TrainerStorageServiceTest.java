@@ -1,6 +1,6 @@
 package org.epam.service.storageService;
 
-import org.epam.Supplier;
+import org.epam.TestDatabaseInitializer;
 import org.epam.dao.gymStorage.UserDaoStorageImpl;
 import org.epam.dao.gymStorage.gymDaoFileStorage.TrainerDaoStorageImpl;
 import org.epam.model.User;
@@ -35,26 +35,26 @@ class TrainerStorageServiceTest {
 
     @Test
     public void testCreate() {
-        Trainer trainer = Supplier.trainer1;
-        when(mockUserDaoStorageImpl.setNewUser(Supplier.user1.getFirstName(), Supplier.user1.getLastName()))
-                .thenReturn(Supplier.user1);
-        when(mockUserDaoStorageImpl.create(any(User.class))).thenReturn(Supplier.user1);
+        Trainer trainer = TestDatabaseInitializer.trainer1;
+        when(mockUserDaoStorageImpl.setNewUser(TestDatabaseInitializer.user1.getFirstName(), TestDatabaseInitializer.user1.getLastName()))
+                .thenReturn(TestDatabaseInitializer.user1);
+        when(mockUserDaoStorageImpl.create(any(User.class))).thenReturn(TestDatabaseInitializer.user1);
         when(mockTrainerDaoStorageImpl.get(1)).thenReturn(trainer);
-        trainerService.create(Supplier.trainingType1, Supplier.user1.getFirstName(), Supplier.user1.getLastName());
+        trainerService.create(TestDatabaseInitializer.trainingType1, TestDatabaseInitializer.user1.getFirstName(), TestDatabaseInitializer.user1.getLastName());
         assertEquals(trainer, trainerService.select(1));
     }
 
     @Test
     public void testUpdate() {
-        Trainer trainer =Supplier.trainer1;
-        String name = Supplier.user1.getFirstName();
-        String surname = Supplier.user1.getLastName();
-        when(mockUserDaoStorageImpl.setNewUser(name, surname)).thenReturn(Supplier.user1);
-        when(mockUserDaoStorageImpl.create(any(User.class))).thenReturn(Supplier.user1);
+        Trainer trainer = TestDatabaseInitializer.trainer1;
+        String name = TestDatabaseInitializer.user1.getFirstName();
+        String surname = TestDatabaseInitializer.user1.getLastName();
+        when(mockUserDaoStorageImpl.setNewUser(name, surname)).thenReturn(TestDatabaseInitializer.user1);
+        when(mockUserDaoStorageImpl.create(any(User.class))).thenReturn(TestDatabaseInitializer.user1);
         Trainer updatedTrainer = new Trainer();
-        updatedTrainer.setSpecialization(Supplier.trainingType2);
+        updatedTrainer.setSpecialization(TestDatabaseInitializer.trainingType2);
         when(mockTrainerDaoStorageImpl.get(1)).thenReturn(updatedTrainer);
-        trainerService.create(Supplier.trainingType2, "Test", "Trainer");
+        trainerService.create(TestDatabaseInitializer.trainingType2, "Test", "Trainer");
         trainerService.update(1, updatedTrainer);
         assertEquals(updatedTrainer, trainerService.select(1));
         assertNotEquals(trainer, trainerService.select(1));
@@ -62,7 +62,7 @@ class TrainerStorageServiceTest {
 
     @Test
     public void testSelect() {
-        Trainer trainer = Supplier.trainer1;
+        Trainer trainer = TestDatabaseInitializer.trainer1;
         when(mockTrainerDaoStorageImpl.get(1)).thenReturn(trainer);
         assertEquals(trainer, trainerService.select(1));
     }
