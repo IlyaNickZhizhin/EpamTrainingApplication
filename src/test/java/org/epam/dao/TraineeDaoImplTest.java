@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,21 +29,22 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@ActiveProfiles("test")
 public class TraineeDaoImplTest {
 
-    @Autowired
-    Storage storage;
     @Mock
     private SessionFactory sessionFactory = mock(SessionFactory.class);
     @Mock
     private Session session = mock(Session.class);
     @Mock
     private UserDaoImpl userDao = mock(UserDaoImpl.class);
-    private TraineeDaoImpl traineeDao = new TraineeDaoImpl(sessionFactory, userDao);
+
+    @InjectMocks
+    private TraineeDaoImpl traineeDao;
     @BeforeEach
     public void setup() {
+        initMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
     }
 

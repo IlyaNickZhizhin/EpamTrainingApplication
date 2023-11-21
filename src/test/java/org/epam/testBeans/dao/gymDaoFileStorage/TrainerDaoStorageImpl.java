@@ -9,8 +9,7 @@ public class TrainerDaoStorageImpl extends GymDaoStorage<Trainer> {
 
     private static final String NAMESPACE = Trainer.class.getName();
 
-    public TrainerDaoStorageImpl(Storage<Trainer> storage) {
-        super(storage);
+    public TrainerDaoStorageImpl() {
         super.namespace = NAMESPACE;
     }
 

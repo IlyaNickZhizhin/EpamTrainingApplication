@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.epam.TestDatabaseInitializer.trainer2_FirstName;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserDaoImplTest {
 
@@ -32,10 +34,12 @@ public class UserDaoImplTest {
     @Mock
     private PasswordGenerator passwordGenerator = mock(PasswordGenerator.class);
 
-    private UserDaoImpl userDao = new UserDaoImpl(sessionFactory, usernameGenerator, passwordGenerator);
+    @InjectMocks
+    private UserDaoImpl userDao;
 
     @BeforeEach
     public void setup() {
+        initMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
     }
 

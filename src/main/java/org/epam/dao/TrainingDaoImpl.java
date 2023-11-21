@@ -32,10 +32,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
 
-    public TrainingDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
-        super(sessionFactory, userDao);
-    }
-
     /**
      * This method updates a Training in the database using its ID and an updated Training object.
      * @param id

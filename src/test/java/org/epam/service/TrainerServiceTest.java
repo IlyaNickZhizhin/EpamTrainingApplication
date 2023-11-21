@@ -9,7 +9,9 @@ import org.epam.exceptions.ProhibitedAction;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.nio.file.AccessDeniedException;
@@ -26,25 +28,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 class TrainerServiceTest {
 
     @Mock
-    private static TrainerDaoImpl mockTrainerDao= mock(TrainerDaoImpl.class);
+    private TrainerDaoImpl mockTrainerDao= mock(TrainerDaoImpl.class);
 
     @Mock
-    private static UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
+    private UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
 
     @Mock
-    private static PasswordChecker mockPasswordChecker = mock(PasswordChecker.class);
+    private PasswordChecker mockPasswordChecker = mock(PasswordChecker.class);
 
-    private static TrainerService trainerService = new TrainerService();
+    @InjectMocks
+    private TrainerService trainerService;
 
-    @BeforeAll
-    public static void setUp() {
-        trainerService.setPasswordChecker(mockPasswordChecker);
+    @BeforeEach
+    public void setUp() {
+        initMocks(this);
         trainerService.setTrainerDao(mockTrainerDao);
-        trainerService.setUserDao(mockUserDao);
     }
 
 

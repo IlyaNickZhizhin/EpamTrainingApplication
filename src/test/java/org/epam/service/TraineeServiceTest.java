@@ -9,7 +9,10 @@ import org.epam.exceptions.ProhibitedAction;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.LocalDate;
@@ -25,26 +28,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 class TraineeServiceTest {
 
     @Mock
-    private static TraineeDaoImpl mockTraineeDao = mock(TraineeDaoImpl.class);
+    private TraineeDaoImpl mockTraineeDao = mock(TraineeDaoImpl.class);
 
     @Mock
-    private static UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
+    private UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
 
     @Mock
-    private static PasswordChecker mockPasswordChecker = mock(PasswordChecker.class);
+    private PasswordChecker mockPasswordChecker = mock(PasswordChecker.class);
 
+    @InjectMocks
+    private  TraineeService traineeService = new TraineeService();
 
-    private static final TraineeService traineeService = new TraineeService();
-
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
+        initMocks(this);
         traineeService.setTraineeDao(mockTraineeDao);
-        traineeService.setUserDao(mockUserDao);
-        traineeService.setPasswordChecker(mockPasswordChecker);
     }
 
     @Test

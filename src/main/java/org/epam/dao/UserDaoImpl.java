@@ -38,13 +38,6 @@ public class UserDaoImpl {
     PasswordGenerator passwordGenerator;
     UsernameGenerator usernameGenerator;
 
-    @Autowired
-    public UserDaoImpl(SessionFactory factory, UsernameGenerator usernameGenerator, PasswordGenerator passwordGenerator) {
-        this.factory = factory;
-        this.passwordGenerator = passwordGenerator;
-        this.usernameGenerator = usernameGenerator;
-    }
-
     /**
      * This method creates a new User in the database. It logs an informational message before saving the User.
      * @param user

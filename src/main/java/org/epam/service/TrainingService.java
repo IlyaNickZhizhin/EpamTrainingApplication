@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import lombok.RequiredArgsConstructor;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.exceptions.ProhibitedAction;
@@ -29,20 +30,15 @@ import java.util.List;
 @Service
 public class TrainingService extends GymAbstractService<Training> {
 
+    @Autowired
     TraineeService traineeService;
+
+    @Autowired
     TrainerService trainerService;
 
     @Autowired
     public void setTrainingDao(TrainingDaoImpl trainingDao) {
         super.gymDao = trainingDao;
-    }
-    @Autowired
-    public void setTraineeService(TraineeService traineeService) {
-        this.traineeService = traineeService;
-    }
-    @Autowired
-    public void setTrainerService(TrainerService trainerService) {
-        this.trainerService = trainerService;
     }
 
     /** This method take parameters of a new Training object and saves it to the database.

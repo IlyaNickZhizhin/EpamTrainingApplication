@@ -1,5 +1,6 @@
 package org.epam.testBeans.dao.gymDaoFileStorage;
 
+import lombok.Setter;
 import org.epam.dao.Dao;
 import org.epam.model.gymModel.Model;
 import org.epam.testBeans.storageInFile.Storage;
@@ -9,21 +10,17 @@ import org.springframework.context.annotation.DependsOn;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @DependsOn("dataInitializer")
+@Setter
 public abstract class GymDaoStorage<M extends Model> implements Dao<M> {
 
+    @Autowired
     Storage<M> storage;
-    private final AtomicInteger AUTO_ID = new AtomicInteger(0);
 
     protected String namespace;
 
-    @Autowired
-    public GymDaoStorage(Storage<M> storage) {
-        this.storage = storage;
-    }
-
     @Override
     public M create(M model) {
-        model.setId(AUTO_ID.incrementAndGet());
+        model.setId(model.getId());
         save(model);
         return model;
     }

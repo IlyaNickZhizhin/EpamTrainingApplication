@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository;
 public class TrainingDaoStorageImpl extends GymDaoStorage<Training> {
 
     private static final String NAMESPACE = Training.class.getName();
-    @Autowired
-    public TrainingDaoStorageImpl(Storage<Training> storage) {
-        super(storage);
+
+    public TrainingDaoStorageImpl() {
         super.namespace = NAMESPACE;
     }
 

@@ -23,10 +23,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TrainerDaoImpl extends GymAbstractDaoImpl<Trainer>{
 
-    public TrainerDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
-        super(sessionFactory, userDao);
-    }
-
     /**
      * This method updates a Trainer in the database using its ID and an updated Trainer object.
      * It logs an informational message before the update operation.

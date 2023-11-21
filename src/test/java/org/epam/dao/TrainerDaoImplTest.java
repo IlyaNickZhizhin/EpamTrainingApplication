@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.epam.TestDatabaseInitializer.trainer1;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 public class TrainerDaoImplTest {
 
     @Mock
@@ -33,9 +36,11 @@ public class TrainerDaoImplTest {
     private Session session = mock(Session.class);
     @Mock
     private UserDaoImpl userDao = mock(UserDaoImpl.class);
-    private TrainerDaoImpl trainerDao = new TrainerDaoImpl(sessionFactory, userDao);
+    @InjectMocks
+    private TrainerDaoImpl trainerDao;
     @BeforeEach
     public void setup() {
+        initMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
     }
 

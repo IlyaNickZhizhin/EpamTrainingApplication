@@ -1,6 +1,7 @@
 package org.epam.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.GymAbstractDaoImpl;
@@ -40,23 +41,18 @@ import java.util.List;
 @Transactional
 @Slf4j
 public abstract class GymAbstractService<M extends Model> {
-    protected GymAbstractDaoImpl<M> gymDao;
-    protected UserDaoImpl userDao;
-    protected PasswordChecker passwordChecker;
-    protected Class<M> modelClass;
-    @Autowired
-    public void setUserDao(UserDaoImpl userDao) {
-        this.userDao = userDao;
-    }
-    @Autowired
-    public void setPasswordChecker(PasswordChecker passwordChecker) {
-        this.passwordChecker = passwordChecker;
-    }
 
-    public GymAbstractService() {
-        this.modelClass = (Class<M>) ((ParameterizedType) getClass()
+    @Autowired
+    protected GymAbstractDaoImpl<M> gymDao;
+
+    @Autowired
+    protected UserDaoImpl userDao;
+
+    @Autowired
+    protected PasswordChecker passwordChecker;
+
+    protected Class<M> modelClass = (Class<M>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
-    }
 
     /**
      * This method creates a new model in the database. It logs an informational message before saving the model.

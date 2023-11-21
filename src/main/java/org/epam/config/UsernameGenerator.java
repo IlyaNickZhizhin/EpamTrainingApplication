@@ -1,5 +1,7 @@
 package org.epam.config;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.epam.dao.UserDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -9,14 +11,10 @@ import java.util.logging.Logger;
 
 @Component
 @DependsOn("dataInitializer")
+@AllArgsConstructor
 public class UsernameGenerator {
 
     private UserDaoImpl userDao;
-
-    @Autowired
-    public UsernameGenerator(UserDaoImpl userDao) {
-        this.userDao = userDao;
-    }
 
     public String getDefaultUsername(String firstName, String lastName) {
 

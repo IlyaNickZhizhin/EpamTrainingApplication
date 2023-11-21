@@ -5,7 +5,9 @@ import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;
 import org.epam.testBeans.storageInFile.Storage;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 
 import java.util.HashMap;
 
@@ -14,26 +16,28 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 class TrainerDaoStorageImplTest {
 
-    static TrainerDaoStorageImpl trainerDaoStorageImpl;
+    Storage mockStorage = mock(Storage.class);
+    @InjectMocks
+    TrainerDaoStorageImpl trainerDaoStorageImpl;
 
-    @BeforeAll
-    public static void beforeAll() {
-        Storage mockStorage = mock(Storage.class);
+    @BeforeEach
+    public void beforeEach() {
+        initMocks(this);
         HashMap<Integer, Trainer> trainers = new HashMap<>();
         HashMap<String, HashMap<Integer, Trainer>> models = new HashMap<>();
         models.put(Trainer.class.getName(), trainers);
         when(mockStorage.getGymModels()).thenReturn(models);
-        trainerDaoStorageImpl = new TrainerDaoStorageImpl(mockStorage);
     }
 
     @Test
     public void testCreateTrainer() {
         Trainer trainer = new Trainer();
         trainerDaoStorageImpl.create(trainer);
-        assertEquals(trainer, trainerDaoStorageImpl.get(1));
+        assertEquals(trainer, trainerDaoStorageImpl.get(0));
     }
 
     @Test

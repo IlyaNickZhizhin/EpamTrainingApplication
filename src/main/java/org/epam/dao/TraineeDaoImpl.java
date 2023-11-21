@@ -1,6 +1,7 @@
 package org.epam.dao;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
@@ -18,10 +19,6 @@ import org.springframework.stereotype.Repository;
 @Transactional
 @Slf4j
 public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
-
-    public TraineeDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
-        super(sessionFactory, userDao);
-    }
 
     /**
      * This method updates a Trainee in the database using its ID and an updated Trainee object. It logs an informational message before the update operation.

@@ -7,7 +7,9 @@ import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.UserSetter;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
@@ -17,35 +19,34 @@ import static org.epam.TestDatabaseInitializer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 class TrainingServiceTest {
 
     @Mock
-    private static TrainingDaoImpl mockTrainingDao = mock(TrainingDaoImpl.class);
+    private TrainingDaoImpl mockTrainingDao = mock(TrainingDaoImpl.class);
 
     @Mock
-    private static TrainerService mockTrainerService = mock(TrainerService.class);
+    private TrainerService mockTrainerService = mock(TrainerService.class);
 
     @Mock
-    private static TraineeService mockTraineeService = mock(TraineeService.class);
+    private TraineeService mockTraineeService = mock(TraineeService.class);
 
     @Mock
-    private static PasswordChecker mockPasswordChecker = mock(PasswordChecker.class);
+    private PasswordChecker mockPasswordChecker = mock(PasswordChecker.class);
 
     @Mock
-    private static UserSetter userSetter = mock(Trainer.class);
+    private UserSetter userSetter = mock(Trainer.class);
 
     @Mock
-    private static UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
+    private UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
 
-    private static final TrainingService trainingService = new TrainingService();
-    @BeforeAll
-    static void setUp() {
+    @InjectMocks
+    private TrainingService trainingService;
+    @BeforeEach
+    void setUp() {
+        initMocks(this);
         trainingService.setTrainingDao(mockTrainingDao);
-        trainingService.setPasswordChecker(mockPasswordChecker);
-        trainingService.setTraineeService(mockTraineeService);
-        trainingService.setTrainerService(mockTrainerService);
-        trainingService.setUserDao(mockUserDao);
     }
 
     @Test

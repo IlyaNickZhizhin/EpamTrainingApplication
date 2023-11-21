@@ -10,6 +10,7 @@ import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.UserSetter;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.ParameterizedType;
@@ -36,16 +37,12 @@ import java.util.List;
 @Slf4j
 public abstract class GymAbstractDaoImpl<M extends Model> implements Dao<M>{
 
-    protected Class<M> modelClass;
+    protected Class<M> modelClass = (Class<M>) ((ParameterizedType) getClass()
+            .getGenericSuperclass()).getActualTypeArguments()[0];;
+    @Autowired
     protected SessionFactory sessionFactory;
+    @Autowired
     private UserDaoImpl userDao;
-
-    public GymAbstractDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
-        this.sessionFactory = sessionFactory;
-        this.userDao = userDao;
-        this.modelClass = (Class<M>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0];
-    }
 
     /**
      * This method creates a new model in the database. It logs an informational message before saving the model.
