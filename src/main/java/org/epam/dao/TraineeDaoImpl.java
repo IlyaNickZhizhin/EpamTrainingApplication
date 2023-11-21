@@ -1,11 +1,8 @@
 package org.epam.dao;
 
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 /**

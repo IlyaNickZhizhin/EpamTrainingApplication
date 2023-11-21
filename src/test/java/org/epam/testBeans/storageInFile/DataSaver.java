@@ -2,8 +2,8 @@ package org.epam.testBeans.storageInFile;
 
 import jakarta.annotation.PreDestroy;
 import org.epam.exceptions.StorageException;
-import org.epam.testBeans.filereader.FileToModelsMapper;
 import org.epam.model.gymModel.Trainer;
+import org.epam.testBeans.filereader.FileToModelsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.epam.TestDatabaseInitializer.trainer1;
 import static org.epam.TestDatabaseInitializer.trainer2;
 import static org.epam.TestDatabaseInitializer.trainingType1;
 import static org.epam.TestDatabaseInitializer.user1;
@@ -24,8 +25,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import static org.epam.TestDatabaseInitializer.trainer1;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TrainerDaoImplTest {

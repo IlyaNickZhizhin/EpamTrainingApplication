@@ -1,7 +1,6 @@
 package org.epam.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;

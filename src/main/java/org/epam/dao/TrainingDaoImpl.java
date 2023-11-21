@@ -1,6 +1,5 @@
 package org.epam.dao;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
@@ -10,7 +9,6 @@ import org.epam.model.gymModel.TrainingType;
 import org.epam.model.gymModel.UserSetter;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -1,10 +1,9 @@
 package org.epam.dao.gymStorage.storage.gymDaoFileStorage;
 
-import org.epam.testBeans.dao.gymDaoFileStorage.TrainerDaoStorageImpl;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;
+import org.epam.testBeans.dao.gymDaoFileStorage.TrainerDaoStorageImpl;
 import org.epam.testBeans.storageInFile.Storage;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,10 +1,10 @@
 package org.epam.testBeans.service;
 
-import org.epam.testBeans.dao.gymDaoFileStorage.TrainingDaoStorageImpl;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
+import org.epam.testBeans.dao.gymDaoFileStorage.TrainingDaoStorageImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

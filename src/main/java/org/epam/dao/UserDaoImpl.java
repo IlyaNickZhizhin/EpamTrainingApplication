@@ -1,6 +1,5 @@
 package org.epam.dao;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
@@ -9,7 +8,6 @@ import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**

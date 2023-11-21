@@ -1,8 +1,8 @@
 package org.epam.service.storageService;
 
 import org.epam.TestDatabaseInitializer;
-import org.epam.testBeans.dao.gymDaoFileStorage.TrainingDaoStorageImpl;
 import org.epam.model.gymModel.Training;
+import org.epam.testBeans.dao.gymDaoFileStorage.TrainingDaoStorageImpl;
 import org.epam.testBeans.service.TraineeStorageService;
 import org.epam.testBeans.service.TrainerStorageService;
 import org.epam.testBeans.service.TrainingStorageService;

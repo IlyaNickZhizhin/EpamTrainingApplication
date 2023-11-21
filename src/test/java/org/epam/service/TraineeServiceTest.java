@@ -5,13 +5,10 @@ import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.exceptions.InvalidDataException;
-import org.epam.exceptions.ProhibitedAction;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -26,8 +23,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class TraineeServiceTest {

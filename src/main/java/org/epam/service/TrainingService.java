@@ -1,7 +1,6 @@
 package org.epam.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.exceptions.ProhibitedAction;

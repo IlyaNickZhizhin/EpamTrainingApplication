@@ -4,15 +4,14 @@ import org.epam.TestDatabaseInitializer;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.dao.UserDaoImpl;
-import org.epam.testBeans.dao.UserDaoStorageImpl;
 import org.epam.model.User;
+import org.epam.testBeans.dao.UserDaoStorageImpl;
 import org.epam.testBeans.storageInFile.Storage;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;

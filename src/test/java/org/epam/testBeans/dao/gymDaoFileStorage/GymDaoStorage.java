@@ -7,8 +7,6 @@ import org.epam.testBeans.storageInFile.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 @DependsOn("dataInitializer")
 @Setter
 public abstract class GymDaoStorage<M extends Model> implements Dao<M> {

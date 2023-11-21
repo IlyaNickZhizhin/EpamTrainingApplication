@@ -1,7 +1,7 @@
 package org.epam.storageInFile;
 
-import org.epam.testBeans.filereader.FileToModelsMapper;
 import org.epam.model.gymModel.Trainer;
+import org.epam.testBeans.filereader.FileToModelsMapper;
 import org.epam.testBeans.storageInFile.DataInitializer;
 import org.epam.testBeans.storageInFile.DataSaver;
 import org.epam.testBeans.storageInFile.Storage;
