@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,14 +22,9 @@ import java.time.LocalDate;
  * This class is used to store information about trainings.
  * @see Model
  */
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @Entity
 @Table(name = "trainings")
-@ToString
 public class Training implements Model {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)

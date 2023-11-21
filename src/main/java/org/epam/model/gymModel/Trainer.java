@@ -7,6 +7,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,13 +22,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * @see Model
  * @see UserSetter
  */
-@EqualsAndHashCode
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@ToString
+@Data
 @Table(name = "trainers")
 public class Trainer implements Model, UserSetter {
 

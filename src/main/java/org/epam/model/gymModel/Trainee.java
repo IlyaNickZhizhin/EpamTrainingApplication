@@ -10,10 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.epam.model.User;
 
 import java.time.LocalDate;
@@ -27,10 +24,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * @see Model
  * @see UserSetter
  */
-@EqualsAndHashCode
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "trainees")
 public class Trainee implements Model, UserSetter {
