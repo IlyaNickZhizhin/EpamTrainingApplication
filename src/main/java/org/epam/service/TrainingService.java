@@ -81,7 +81,7 @@ public class TrainingService extends GymAbstractService<Training> {
         String ingName = (String) parameters[1];
         TrainingType type = (TrainingType) parameters[2];
         LocalDate date = (LocalDate) parameters[3];
-        Number duration = (Number) parameters[4];
+        double duration = (double) parameters[4];
         if (who.getClass().equals(Trainee.class)) {
             ee = (Trainee) who;
             er = (Trainer) parameters[0];

@@ -54,6 +54,6 @@ public class Training implements Model {
     private LocalDate trainingDate;
 
     @Column(name = "duration", nullable = false)
-    private Number duration;
+    private Double duration;
 
 }

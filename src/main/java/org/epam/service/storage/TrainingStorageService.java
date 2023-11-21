@@ -31,7 +31,7 @@ public class TrainingStorageService {
 
 
 
-    public Training create(String Name, LocalDate trainingDate, Number duration, Trainer trainer, Trainee trainee, TrainingType trainingType) {
+    public Training create(String Name, LocalDate trainingDate, double duration, Trainer trainer, Trainee trainee, TrainingType trainingType) {
         Training training = new Training();
         training.setTrainingName(Name);
         training.setTrainingDate(trainingDate);

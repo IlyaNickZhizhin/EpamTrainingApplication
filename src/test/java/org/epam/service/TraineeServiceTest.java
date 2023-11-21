@@ -120,7 +120,7 @@ class TraineeServiceTest {
 
     @Test
     public void testDelete() {
-        Trainee trainee = TestDatabaseInitializer.trainee4;
+        Trainee trainee = trainee4;
         String name = user4.getFirstName();
         String surname = user4.getLastName();
         when(mockUserDao.setNewUser(name, surname)).thenReturn(user4);

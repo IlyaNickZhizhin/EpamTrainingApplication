@@ -38,6 +38,7 @@ public class Storage<M extends Model> {
         gymModels.put(Trainer.class.getName(), new HashMap<>());
         gymModels.put(Trainee.class.getName(), new HashMap<>());
         gymModels.put(Training.class.getName(), new HashMap<>());
+        gymModels.put(TrainingType.class.getName(), new HashMap<>());
         logger.info("Begin reading initial file");
     }
 

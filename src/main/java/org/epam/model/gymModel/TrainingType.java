@@ -1,5 +1,6 @@
 package org.epam.model.gymModel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,6 +38,7 @@ public class TrainingType implements Model {
     int id;
     @Enumerated(EnumType.STRING)
     @Column(name = "training_name", nullable = false)
+    @JsonProperty("training_name")
     private TrainingName trainingName;
     public TrainingType(TrainingName trainingName) {
         this.trainingName = trainingName;

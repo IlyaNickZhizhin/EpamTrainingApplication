@@ -64,9 +64,12 @@ public interface TestDatabaseInitializer {
 
     Trainee trainee6 = new Trainee(4, null, trainee6_Address, user6);
 
+
+
     Training training1 = new Training(1, trainee3, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
 
     Training training2 = new Training(
             1, trainee4, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
+
 
 }
