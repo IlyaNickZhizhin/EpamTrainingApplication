@@ -22,13 +22,9 @@ import java.util.stream.Collectors;
  * @see org.epam.model.gymModel.Training
  * @see org.epam.dao.GymAbstractDaoImpl
  * @see org.epam.dao.TrainingDaoImpl#update(int, Training)
- * @see org.epam.dao.TrainingDaoImpl#updateTrainersList(int, Trainee)
  * @see org.epam.dao.TrainingDaoImpl#getAllTrainersAvalibleForTrainee(Trainee, List)
- * @see org.epam.dao.TrainingDaoImpl#getAllByTraineeAndTrainingTypes(Trainee, List)
- * @see org.epam.dao.TrainingDaoImpl#getAllByTrainerAndTrainingTypes(Trainer, List)
  */
 @Repository
-@Transactional
 @Slf4j
 public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
 

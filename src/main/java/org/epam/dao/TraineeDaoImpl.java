@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
  * @see org.epam.dao.TraineeDaoImpl#update(int, Trainee)
  */
 @Repository
-@Transactional
 @Slf4j
 public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
 

@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
@@ -28,6 +29,7 @@ import java.util.List;
  * @see org.epam.service.TrainingService#getTrainingsByUsernameAndTrainingTypes(String, String, List)
  */
 @Service
+@Transactional
 public class TrainingService extends GymAbstractService<Training> {
 
     @Autowired

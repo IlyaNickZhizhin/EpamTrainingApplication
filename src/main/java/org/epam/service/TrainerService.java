@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import jakarta.transaction.Transactional;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
@@ -21,10 +22,10 @@ import java.util.List;
  * @see org.epam.service.TrainerService#selectAll(String, String)
  * @see org.epam.service.TrainerService#selectByUsername(String, String)
  * @see org.epam.service.TrainerService#changePassword(String, String, String)
- * @see org.epam.service.TrainerService#changeActive(String, String)
  * @see org.epam.service.TrainerService#setActive(String, String, boolean)
  */
 @Service
+@Transactional
 public class TrainerService extends GymAbstractService<Trainer> {
 
     @Autowired

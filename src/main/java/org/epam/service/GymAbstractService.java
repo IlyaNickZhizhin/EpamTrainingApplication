@@ -2,6 +2,7 @@ package org.epam.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.GymAbstractDaoImpl;
@@ -38,6 +39,7 @@ import java.util.List;
  * @see org.epam.service.GymAbstractService#setActive(String, boolean)
  */
 @Service
+@Setter
 @Transactional
 @Slf4j
 public abstract class GymAbstractService<M extends Model> {
@@ -53,6 +55,8 @@ public abstract class GymAbstractService<M extends Model> {
 
     protected Class<M> modelClass = (Class<M>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
+
+
 
     /**
      * This method creates a new model in the database. It logs an informational message before saving the model.

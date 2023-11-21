@@ -31,7 +31,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 @AllArgsConstructor
 @Slf4j
-@Transactional
 public class UserDaoImpl {
 
     SessionFactory factory;

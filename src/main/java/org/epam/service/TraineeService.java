@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
@@ -26,11 +27,11 @@ import java.time.LocalDate;
  * @see org.epam.service.TraineeService#select(String, String, int)
  * @see org.epam.service.TraineeService#selectByUsername(String, String)
  * @see org.epam.service.TraineeService#changePassword(String, String, String)
- * @see org.epam.service.TraineeService#changeActive(String, String)
  * @see org.epam.service.TraineeService#setActive(String, String, boolean)
  */
 @Service
 @Slf4j
+@Transactional
 public class TraineeService extends GymAbstractService<Trainee> {
 
     @Autowired

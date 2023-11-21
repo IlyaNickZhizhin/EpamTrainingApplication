@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
  * @see org.epam.dao.TrainerDaoImpl#update(int, Trainer)
  */
 @Repository
-@Transactional
 @Slf4j
 public class TrainerDaoImpl extends GymAbstractDaoImpl<Trainer>{
 
