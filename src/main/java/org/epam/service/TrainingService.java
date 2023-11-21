@@ -3,7 +3,7 @@ package org.epam.service;
 import jakarta.transaction.Transactional;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
-import org.epam.exceptions.ProhibitedAction;
+import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
@@ -92,7 +92,7 @@ public class TrainingService extends GymAbstractService<Training> {
                 .filter(tr -> tr.getDuration().equals(duration))
                 .filter(tr -> tr.getTrainingName().equals(ingName)).count();
         if (numOfTrainings > 0) {
-            throw new ProhibitedAction("This training already exists");
+            throw new ProhibitedActionException("This training already exists");
         }
         training.setTrainer(er);
         training.setTrainee(ee);

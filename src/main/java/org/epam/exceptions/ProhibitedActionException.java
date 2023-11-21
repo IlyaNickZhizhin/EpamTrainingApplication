@@ -8,8 +8,8 @@ package org.epam.exceptions;
  * @see org.epam.service.TrainerService
  * @see org.epam.service.TrainingService
  */
-public class ProhibitedAction extends RuntimeException{
-    public ProhibitedAction(String message) {
+public class ProhibitedActionException extends RuntimeException{
+    public ProhibitedActionException(String message) {
         super(message);
     }
 }

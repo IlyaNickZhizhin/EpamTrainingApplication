@@ -1,11 +1,14 @@
 package org.epam.model.gymModel;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.epam.model.User;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -16,6 +19,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * @see UserSetter
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(name = "trainers")
 public class Trainer implements Model, UserSetter {
 
@@ -35,10 +41,5 @@ public class Trainer implements Model, UserSetter {
         this.specialization = specialization;
         this.user = user;
     }
-
-    public void setSpecialization(TrainingType specialization) {
-        this.specialization = specialization;
-    }
-
 
 }

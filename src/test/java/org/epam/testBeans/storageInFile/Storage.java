@@ -20,7 +20,6 @@ import java.util.Map;
 @Getter
 public class Storage<M extends Model> {
 
-    private DataSaver dataSaver;
     private Map<String, Map<Integer, M>> gymModels;
     private Map<String, User> users;
 
@@ -40,11 +39,6 @@ public class Storage<M extends Model> {
         gymModels.put(Training.class.getName(), new HashMap<>());
         gymModels.put(TrainingType.class.getName(), new HashMap<>());
         logger.info("Begin reading initial file");
-    }
-
-    @PreDestroy
-    public void saveData() {
-        dataSaver.saveData();
     }
 
 }

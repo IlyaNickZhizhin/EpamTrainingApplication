@@ -138,17 +138,6 @@ public class FileToModelsMapper<M extends Model> {
         }
     }
 
-    public void writeModels() throws IOException {
-        String jsonData = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(loadData);
-        Files.write(Paths.get(initFile), jsonData.getBytes());
-    }
-
-
-    public String takeDataName(String modelClassGetName) {
-        StringBuilder sb = new StringBuilder(modelClassGetName);
-        return sb.substring(sb.lastIndexOf(".") + 1).toLowerCase().concat("s");
-    }
-
     private User getUser(Integer userId) {
         User user = null;
         List<User> users = new ArrayList<>(storage.getUsers().values());

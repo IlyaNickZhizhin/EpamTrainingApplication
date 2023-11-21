@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.GymAbstractDaoImpl;
 import org.epam.dao.UserDaoImpl;
-import org.epam.exceptions.ProhibitedAction;
+import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
@@ -34,7 +34,6 @@ import java.util.List;
  * @see org.epam.service.GymAbstractService#selectAll()
  * @see org.epam.service.GymAbstractService#selectByUsername(String)
  * @see org.epam.service.GymAbstractService#changePassword(String, String)
- * @see org.epam.service.GymAbstractService#changeActive(String)
  * @see org.epam.service.GymAbstractService#setActive(String, boolean)
  */
 @Service
@@ -189,7 +188,7 @@ public abstract class GymAbstractService<M extends Model> {
         log.info("Changing password for " + username);
         User user = userDao.getByUsername(username);
         if (user.getPassword().equals(newPassword)) {
-            throw new ProhibitedAction("It is not possible to change password for user it is already ");
+            throw new ProhibitedActionException("It is not possible to change password for user it is already ");
         }
         user.setPassword(newPassword);
         try {

@@ -8,7 +8,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +24,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "training_types")
 public class TrainingType implements Model {
@@ -33,9 +37,6 @@ public class TrainingType implements Model {
     @Column(name = "training_name", nullable = false)
     @JsonProperty("training_name")
     private TrainingName trainingName;
-    public TrainingType(TrainingName trainingName) {
-        this.trainingName = trainingName;
-    }
 
     /**
      * This enum is used to store information about training names.

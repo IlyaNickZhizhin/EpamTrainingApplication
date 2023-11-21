@@ -56,13 +56,13 @@ public interface TestDatabaseInitializer {
 
     Trainer trainer2 = new Trainer(2, trainingType2, user2);
 
-    Trainee trainee3 = new Trainee(1, trainee3_Birthday, trainee3_Address, user3);
+    Trainee trainee3 = new Trainee(1, trainee3_Birthday, trainee3_Address, user3, null);
 
-    Trainee trainee4 = new Trainee(2, trainee4_Birthday, trainee4_Address, user4);
+    Trainee trainee4 = new Trainee(2, trainee4_Birthday, trainee4_Address, user4, null);
 
-    Trainee trainee5 = new Trainee(3, trainee5_Birthday, null, user5);
+    Trainee trainee5 = new Trainee(3, trainee5_Birthday, null, user5, null);
 
-    Trainee trainee6 = new Trainee(4, null, trainee6_Address, user6);
+    Trainee trainee6 = new Trainee(4, null, trainee6_Address, user6, null);
 
 
 

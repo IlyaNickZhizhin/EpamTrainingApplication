@@ -10,7 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.epam.model.User;
 
 import java.time.LocalDate;
@@ -25,6 +27,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * @see UserSetter
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "trainees")
 public class Trainee implements Model, UserSetter {
@@ -46,13 +50,5 @@ public class Trainee implements Model, UserSetter {
 
     @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Training> trainings;
-
-    public Trainee(int i, LocalDate of, String address, User user) {
-        this.id = i;
-        this.dateOfBirth = of;
-        this.address = address;
-        this.user = user;
-        trainings = new ArrayList<>();
-    }
 
 }

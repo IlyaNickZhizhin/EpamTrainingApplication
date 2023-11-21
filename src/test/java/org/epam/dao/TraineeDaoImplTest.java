@@ -110,7 +110,7 @@ public class TraineeDaoImplTest {
         int id = 1;
         Trainee trainee = new Trainee();
         when(session.get(Trainee.class, id)).thenReturn(trainee);
-        doNothing().when(session).delete(trainee);
+        doNothing().when(session).remove(trainee);
         traineeDao.delete(id);
         verify(session).remove(trainee);
     }

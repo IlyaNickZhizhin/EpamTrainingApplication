@@ -82,7 +82,7 @@ class TrainerServiceTest {
         when(mockUserDao.setNewUser(name, surname)).thenReturn(user1);
         when(mockUserDao.create(any(User.class))).thenReturn(user1);
         when(mockTrainerDao.get(1)).thenReturn(trainer);
-        Trainer updatedTrainer = new Trainer(trainer1.getId(), trainer1.getSpecialization(), user1);
+        Trainer updatedTrainer = new Trainer(1, trainer1.getSpecialization(), user1);
         assertEquals(updatedTrainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
         updatedTrainer.setSpecialization(TestDatabaseInitializer.trainingType2);
         trainerService.update(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1, updatedTrainer);
