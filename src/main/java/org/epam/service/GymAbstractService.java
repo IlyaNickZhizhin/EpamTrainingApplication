@@ -4,46 +4,24 @@ import jakarta.transaction.Transactional;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
-import org.epam.dao.GymAbstractDaoImpl;
+import org.epam.dao.GymAbstractDao;
 import org.epam.dao.UserDaoImpl;
-import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
-import org.epam.model.gymModel.Model;
-import org.epam.model.gymModel.UserSetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-/**
- * This class is the abstract superclass for all Service classes.
- * @param <M>
- * @see org.epam.model.gymModel.Model
- * @see org.epam.model.gymModel.UserSetter
- * @see org.epam.dao.GymAbstractDaoImpl
- * @see org.epam.service.TraineeService
- * @see org.epam.service.TrainerService
- * @see org.epam.service.TrainingService
- * @see org.epam.service.GymAbstractService#create(String, String, Object...)
- * @see org.epam.service.GymAbstractService#update(int, Model)
- * @see org.epam.service.GymAbstractService#delete(int)
- * @see org.epam.service.GymAbstractService#select(int)
- * @see org.epam.service.GymAbstractService#selectAll()
- * @see org.epam.service.GymAbstractService#selectByUsername(String)
- * @see org.epam.service.GymAbstractService#changePassword(String, String)
- * @see org.epam.service.GymAbstractService#setActive(String, boolean)
- */
 @Service
 @Setter
 @Transactional
 @Slf4j
-public abstract class GymAbstractService<M extends Model> {
+public abstract class GymAbstractService<M> {
 
     @Autowired
-    protected GymAbstractDaoImpl<M> gymDao;
+    protected GymAbstractDao<M> gymDao;
 
     @Autowired
     protected UserDaoImpl userDao;
@@ -51,177 +29,73 @@ public abstract class GymAbstractService<M extends Model> {
     @Autowired
     protected PasswordChecker passwordChecker;
 
-    protected Class<M> modelClass = (Class<M>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0];
-
-
-
-    /**
-     * This method creates a new model in the database. It logs an informational message before saving the model.
-     * There are two options for creating a model:
-     * for UserSetter (Trainee and Trainer) and for other Trainings and others.
-     * method is protected and must be overridden in child classes by two phases 1) create 2) parametrize
-     * @param name (String)
-     * @param surname (String)
-     * @param parameters (Object...)
-     * @return The model that was created and saved.
-     */
-    protected final M create(String name, String surname, Object... parameters) {
-        log.info("Creating " + modelClass.getSimpleName());
-        M model;
-        User user;
-        if (UserSetter.class.isAssignableFrom(modelClass)) {
-            log.info("Creating " + modelClass.getSimpleName() + " with user " + name + " " + surname);
-            user = userDao.setNewUser(name, surname);
-            model = createModel(user, parameters);
-            ((UserSetter) model).setUser(user);
-        } else {
-            UserSetter userSetter = gymDao.getModelByUsername(name);
-            log.info("Creating " + modelClass.getSimpleName() + " with user "
-                    + name + "who is" + userSetter.getClass().getSimpleName());
-            model = createModel(userSetter, parameters);
-        }
-        log.info("Created " + modelClass.getSimpleName() + "and parametrized");
-        try {
-            gymDao.save(model);
-        } catch (ResourceNotFoundException e) {
-            log.error("Error creating " + modelClass.getSimpleName(), e);
-            throw e;
-        }
-        return model;
-    }
-
-    /**
-     * This method must be overridden in child classes for correct parametrization of creating model
-     * @param object (Object)
-     * @param parameters (Object...)
-     * @return parametrized model
-     */
-    protected abstract M createModel(Object object, Object... parameters);
-
-    /**
-     * This method updates a model in the database using its ID and an updated model object.
-     * It logs an informational message before the update operation.
-     * @param id The ID of the model to be updated.
-     * @param updatedModel The model object containing the updated data.
-     * @return The model that was updated.
-     */
     protected M update(int id, M updatedModel) {
-        log.info("Updating " + modelClass.getSimpleName() + " with id: " + id);
+        log.info("Updating " + getModelName() + " with id: " + id);
         try {
             gymDao.update(id, updatedModel);
         } catch (ResourceNotFoundException e) {
-            log.error("Error updating " + modelClass.getSimpleName() + " with id: " + id, e);
+            log.error("Error updating " + getModelName() + " with id: " + id, e);
             throw e;
         }
         return updatedModel;
     }
 
-    /**
-     * This method deletes a model from the database using its ID.
-     * It logs an informational message before the delete operation.
-     * @param id The ID of the model to be deleted.
-     */
     protected void delete(int id) {
-        log.info("Deleting " + modelClass.getSimpleName() + " with id " + id);
-        UserSetter model = (UserSetter) gymDao.get(id);
+        log.info("Deleting " + getModelName() + " with id " + id);
+        M model = gymDao.get(id);
         try {
             gymDao.delete(id);
         } catch (ResourceNotFoundException e) {
-            log.error("Error deleting " + modelClass.getSimpleName() + " with id " + id, e);
+            log.error("Error deleting " + getModelName() + " with id " + id, e);
             throw e;
         }
     }
 
-    /**
-     * This method selects a model from the database using its ID.
-     * @param id The ID of the model to be selected.
-     * @return The model that was selected.
-     */
     protected M select(int id) {
-        log.info("Selecting " + modelClass.getSimpleName() + " with id " + id);
+        log.info("Selecting " + getModelName() + " with id " + id);
         try {
             return gymDao.get(id);
         } catch (ResourceNotFoundException e) {
-            log.error("Error selecting " + modelClass.getSimpleName() + " with id " + id, e);
+            log.error("Error selecting " + getModelName() + " with id " + id, e);
             throw e;
         }
     }
 
-    /**
-     * This method selects all models from the database.
-     * @return The list of models that was selected.
-     */
     List<M> selectAll() {
-        log.info("Selecting all " + modelClass.getSimpleName() + "s");
+        log.info("Selecting all " + getModelName() + "s");
         try {
             return gymDao.getAll();
         } catch (ResourceNotFoundException e) {
-            log.error("Error selecting all " + modelClass.getSimpleName() + "s", e);
+            log.error("Error selecting all " + getModelName() + "s", e);
             throw e;
         }
     }
 
-    /**
-     * This method selects a model from the database using its username.
-     * @param username The username of the model to be selected.
-     * @return The model that was selected.
-     */
-    protected M selectByUsername(String username) {
-        log.info("Selecting " + modelClass.getSimpleName() + " with username " + username);
-        User user = userDao.getByUsername(username);
+
+    protected M selectByUser(String username) {
+        log.info("Selecting " + getModelName() + " with username " + username);
         try {
-            return gymDao.getByUserId(user.getId());
+            return gymDao.getModelByUserId(selectUserByUsername(username).getId());
         } catch (ResourceNotFoundException e) {
-            log.error("Error selecting " + modelClass.getSimpleName() + " with username " + username, e);
+            log.error("Error selecting " + getModelName() + " with username " + username, e);
             throw e;
         }
     }
 
-    /**
-     * This method changes password for user with username.
-     * @param username (String)
-     * @param newPassword (String)
-     */
-    // TODO нормально ли это что из TraineeService можно менять пароль и активность Trainer и наоборот?
-    protected void changePassword(String username, String newPassword) {
-        log.info("Changing password for " + username);
-        User user = userDao.getByUsername(username);
-        if (user.getPassword().equals(newPassword)) {
-            throw new ProhibitedActionException("It is not possible to change password for user it is already ");
-        }
-        user.setPassword(newPassword);
+    final void verify(String username, String password, User user) throws VerificationException {
+        passwordChecker.checkPassword(username, password, user);
+    }
+
+    User selectUserByUsername(String username) {
+        log.info("Selecting User with username " + username);
         try {
-            userDao.update(user.getId(), user);
+            return userDao.getByUsername(username);
         } catch (ResourceNotFoundException e) {
-            log.error("Error changing password for " + username, e);
+            log.error("Error selecting " + getModelName() + " with username " + username, e);
             throw e;
         }
     }
 
-    /**
-     * This method sets active for user with username.
-     * @param username (String)
-     * @param isActive (boolean)
-     */
-    protected void setActive(String username, boolean isActive) {
-        try {
-            User user = userDao.getByUsername(username);
-            if (user.isActive() != isActive) userDao.update(user.getId(), user);
-        } catch (ResourceNotFoundException e) {
-            log.error("Error setting active for " + username, e);
-            throw e;
-        }
-    }
-
-    /**
-     * This method verifies the password for a user with the given username.
-     * @param username (String)
-     * @param password (String)
-     * @throws VerificationException when username and password are incorrect
-     */
-    protected final void verify(String username, String password) throws VerificationException {
-        passwordChecker.checkPassword(username, password);
-    }
+    protected abstract String getModelName();
 
 }

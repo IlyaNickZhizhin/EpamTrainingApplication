@@ -1,35 +1,28 @@
 package org.epam.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.exceptions.ProhibitedActionException;
+import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
-import org.epam.model.gymModel.UserSetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * This class is the Service for Training models.
- * @see org.epam.model.gymModel.Training
- * @see org.epam.service.GymAbstractService
- * @see org.epam.dao.TrainingDaoImpl
- * @see org.epam.service.TrainingService#create(String, String, UserSetter, String, TrainingType, LocalDate, Number)
- * @see org.epam.service.TrainingService#createModel(Object, Object...)
- * @see org.epam.service.TrainingService#updateTrainersList(int, Trainee)
- * @see org.epam.service.TrainingService#getAllTrainersAvalibleForTrainee(Trainee, String, String)
- * @see org.epam.service.TrainingService#getTrainingsByUsernameAndTrainingTypes(String, String, List)
- */
+
+@Slf4j
 @Service
 @Transactional
-public class TrainingService extends GymAbstractService<Training> {
+public class TrainingService {
 
     @Autowired
     TraineeService traineeService;
@@ -38,9 +31,10 @@ public class TrainingService extends GymAbstractService<Training> {
     TrainerService trainerService;
 
     @Autowired
-    public void setTrainingDao(TrainingDaoImpl trainingDao) {
-        super.gymDao = trainingDao;
-    }
+    TrainingDaoImpl trainingDao;
+
+    @Autowired
+    PasswordChecker passwordChecker;
 
     /** This method take parameters of a new Training object and saves it to the database.
      * It logs an informational message before the create operation.
@@ -55,104 +49,62 @@ public class TrainingService extends GymAbstractService<Training> {
      * @throws VerificationException if username or password is incorrect
      */
     public Training create(String username, String password,
-                           UserSetter opponent, String trainingName,
+                           Trainee trainee, String trainingName,
                            TrainingType trainingType, LocalDate trainingDate,
-                           Number duration) {
-        return super.create(username, password, opponent, trainingName, trainingType, trainingDate, duration);
+                           Double duration) {
+        Trainer trainer = trainerService.selectByUsername(username, password);
+        Training training = setOtherFields(trainingName, trainingType, trainingDate, duration);
+        training.setTrainer(trainer);
+        training.setTrainee(trainee);
+        return trainingDao.create(training);
+    }
+    public Training create(String username, String password,
+                           Trainer trainer, String trainingName,
+                           TrainingType trainingType, LocalDate trainingDate,
+                           Double duration) {;
+        Trainee trainee = traineeService.selectByUsername(username, password);
+        Training training = setOtherFields(trainingName, trainingType, trainingDate, duration);
+        training.setTrainer(trainer);
+        training.setTrainee(trainee);
+        return trainingDao.create(training);
     }
 
-    //TODO подумать как исключить двойное обращение к БД для определения кем является Юзернэйм
-
-    /** This method parametrize a new Training object before saves it to the database.
-     * It logs an informational message before the create operation.
-     * @param who (Object)
-     * @param parameters (Object...)
-     * @return The Training object that was created.
-     */
-    @Override
-    protected Training createModel(Object who, Object... parameters) {
+    private Training setOtherFields(String trainingName, TrainingType trainingType,
+                                          LocalDate trainingDate, Double duration){
         Training training = new Training();
-        List<Training> existing;
-        Trainee ee;
-        Trainer er;
-        String ingName = (String) parameters[1];
-        TrainingType type = (TrainingType) parameters[2];
-        LocalDate date = (LocalDate) parameters[3];
-        double duration = (double) parameters[4];
-        if (who.getClass().equals(Trainee.class)) {
-            ee = (Trainee) who;
-            er = (Trainer) parameters[0];
-        } else {
-            er = (Trainer) who;
-            ee = (Trainee) parameters[0];
-        }
-        existing = getTrainingsByUsernameAndTrainingTypesPRIVATE(ee.getUser().getUsername(), List.of(type));
-        long numOfTrainings = existing.stream()
-                .filter(tr -> tr.getTrainingDate().equals(date))
-                .filter(tr -> tr.getDuration().equals(duration))
-                .filter(tr -> tr.getTrainingName().equals(ingName)).count();
-        if (numOfTrainings > 0) {
-            throw new ProhibitedActionException("This training already exists");
-        }
-        training.setTrainer(er);
-        training.setTrainee(ee);
-        training.setTrainingName(ingName);
-        training.setTrainingType(type);
-        training.setTrainingDate(date);
+        training.setTrainingName(trainingName);
+        training.setTrainingType(trainingType);
+        training.setTrainingDate(trainingDate);
         training.setDuration(duration);
         return training;
     }
 
-    //TODO я не понял зачем этот метод и сделал его НЕ верно.
-
-    /**
-     * This method updates a Trainer in the database using its ID and an updated Trainer object.
-     * It logs an informational message before the update operation.
-     * @param id (int)
-     * @param traineeForUpdateList (Trainee)
-     * @return List<Trainer>
-     */
     public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
-        return ((TrainingDaoImpl) super.gymDao).updateTrainersList(traineeForUpdateList);
+        return trainingDao.updateTrainersList(traineeForUpdateList);
     }
 
-    /**
-     * This method returns all trainers available for trainee.
-     * @param trainee (Trainee)
-     * @param username (String)
-     * @param password (String)
-     * @return List<Trainer>
-     */
-    public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, String username, String password) throws InvaildDeveloperException{
-        verify(username, password);
+    public List<Trainer> getAllTrainersAvalibleForTrainee(String username, String password) throws InvaildDeveloperException{
+        Trainee trainee = traineeService.selectByUsername(username, password);
         List<Trainer> trainers = trainerService.selectAll();
-        return ((TrainingDaoImpl) gymDao).getAllTrainersAvalibleForTrainee(trainee, trainers);
+        return trainingDao.getAllTrainersAvalibleForTrainee(trainee, trainers);
     }
 
-    /**
-     * This method returns all trainings for userSetter by training types.
-     * @param types (List<TrainingType>)
-     * @param username (String)
-     * @param password (String)
-     * @return List<Training>
-     * @throws VerificationException if username or password is incorrect
-     */
-    public List<Training> getTrainingsByUsernameAndTrainingTypes(
-            String username, String password, List<TrainingType> types) throws VerificationException {
-        super.verify(username, password);
-        UserSetter userSetter = traineeService.selectByUsername(username);
-        return getTrainingsByUsernameAndTrainingTypesPRIVATE (username, types);
-    }
 
-    /**
-     *  This method returns all trainings for trainee by trainee and training types.
-     * @param username (String)
-     * @param types (List<TrainingType>)
-     * @return List<Training>
-     */
-    private List<Training> getTrainingsByUsernameAndTrainingTypesPRIVATE (String username,
+    public List<Training> getTrainingsByUsernameAndTrainingTypes (String username, String password,
                                                                           List<TrainingType> types) {
-        return ((TrainingDaoImpl) gymDao).getAllByUsernameAndTrainingTypes(username, types);
+        Trainee trainee = null;
+        Trainer trainer = null;
+        try {
+            trainee = traineeService.selectByUsername(username, password);
+        } catch (ResourceNotFoundException e1) {
+            try {
+            trainer = trainerService.selectByUsername(username, password);
+            } catch (ResourceNotFoundException e2) {
+                throw new ProhibitedActionException("You are not a trainer or a trainee");
+            }
+        }
+        return trainee != null ? trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainee) :
+                trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainer);
     }
 
 }

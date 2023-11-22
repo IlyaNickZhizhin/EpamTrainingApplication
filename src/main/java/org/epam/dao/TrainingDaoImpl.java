@@ -1,14 +1,16 @@
 package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
+import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
-import org.epam.model.gymModel.UserSetter;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,19 +20,27 @@ import java.util.stream.Collectors;
  * This class is the DAO for Training objects.
  * It contains methods for creating, saving, updating, deleting, and retrieving Training objects.
  * @see org.epam.model.gymModel.Training
- * @see org.epam.dao.GymAbstractDaoImpl
- * @see org.epam.dao.TrainingDaoImpl#update(int, Training)
- * @see org.epam.dao.TrainingDaoImpl#getAllTrainersAvalibleForTrainee(Trainee, List)
+ * @see GymAbstractDao
+ * @see TrainingDaoImpl#update(int, Training)
+ * @see TrainingDaoImpl#getAllTrainersAvalibleForTrainee(Trainee, List)
  */
 @Repository
 @Slf4j
-public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
+public class TrainingDaoImpl extends GymAbstractDao<Training>{
 
-    /**
-     * This method updates a Training in the database using its ID and an updated Training object.
-     * @param id
-     * @param updatedTraining
-     */
+    @Autowired
+    private final TraineeDaoImpl traineeDao;
+
+    @Autowired
+    private final TrainerDaoImpl trainerDao;
+
+    public TrainingDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao, TraineeDaoImpl traineeDao, TrainerDaoImpl trainerDao) {
+        super(sessionFactory, userDao);
+        this.traineeDao = traineeDao;
+        this.trainerDao = trainerDao;
+    }
+
+
     @Override
     public void update(int id, Training updatedTraining) {
         Training training = get(id);
@@ -42,15 +52,6 @@ public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
         }
     }
 
-    // TODO я не понял зачем этот метод, и вероятно сделал его не корректно.
-
-    /**
-     * This method updates the list of Trainers for a Trainee. It logs an informational message before the update operation.
-     * If an exception occurs during the update operation, it logs an error message and throws a ResourceNotFoundException.
-     * @param id The ID of the Trainee.
-     * @param traineeForUpdateList The Trainee object for which the list of Trainers is to be updated.
-     * @return The updated list of Trainers.
-     */
     public List<Trainer> updateTrainersList(Trainee traineeForUpdateList) {
         log.info("Updating trainers list for trainee №" + traineeForUpdateList.getId());
         try {
@@ -83,17 +84,41 @@ public class TrainingDaoImpl extends GymAbstractDaoImpl<Training>{
         }
     }
 
-    public List<Training> getAllByUsernameAndTrainingTypes(String username, List<TrainingType> types) {
+    public List<Training> getAllByUsernameAndTrainingTypes(String username, List<TrainingType> types, Trainer trainer) {
         try (Session session = sessionFactory.openSession()) {
-            UserSetter userSetter = getModelByUsername(username);
-            return session.createQuery("from Training where" +
-                            userSetter.getClass().getSimpleName().toLowerCase() +
-                            "= :userSetter", Training.class)
-                    .setParameter(userSetter.getClass().getSimpleName().toLowerCase(), userSetter)
-                    .getResultStream().filter(training -> types.contains(training.getTrainingType()))
-                    .collect(Collectors.toList());
+            return session.createQuery("from Training where trainer = :trainer", Training.class)
+                        .setParameter("trainer", trainer)
+                        .getResultStream().filter(training -> types.contains(training.getTrainingType()))
+                        .collect(Collectors.toList());
         } catch (HibernateException e) {
             throw new RuntimeException("Something went wrong while getting the list of trainings", e);
         }
+    }
+
+    public List<Training> getAllByUsernameAndTrainingTypes(String username, List<TrainingType> types, Trainee trainee) {
+        try (Session session = sessionFactory.openSession()) {
+        return session.createQuery("from Training where trainee = :trainee", Training.class)
+                .setParameter("trainee", trainee)
+                .getResultStream().filter(training -> types.contains(training.getTrainingType()))
+                .collect(Collectors.toList());
+        } catch (HibernateException e) {
+            throw new RuntimeException("Something went wrong while getting the list of trainings", e);
+        }
+    }
+
+    @Override
+    public Training getModelByUserId(int userId) throws ResourceNotFoundException {
+        throw new ProhibitedActionException("You can't get Training by User ID");
+    }
+
+
+    @Override
+    protected String getModelName() {
+        return getModelClass().getSimpleName();
+    }
+
+    @Override
+    protected Class<Training> getModelClass() {
+        return Training.class;
     }
 }

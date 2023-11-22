@@ -11,7 +11,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @PropertySource("classpath:application.properties")
 public class LiquibaseConfig {
 
-
     @Value("${spring.datasource.url}")
     private String url;
 
@@ -26,7 +25,6 @@ public class LiquibaseConfig {
     @Bean
     public SpringLiquibase liquibase() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);
         dataSource.setUsername(username);

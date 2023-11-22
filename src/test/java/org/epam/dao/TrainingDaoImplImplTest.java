@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
-public class TrainingDaoImplTest {
+public class TrainingDaoImplImplTest {
 
     @Mock
     private SessionFactory sessionFactory = mock(SessionFactory.class);
@@ -47,7 +47,7 @@ public class TrainingDaoImplTest {
     @Mock
     private UserDaoImpl userDao = mock(UserDaoImpl.class);
     @InjectMocks
-    private TrainingDaoImpl trainingDao;
+    private TrainingDaoImpl trainingDaoImpl;
     @BeforeEach
     public void setup() {
         initMocks(this);
@@ -62,7 +62,7 @@ public class TrainingDaoImplTest {
         updatedTraining.setId(training.getId());
         updatedTraining.setTrainingDate(LocalDate.now());
         when(session.get(Training.class, 1)).thenReturn(training);
-        trainingDao.update(1, updatedTraining);
+        trainingDaoImpl.update(1, updatedTraining);
         assertEquals(training.getTrainingDate(), updatedTraining.getTrainingDate());
         verify(session).merge(training);
     }
@@ -70,21 +70,21 @@ public class TrainingDaoImplTest {
     @Test
     public void testCreate() {
         doNothing().when(session).persist(training1);
-        trainingDao.create(training1);
+        trainingDaoImpl.create(training1);
         verify(session).persist(training1);
     }
 
     @Test
     public void testSave() {
         doNothing().when(session).persist(training1);
-        trainingDao.save(training1);
+        trainingDaoImpl.save(training1);
         verify(session).persist(training1);
     }
 
     @Test
     public void testGet() {
         when(session.get(Training.class, training1.getId())).thenReturn(training1);
-        assertEquals(training1, trainingDao.get(training1.getId()));
+        assertEquals(training1, trainingDaoImpl.get(training1.getId()));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class TrainingDaoImplTest {
         Query query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.list()).thenReturn(trainings);
-        assertEquals(trainings, trainingDao.getAll());
+        assertEquals(trainings, trainingDaoImpl.getAll());
     }
 
     @Test
@@ -107,7 +107,7 @@ public class TrainingDaoImplTest {
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(ts.stream());
-        assertEquals(List.of(trainer1, trainer2), trainingDao.updateTrainersList(trainee3));
+        assertEquals(List.of(trainer1, trainer2), trainingDaoImpl.updateTrainersList(trainee3));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class TrainingDaoImplTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training2));
         assertEquals(List.of(trainer1),
-                trainingDao.getAllTrainersAvalibleForTrainee(trainee4, ts));
+                trainingDaoImpl.getAllTrainersAvalibleForTrainee(trainee4, ts));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class TrainingDaoImplTest {
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
         when(query2.setParameter(anyString(), any())).thenReturn(query2);
         when(query2.getSingleResultOrNull()).thenReturn(trainer1);
-        assertEquals(List.of(training1), trainingDao.getAllByUsernameAndTrainingTypes(trainer1_Username, List.of(trainingType1)));
+        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(trainer1_Username, List.of(trainingType1), trainer1));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class TrainingDaoImplTest {
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
         when(query2.setParameter(anyString(), any())).thenReturn(query2);
         when(query2.getSingleResultOrNull()).thenReturn(null);
-        assertEquals(List.of(training1), trainingDao.getAllByUsernameAndTrainingTypes(trainee3_Username, List.of(trainingType1)));
+        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(trainee3_Username, List.of(trainingType1), trainee3));
     }
 
 }

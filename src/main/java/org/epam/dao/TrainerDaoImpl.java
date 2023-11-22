@@ -2,18 +2,24 @@ package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ResourceNotFoundException;
+import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 /**
  * This class is the DAO for Trainer models.
  * @see org.epam.model.gymModel.Trainer
- * @see org.epam.dao.GymAbstractDaoImpl
- * @see org.epam.dao.TrainerDaoImpl#update(int, Trainer)
+ * @see GymAbstractDao
+ * @see TrainerDaoImpl#update(int, Trainer)
  */
 @Repository
 @Slf4j
-public class TrainerDaoImpl extends GymAbstractDaoImpl<Trainer>{
+public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
+
+    public TrainerDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+        super(sessionFactory, userDao);
+    }
 
     /**
      * This method updates a Trainer in the database using its ID and an updated Trainer object.
@@ -33,5 +39,25 @@ public class TrainerDaoImpl extends GymAbstractDaoImpl<Trainer>{
             log.error("Trainer with id: " + id + " not found");
             throw new ResourceNotFoundException(Trainer.class.getSimpleName(), id);
         }
+    }
+
+    @Override
+    public Trainer getModelByUserId(int userId) throws ResourceNotFoundException{
+        log.info("Getting Trainer with user №" + userId);
+        User user = userDao.get(userId);
+        if (user == null) {
+            throw new ResourceNotFoundException("User", userId);
+        }
+        return getModelByUser(user);
+    }
+
+    @Override
+    protected String getModelName() {
+        return getModelClass().getSimpleName();
+    }
+
+    @Override
+    protected Class<Trainer> getModelClass() {
+        return Trainer.class;
     }
 }

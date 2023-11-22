@@ -6,7 +6,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import org.epam.model.User;
-import org.epam.model.gymModel.Model;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,28 +31,27 @@ import java.util.Map;
 @Getter
 @Setter
 @PropertySource("classpath:application.properties")
-public class FileToModelsMapper<M extends Model> {
+public class FileToModelsWriter {
 
     @Value("${initFile}")
     private String initFile;
     private Storage storage;
 
     @Autowired
-    public FileToModelsMapper(Storage storage) {
+    public FileToModelsWriter(Storage storage) {
         this.storage = storage;
     }
 
-    public FileToModelsMapper(Storage storage, String customPathToInitFile) {
+    public FileToModelsWriter(Storage storage, String customPathToInitFile) {
         this.storage = storage;
         initFile = customPathToInitFile;
     }
 
-    Logger logger = LoggerFactory.getLogger(FileToModelsMapper.class);
+    Logger logger = LoggerFactory.getLogger(FileToModelsWriter.class);
     private ObjectMapper objectMapper;
     Map<String, List<Map<String, Object>>> loadData;
     Map<String, List<Object>> saveData;
 
-    @PostConstruct
     public void init() throws IOException {
         objectMapper = new ObjectMapper();
         InputStream inputStream = new FileInputStream(initFile);
@@ -68,7 +64,7 @@ public class FileToModelsMapper<M extends Model> {
         for (Map<String, Object> userMap :
                 usersData) {
             User user = objectMapper.convertValue(userMap, User.class);
-            storage.getUsers().put(user.getUsername(), user);
+            storage.users.put(user.getId(), user);
             logger.info("users data read");
         }
     }
@@ -78,7 +74,7 @@ public class FileToModelsMapper<M extends Model> {
         for (Map<String, Object> trainingTypeMap :
                 trainingTypeData) {
             TrainingType trainingType = objectMapper.convertValue(trainingTypeMap, TrainingType.class);
-            storage.getModels(TrainingType.class.getName()).put(trainingType.getId(), trainingType);
+            storage.trainingTypes.put(trainingType.getId(), trainingType);
             logger.info("TrainingType data read");
         }
     }
@@ -92,8 +88,8 @@ public class FileToModelsMapper<M extends Model> {
             Integer specId = (Integer) trainerTypeMap.get("specialization");
             Trainer trainer = new Trainer();
             trainer.setUser(getUser(userId));
-            trainer.setSpecialization((TrainingType) storage.getModels(TrainingType.class.getName()).get(specId));
-            storage.getModels(Trainer.class.getName()).put(trainer.getId(), trainer);
+            trainer.setSpecialization(storage.trainingTypes.get(specId));
+            Storage.trainers.put(trainer.getId(), trainer);
             logger.info("Trainers data read");
         }
     }
@@ -111,7 +107,7 @@ public class FileToModelsMapper<M extends Model> {
             trainee.setUser(getUser(userId));
             trainee.setDateOfBirth(dateOfBirth);
             trainee.setAddress(address);
-            storage.getModels(Trainee.class.getName()).put(trainee.getId(), trainee);
+            Storage.trainees.put(trainee.getId(), trainee);
             logger.info("Trainee data read");
         }
     }
@@ -128,19 +124,19 @@ public class FileToModelsMapper<M extends Model> {
             String dateStr = (String) trainingTypeMap.get("trainingDate");
             LocalDate date = LocalDate.parse(dateStr);
             Training training = new Training();
-            training.setTrainer((Trainer) storage.getModels(Trainer.class.getName()).get(trainerId));
-            training.setTrainee((Trainee) storage.getModels(Trainee.class.getName()).get(traineeId));
-            training.setTrainingType((TrainingType) storage.getModels(TrainingType.class.getName()).get(trainingTypeId));
+            training.setTrainer(storage.trainers.get(trainerId));
+            training.setTrainee(storage.trainees.get(traineeId));
+            training.setTrainingType((TrainingType) storage.trainingTypes.get(trainingTypeId));
             training.setTrainingDate(date);
             training.setDuration(duration);
-            storage.getModels(Training.class.getName()).put(training.getId(), training);
+            Storage.trainings.put(training.getId(), training);
             logger.info("Training data read");
         }
     }
 
     private User getUser(Integer userId) {
         User user = null;
-        List<User> users = new ArrayList<>(storage.getUsers().values());
+        List<User> users = new ArrayList<>(storage.users.values());
         Iterator<User> userIterator = users.iterator();
         while (user == null) {
             User u = userIterator.next();

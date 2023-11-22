@@ -44,7 +44,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 class TrainerServiceTest {
 
     @Mock
-    private TrainerDaoImpl mockTrainerDao= mock(TrainerDaoImpl.class);
+    private TrainerDaoImpl mockTrainerDaoImpl = mock(TrainerDaoImpl.class);
 
     @Mock
     private UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
@@ -58,7 +58,7 @@ class TrainerServiceTest {
     @BeforeEach
     public void setUp() {
         initMocks(this);
-        trainerService.setTrainerDao(mockTrainerDao);
+        trainerService.setTrainerDao(mockTrainerDaoImpl);
     }
 
 
@@ -68,9 +68,9 @@ class TrainerServiceTest {
         when(mockUserDao.setNewUser(user1.getFirstName(), user1.getLastName()))
                 .thenReturn(user1);
         when(mockUserDao.create(any(User.class))).thenReturn(user1);
-        when(mockTrainerDao.get(1)).thenReturn(trainer);
+        when(mockTrainerDaoImpl.get(1)).thenReturn(trainer);
         trainerService.create(user1.getFirstName(), user1.getLastName(), TestDatabaseInitializer.trainingType1);
-        when(mockTrainerDao.get(1)).thenReturn(trainer);
+        when(mockTrainerDaoImpl.get(1)).thenReturn(trainer);
         assertEquals(trainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
     }
 
@@ -81,12 +81,12 @@ class TrainerServiceTest {
         String surname = user1.getLastName();
         when(mockUserDao.setNewUser(name, surname)).thenReturn(user1);
         when(mockUserDao.create(any(User.class))).thenReturn(user1);
-        when(mockTrainerDao.get(1)).thenReturn(trainer);
+        when(mockTrainerDaoImpl.get(1)).thenReturn(trainer);
         Trainer updatedTrainer = new Trainer(1, trainer1.getSpecialization(), user1);
         assertEquals(updatedTrainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
         updatedTrainer.setSpecialization(TestDatabaseInitializer.trainingType2);
         trainerService.update(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1, updatedTrainer);
-        when(mockTrainerDao.get(1)).thenReturn(updatedTrainer);
+        when(mockTrainerDaoImpl.get(1)).thenReturn(updatedTrainer);
         assertEquals(updatedTrainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
         assertNotEquals(trainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
     }
@@ -94,7 +94,7 @@ class TrainerServiceTest {
     @Test
     public void testSelect() throws AccessDeniedException {
         Trainer trainer = trainer1;
-        when(mockTrainerDao.get(1)).thenReturn(trainer);
+        when(mockTrainerDaoImpl.get(1)).thenReturn(trainer);
         assertEquals(trainer, trainerService.select(trainer1.getUser().getUsername(), trainer1.getUser().getPassword(), 1));
     }
 
@@ -103,14 +103,14 @@ class TrainerServiceTest {
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer1);
         trainers.add(trainer2);
-        when(mockTrainerDao.getAll()).thenReturn(trainers);
+        when(mockTrainerDaoImpl.getAll()).thenReturn(trainers);
         assertEquals(trainers, trainerService.selectAll(trainer1_Username, trainer1_Password));
     }
 
     @Test
     public void testSelectByUsername() {
         when(mockUserDao.getByUsername(trainer2_Username)).thenReturn(user2);
-        when(mockTrainerDao.getByUserId(user2.getId())).thenReturn(trainer2);
+        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(trainer2);
         assertEquals(trainer2, trainerService.selectByUsername(trainer2_Username, trainer2_Password));
     }
 
@@ -120,7 +120,7 @@ class TrainerServiceTest {
         when(mockUserDao.getByUsername(trainee3_Username)).thenReturn(user3);
         doNothing().when(mockUserDao).update(user3.getId(), upDated);
         trainerService.changePassword(trainee3_Username, trainee3_Password, trainee4_Password);
-        verify(mockPasswordChecker, times(1)).checkPassword(trainee3_Username, trainee3_Password);
+        verify(mockPasswordChecker, times(1)).checkPassword(trainee3_Username, trainee3_Password, user3);
     }
 
     @Test

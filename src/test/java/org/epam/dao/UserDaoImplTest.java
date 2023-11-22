@@ -11,10 +11,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static org.epam.TestDatabaseInitializer.trainer1_Username;
 import static org.epam.TestDatabaseInitializer.trainer2_FirstName;
 import static org.epam.TestDatabaseInitializer.trainer2_LastName;
+import static org.epam.TestDatabaseInitializer.trainer2_Username;
 import static org.epam.TestDatabaseInitializer.user1;
+import static org.epam.TestDatabaseInitializer.user2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -62,6 +67,7 @@ public class UserDaoImplTest {
         User user = user1;
         user.setFirstName("New name");
         when(session.get(User.class, 1)).thenReturn(user);
+        when(session.merge(user1)).thenReturn(user);
         userDao.update(1, user);
         verify(session).merge(user);
     }
@@ -88,7 +94,7 @@ public class UserDaoImplTest {
         Query query = mock(Query.class);
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", username)).thenReturn(query);
-        when(query.getSingleResultOrNull()).thenReturn(user1);
+        when(query.getSingleResult()).thenReturn(user1);
         assertEquals(user1, userDao.getByUsername(username));
     }
 
@@ -98,9 +104,45 @@ public class UserDaoImplTest {
         User user = new User();
         user.setFirstName(trainer2_FirstName);
         user.setLastName(trainer2_LastName);
+        Query query = mock(Query.class);
+        when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
+        when(query.setParameter("username", trainer2_Username)).thenReturn(query);
+        when(query.getSingleResultOrNull()).thenReturn(null);
         doNothing().when(session).persist(user);
         User newUser = userDao.setNewUser(trainer2_FirstName, trainer2_LastName);
         assertEquals(user.getFirstName(), newUser.getFirstName());
         assertEquals(user.getLastName(), newUser.getLastName());
+    }
+
+    @Test
+    public void testSetNewUserUpToExisting() {
+        User user = new User();
+        User upToExist = new User(999, trainer2_FirstName, trainer2_LastName, trainer1_Username+"1", "", true);
+        user.setFirstName(trainer2_FirstName);
+        user.setLastName(trainer2_LastName);
+        when(session.createQuery("from User where username = :username", User.class)).thenAnswer(
+                invoks -> {
+                    Query query = mock(Query.class);
+                    when(query.setParameter(anyString(), any())). thenAnswer(
+                        querys -> {
+                            String username = querys.getArgument(1);
+                            if (username.equals(trainer2_Username)) {
+                                when(query.getSingleResultOrNull()).thenReturn(user2);
+                            } else {
+                                if (username.equals(trainer2_Username+"1")) {
+                                    when(query.getSingleResultOrNull()).thenReturn(upToExist);
+                                } else
+                                    when(query.getSingleResultOrNull()).thenReturn(null);
+                            }
+                            return query;
+                        });
+                    return query;
+                }
+        );
+        doNothing().when(session).persist(user);
+        User newUser = userDao.setNewUser(trainer2_FirstName, trainer2_LastName);
+        assertEquals(user.getFirstName(), newUser.getFirstName());
+        assertEquals(user.getLastName(), newUser.getLastName());
+        assertEquals(trainer2_Username+"2", newUser.getUsername());
     }
 }

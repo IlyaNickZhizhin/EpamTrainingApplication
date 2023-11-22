@@ -2,26 +2,26 @@ package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ResourceNotFoundException;
+import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 /**
  * This class is the DAO for Training objects.
  * It contains methods for creating, saving, updating, deleting, and retrieving Training objects.
  * @see org.epam.model.gymModel.Trainee
- * @see org.epam.dao.GymAbstractDaoImpl
- * @see org.epam.dao.TraineeDaoImpl#update(int, Trainee)
+ * @see GymAbstractDao
+ * @see TraineeDaoImpl#update(int, Trainee)
  */
 @Repository
 @Slf4j
-public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
+public class TraineeDaoImpl extends GymAbstractDao<Trainee> {
 
-    /**
-     * This method updates a Trainee in the database using its ID and an updated Trainee object. It logs an informational message before the update operation.
-     * If the Trainee to be updated is not found, it logs an error message and throws a ResourceNotFoundException.
-     * @param id The ID of the Trainee to be updated.
-     * @param updatedTrainee The Trainee object containing the updated data.
-     */
+    public TraineeDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+        super(sessionFactory, userDao);
+    }
+
     @Override
     public void update(int id, Trainee updatedTrainee) {
         log.info("Updating trainee with id: " + id);
@@ -39,5 +39,24 @@ public class TraineeDaoImpl extends GymAbstractDaoImpl<Trainee> {
             log.error("Trainee with id: " + id + " not found");
             throw new ResourceNotFoundException(Trainee.class.getSimpleName(), id);
         }
+    }
+
+    public Trainee getModelByUserId(int userId) throws ResourceNotFoundException{
+        log.info("Getting Trainee with user №" + userId);
+        User user = userDao.get(userId);
+        if (user == null) {
+            throw new ResourceNotFoundException("User", userId);
+        }
+        return getModelByUser(user);
+    }
+
+    @Override
+    protected String getModelName() {
+        return getModelClass().getSimpleName();
+    }
+
+    @Override
+    protected Class<Trainee> getModelClass() {
+        return Trainee.class;
     }
 }

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class TrainerDaoImplTest {
+public class TrainerDaoImplImplTest {
 
     @Mock
     private SessionFactory sessionFactory = mock(SessionFactory.class);
@@ -36,7 +36,7 @@ public class TrainerDaoImplTest {
     @Mock
     private UserDaoImpl userDao = mock(UserDaoImpl.class);
     @InjectMocks
-    private TrainerDaoImpl trainerDao;
+    private TrainerDaoImpl trainerDaoImpl;
     @BeforeEach
     public void setup() {
         initMocks(this);
@@ -50,7 +50,7 @@ public class TrainerDaoImplTest {
         updatedTrainer.setId(trainer.getId());
         updatedTrainer.setSpecialization(trainingType1);
         when(session.get(Trainer.class, 1)).thenReturn(trainer);
-        trainerDao.update(1, updatedTrainer);
+        trainerDaoImpl.update(1, updatedTrainer);
         assertEquals(trainer.getSpecialization(), updatedTrainer.getSpecialization());
         verify(session).merge(trainer);
     }
@@ -59,7 +59,7 @@ public class TrainerDaoImplTest {
     public void testCreate() {
         Trainer trainer = new Trainer();
         doNothing().when(session).persist(trainer);
-        trainerDao.create(trainer);
+        trainerDaoImpl.create(trainer);
         verify(session).persist(trainer);
     }
 
@@ -67,7 +67,7 @@ public class TrainerDaoImplTest {
     public void testSave() {
         Trainer trainer = new Trainer();
         doNothing().when(session).persist(trainer);
-        trainerDao.save(trainer);
+        trainerDaoImpl.save(trainer);
         verify(session).persist(trainer);
     }
 
@@ -76,7 +76,7 @@ public class TrainerDaoImplTest {
         int id = 1;
         Trainer trainer = new Trainer();
         when(session.get(Trainer.class, id)).thenReturn(trainer);
-        assertEquals(trainer, trainerDao.get(id));
+        assertEquals(trainer, trainerDaoImpl.get(id));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class TrainerDaoImplTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         Trainer trainer = new Trainer();
         when(query.getSingleResult()).thenReturn(trainer);
-        assertEquals(trainer, trainerDao.getByUserId(userId));
+        assertEquals(trainer, trainerDaoImpl.getModelByUserId(userId));
     }
 
     @Test
@@ -100,6 +100,6 @@ public class TrainerDaoImplTest {
         Query query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query);
         when(query.list()).thenReturn(trainers);
-        assertEquals(trainers, trainerDao.getAll());
+        assertEquals(trainers, trainerDaoImpl.getAll());
     }
 }

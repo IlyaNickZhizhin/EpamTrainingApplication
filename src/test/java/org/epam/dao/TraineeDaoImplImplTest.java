@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class TraineeDaoImplTest {
+public class TraineeDaoImplImplTest {
 
     @Mock
     private SessionFactory sessionFactory = mock(SessionFactory.class);
@@ -36,9 +36,10 @@ public class TraineeDaoImplTest {
     private Session session = mock(Session.class);
     @Mock
     private UserDaoImpl userDao = mock(UserDaoImpl.class);
-
     @InjectMocks
-    private TraineeDaoImpl traineeDao;
+    private TraineeDaoImpl traineeDaoImpl;
+
+
     @BeforeEach
     public void setup() {
         initMocks(this);
@@ -52,7 +53,7 @@ public class TraineeDaoImplTest {
         updatedTrainee.setId(trainee.getId());
         updatedTrainee.setAddress("New address");
         when(session.get(Trainee.class, 1)).thenReturn(trainee);
-        traineeDao.update(1, updatedTrainee);
+        traineeDaoImpl.update(1, updatedTrainee);
         assertEquals(trainee.getAddress(), updatedTrainee.getAddress());
         verify(session).merge(trainee);
     }
@@ -61,7 +62,7 @@ public class TraineeDaoImplTest {
     public void testCreate() {
         Trainee trainee = new Trainee();
         doNothing().when(session).persist(trainee);
-        traineeDao.create(trainee);
+        traineeDaoImpl.create(trainee);
         verify(session).persist(trainee);
     }
 
@@ -69,16 +70,15 @@ public class TraineeDaoImplTest {
     public void testSave() {
         Trainee trainee = new Trainee();
         doNothing().when(session).persist(trainee);
-        traineeDao.save(trainee);
+        traineeDaoImpl.save(trainee);
         verify(session).persist(trainee);
     }
 
     @Test
     public void testGet() {
-        int id = 1;
-        Trainee trainee = new Trainee();
-        when(session.get(Trainee.class, id)).thenReturn(trainee);
-        assertEquals(trainee, traineeDao.get(id));
+        Trainee trainee = trainee3;
+        when(session.get(Trainee.class, trainee3.getId())).thenReturn(trainee);
+        assertEquals(trainee, traineeDaoImpl.get(trainee3.getId()));
     }
 
     @Test
@@ -89,9 +89,9 @@ public class TraineeDaoImplTest {
         Query query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
-        Trainee trainee = new Trainee();
+        Trainee trainee = trainee3;
         when(query.getSingleResult()).thenReturn(trainee);
-        assertEquals(trainee, traineeDao.getByUserId(userId));
+        assertEquals(trainee, traineeDaoImpl.getModelByUserId(userId));
     }
 
     @Test
@@ -102,16 +102,16 @@ public class TraineeDaoImplTest {
         Query query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.list()).thenReturn(models);
-        assertEquals(models, traineeDao.getAll());
+        assertEquals(models, traineeDaoImpl.getAll());
     }
 
     @Test
     public void testDelete() {
-        int id = 1;
-        Trainee trainee = new Trainee();
+        int id = trainee3.getId();
+        Trainee trainee = trainee3;
         when(session.get(Trainee.class, id)).thenReturn(trainee);
         doNothing().when(session).remove(trainee);
-        traineeDao.delete(id);
+        traineeDaoImpl.delete(id);
         verify(session).remove(trainee);
     }
 
@@ -119,21 +119,21 @@ public class TraineeDaoImplTest {
     public void testDeleteThrowsException() {
         int id = 99999999;
         when(session.get(Trainee.class, id)).thenReturn(null);
-        assertThrows(ResourceNotFoundException.class, () -> traineeDao.delete(id));
+        assertThrows(ResourceNotFoundException.class, () -> traineeDaoImpl.delete(id));
     }
 
     @Test
     public void testGetThrowsException() {
         int id = 99999;
         when(session.get(Trainee.class, id)).thenReturn(null);
-        assertThrows(ResourceNotFoundException.class, () -> traineeDao.get(id));
+        assertThrows(ResourceNotFoundException.class, () -> traineeDaoImpl.get(id));
     }
 
     @Test
     public void testGetByUserIdThrowsException() {
         int userId = 1;
         when(userDao.get(userId)).thenReturn(null);
-        assertThrows(ResourceNotFoundException.class, () -> traineeDao.getByUserId(userId));
+        assertThrows(ResourceNotFoundException.class, () -> traineeDaoImpl.getModelByUserId(userId));
     }
 
 

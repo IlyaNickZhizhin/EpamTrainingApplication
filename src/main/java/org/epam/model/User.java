@@ -10,13 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.epam.model.gymModel.Model;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
-
-/**
- * This class is used to store information about users.
- */
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -24,7 +19,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode
 @Entity
 @Table(name = "users")
-public class User implements Model {
+public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

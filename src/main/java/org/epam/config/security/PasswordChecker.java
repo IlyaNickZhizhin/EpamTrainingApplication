@@ -18,9 +18,8 @@ public class PasswordChecker {
 
     private final UserDaoImpl userDao;
 
-    public boolean checkPassword(String username, String password) {
+    public boolean checkPassword(String username, String password, User user) {
         log.info("Checking password for user: " + username);
-        User user = userDao.getByUsername(username);
         if (user.getPassword().equals(password)){
             log.info("Password for user: " + username + " is correct");
           return true;

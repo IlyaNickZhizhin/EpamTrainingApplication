@@ -1,36 +1,33 @@
 package org.epam.config;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.UserDaoImpl;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
+import org.epam.model.User;
 
 import java.util.logging.Logger;
 
-@Component
-@DependsOn("dataInitializer")
 @AllArgsConstructor
+@Slf4j
 public class UsernameGenerator {
 
     private UserDaoImpl userDao;
 
     public String getDefaultUsername(String firstName, String lastName) {
-
-        Logger logger = Logger.getLogger(UsernameGenerator.class.getName());
-        logger.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
+        log.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
         StringBuilder username = new StringBuilder(firstName.concat("." + lastName));
         int indexOfUsername = 1;
-        if (userDao.getByUsername(username.toString())!=null) {
-            logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
+        if (userDao.getByUsernameForUsernameGenerator(username.toString())!=null) {
+            log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        while (userDao.getByUsername(username.toString())!=null) {
+        while (userDao.getByUsernameForUsernameGenerator(username.toString())!=null) {
             username.delete((username.length()-String.valueOf(indexOfUsername).length()),username.length());
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        logger.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created as " + username. toString() );
+        log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created as " + username. toString() );
         return username.toString();
     }
 

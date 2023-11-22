@@ -12,18 +12,12 @@ import lombok.NoArgsConstructor;
 import org.epam.model.User;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
-
-/**
- * This class is used to store information about trainers.
- * @see Model
- * @see UserSetter
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "trainers")
-public class Trainer implements Model, UserSetter {
+public class Trainer {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

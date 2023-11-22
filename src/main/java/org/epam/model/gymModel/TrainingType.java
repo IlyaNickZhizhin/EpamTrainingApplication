@@ -16,19 +16,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
-
-/**
- * This class is used to store information about training types.
- * @see Model
- * @see TrainingType.TrainingName
- */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "training_types")
-public class TrainingType implements Model {
+public class TrainingType {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

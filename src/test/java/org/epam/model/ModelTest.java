@@ -7,6 +7,11 @@ import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
+import static org.epam.TestDatabaseInitializer.trainee3;
+import static org.epam.TestDatabaseInitializer.trainee4;
+import static org.epam.TestDatabaseInitializer.user1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -45,11 +50,19 @@ public class ModelTest {
 
     @Test
     public void testTraineeEqualsAndHashCode() {
-        Trainee trainee1 = TestDatabaseInitializer.trainee3;
-        Trainee trainee2 = TestDatabaseInitializer.trainee3;
+        Trainee trainee1 = new Trainee();
+        trainee1.setId(1);
+        trainee1.setAddress("a");
+        trainee1.setDateOfBirth(LocalDate.of(2000,1,1));
+        trainee1.setUser(user1);
+        Trainee trainee2 = trainee3;
+        trainee2.setId(1);
+        trainee2.setAddress("a");
+        trainee2.setDateOfBirth(LocalDate.of(2000,1,1));
+        trainee2.setUser(user1);
         assertEquals(trainee1, trainee2);
         assertEquals(trainee1.hashCode(), trainee2.hashCode());
-        trainee2 = TestDatabaseInitializer.trainee4;
+        trainee2 = trainee4;
         assertNotEquals(trainee1, trainee2);
         assertNotEquals(trainee1.hashCode(), trainee2.hashCode());
     }

@@ -14,16 +14,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * This class is used to store information about trainings.
- * @see Model
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "trainings")
-public class Training implements Model {
+public class Training {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;

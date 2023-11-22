@@ -25,6 +25,7 @@
     <mockito-core.version>5.3.1</mockito-core.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <slf4j-api.version>2.0.9</slf4j-api.version>
+    <log4j.version>2.22.0</log4j.version>
     <modelmapper.version>3.1.1</modelmapper.version>
     <hibernate-core.version>6.2.13.Final</hibernate-core.version>
     <hibernate-entitymanager.version>5.6.15.Final</hibernate-entitymanager.version>
@@ -109,6 +110,12 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j-api.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>${log4j.version}</version>
     </dependency>
 
     <dependency>

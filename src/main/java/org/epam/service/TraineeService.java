@@ -3,8 +3,8 @@ package org.epam.service;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
-import org.epam.exceptions.InvaildDeveloperException;
-import org.epam.exceptions.InvalidDataException;
+import org.epam.exceptions.ProhibitedActionException;
+import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
  * This class is the Service for Trainee models.
  * @see org.epam.model.gymModel.Trainee
  * @see org.epam.service.GymAbstractService
- * @see org.epam.dao.TraineeDaoImpl
+ * @see TraineeDaoImpl
  * @see org.epam.service.TraineeService#create(String, String)
  * @see org.epam.service.TraineeService#create(String, String, String)
  * @see org.epam.service.TraineeService#create(String, String, LocalDate)
@@ -35,176 +35,101 @@ import java.time.LocalDate;
 public class TraineeService extends GymAbstractService<Trainee> {
 
     @Autowired
-    public void setTraineeDao(TraineeDaoImpl traineeDao) {
-        super.gymDao = traineeDao;
+    public void setTraineeDao(TraineeDaoImpl traineeDaoImpl) {
+        super.gymDao = traineeDaoImpl;
     }
 
-    /**
-     * This method creates a new model in the database. Without parameters.
-     * @param firstName (String)
-     * @param lastName (String)
-     * @return Trainee
-     */
+
     public Trainee create(String firstName, String lastName) {
-        log.info("Creating " + modelClass.getSimpleName() + " with user " + firstName + " " + lastName);
-        return super.create(firstName, lastName);
+        return gymDao.create(prepare(firstName, lastName));
     }
 
-    /**
-     * This method creates a new model in the database. With one parameter - address.
-     * @param firstName (String)
-     * @param lastName (String)
-     * @param address (String)
-     * @return Trainee
-     */
+
     public Trainee create(String firstName, String lastName, String address) {
-        log.info("Creating " + modelClass.getSimpleName() + " with user " + firstName + " " + lastName +
-                " and address ");
-        return super.create(firstName, lastName, address);
+        Trainee trainee = prepare(firstName, lastName);
+        trainee.setAddress(address);
+        return gymDao.create(trainee);
     }
 
-    /**
-     * This method creates a new model in the database. With one parameter - dateOfBirth.
-     * @param firstName (String)
-     * @param lastName (String)
-     * @param dateOfBirth (LocalDate)
-     * @return Trainee
-     */
+
     public Trainee create(String firstName, String lastName, LocalDate dateOfBirth) {
-        log.info("Creating " + modelClass.getSimpleName() + " with user " + firstName + " " + lastName +
-                " and date of birth " + dateOfBirth);
-        return super.create(firstName, lastName, dateOfBirth);
+        Trainee trainee = prepare(firstName, lastName);
+        trainee.setDateOfBirth(dateOfBirth);
+        return gymDao.create(trainee);
     }
 
-    /**
-     * This method creates a new model in the database. With two parameters - address and dateOfBirth.
-     * @param firstName (String)
-     * @param lastName (String)
-     * @param address (String)
-     * @param dateOfBirth (LocalDate)
-     * @return Trainee
-     */
     public Trainee create(String firstName, String lastName, String address, LocalDate dateOfBirth) {
-        return super.create(firstName, lastName, address, dateOfBirth);
+        Trainee trainee = prepare(firstName, lastName);
+        trainee.setAddress(address);
+        trainee.setDateOfBirth(dateOfBirth);
+        return gymDao.create(trainee);
     }
 
 
-    /**
-     * This method parametrizes a new model before adding database.
-     * It logs an informational message before saving in database.
-     * @param user (User)
-     * @param parameters (Object...)
-     * @return Trainee
-     */
-    @Override
-    protected Trainee createModel(Object user, Object... parameters) {
-        Trainee trainee = new Trainee();
-        switch (parameters.length)
-        {
-            case 0:
-                break;
-            case 1:
-                try {
-                    if (parameters[0] instanceof String) {
-                        trainee.setAddress((String) parameters[0]);
-                    } else {
-                        trainee.setDateOfBirth((LocalDate) parameters[0]);
-                    }
-                } catch (ClassCastException e) {
-                    throw new InvalidDataException("Invalid data for creating " + modelClass.getSimpleName() +
-                            "only string address and LocalData");
-                }
-                break;
-            case 2:
-                try {
-                    trainee.setAddress((String) parameters[0]);
-                    trainee.setDateOfBirth((LocalDate) parameters[1]);
-                } catch (ClassCastException e) {
-                    throw new InvalidDataException("Invalid data for creating " + modelClass.getSimpleName() +
-                            "only string address and LocalData, and address first");
-                }
-                break;
-            default:
-                throw new InvaildDeveloperException("It is not possible to be here!!!");
-        }
-        trainee.setUser((User) user);
-        return trainee;
-    }
-
-    /**
-     * This method updates a Trainee in the database using its ID and an updated Trainee object.
-     * It logs an informational message before the update operation.
-     * If the Trainee to be updated is not found, it logs an error message and throws a ResourceNotFoundException.
-     * @param oldUsername (String)
-     * @param oldPassword (String)
-     * @param id (int)
-     * @param updatedModel (Trainee)
-     * @return The Trainee that was updated.
-     * @throws VerificationException when username and password are incorrect
-     */
     public Trainee update(String oldUsername, String oldPassword, int id, Trainee updatedModel) throws VerificationException {
-        super.verify(oldUsername, oldPassword);
+        User user = selectUserByUsername(oldUsername);
+        super.verify(oldUsername, oldPassword, user);
         return super.update(id, updatedModel);
     }
 
-    /**
-     * This method deletes a Trainee from the database using its ID.
-     * @param username (String)
-     * @param password (String)
-     * @param id (int)
-     * @throws VerificationException when username and password are incorrect
-     */
     public void delete(String username, String password, int id) throws VerificationException {
-        super.verify(username, password);
+        User user = selectUserByUsername(username);
+        super.verify(username, password, user);
         super.delete(id);
     }
 
-    /**
-     * This method selects a Trainee from the database using its ID.
-     * @param username (String)
-     * @param password (String)
-     * @param id (int)
-     * @return The Trainee that was selected.
-     * @throws VerificationException when username and password are incorrect
-     */
     public Trainee select(String username, String password, int id) throws VerificationException {
-        super.verify(username, password);
+        User user = selectUserByUsername(username);
+        super.verify(username, password, user);
         return super.select(id);
     }
 
-    /**
-     * This method selects all Trainees from the database.
-     * @param username (String)
-     * @param password (String)
-     * @return The list of Trainees that was selected.
-     * @throws VerificationException when username and password are incorrect
-     */
     public Trainee selectByUsername(String username, String password) throws VerificationException {
-        super.verify(username, password);
-        return super.selectByUsername(username);
+        User user = selectUserByUsername(username);
+        super.verify(username, password, user);
+        return gymDao.getModelByUser(user);
     }
 
-    /**
-     * This method selects all Trainees from the database.
-     * @param username (String)
-     * @param oldPassword (String)
-     * @param newPassword (String)
-     * @throws VerificationException when username and password are incorrect
-     */
     public void changePassword(String username, String oldPassword, String newPassword) throws VerificationException {
-        super.verify(username, oldPassword);
-        super.changePassword(username, newPassword);
+        User user;
+        try {
+            user = super.selectUserByUsername(username);
+            verify(username, oldPassword, user);
+        } catch (ResourceNotFoundException e) {
+            throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        };
+        log.info("Changing password for " + username);
+        if (user.getPassword().equals(newPassword)) {
+            throw new ProhibitedActionException("It is not possible to change password for user it is already ");
+        }
+        user.setPassword(newPassword);
+        userDao.update(user.getId(), user);
     }
 
-    /**
-     * This method selects all Trainees from the database.
-     * @param username (String)
-     * @param password (String)
-     * @param isActive (boolean)
-     * @throws VerificationException when username and password are incorrect
-     */
     public void setActive(String username, String password, boolean isActive) throws VerificationException {
-        super.verify(username, password);
-        super.setActive(username, isActive);
+        User user;
+        try {
+            user = selectUserByUsername(username);
+        } catch (ResourceNotFoundException e) {
+            throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        };
+        verify(username, password, user);
+        if (user.isActive() != isActive) userDao.update(user.getId(), user);
+        log.info("Setting active status for " + username + " to " + isActive);
+    }
+
+    private Trainee prepare(String firstName, String lastName) {
+        log.info("Creating " + getModelName());
+        Trainee trainee = new Trainee();
+        User user = userDao.setNewUser(firstName, lastName);
+        log.info("Creating " + getModelName() + " with user " + firstName + " " + lastName);
+        trainee.setUser(user);
+        log.info("Created " + getModelName() + "and parametrized");
+        return trainee;
+    }
+
+    @Override
+    protected String getModelName() {
+        return "Trainee";
     }
 }

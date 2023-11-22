@@ -1,7 +1,10 @@
 package org.epam.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TrainerDaoImpl;
+import org.epam.exceptions.ProhibitedActionException;
+import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
@@ -15,7 +18,7 @@ import java.util.List;
  * This class is the Service for Trainer models.
  * @see org.epam.model.gymModel.Trainer
  * @see org.epam.service.GymAbstractService
- * @see org.epam.dao.TrainerDaoImpl
+ * @see TrainerDaoImpl
  * @see org.epam.service.TrainerService#create(String, String, TrainingType)
  * @see org.epam.service.TrainerService#update(String, String, int, Trainer)
  * @see org.epam.service.TrainerService#select(String, String, int)
@@ -24,13 +27,14 @@ import java.util.List;
  * @see org.epam.service.TrainerService#changePassword(String, String, String)
  * @see org.epam.service.TrainerService#setActive(String, String, boolean)
  */
+@Slf4j
 @Service
 @Transactional
 public class TrainerService extends GymAbstractService<Trainer> {
 
     @Autowired
-    public void setTrainerDao(TrainerDaoImpl trainerDao) {
-        super.gymDao = trainerDao;
+    public void setTrainerDao(TrainerDaoImpl trainerDaoImpl) {
+        super.gymDao = trainerDaoImpl;
     }
 
     /**
@@ -41,58 +45,31 @@ public class TrainerService extends GymAbstractService<Trainer> {
      * @return Trainer
      */
     public Trainer create(String firstName, String lastName, TrainingType trainingType) {
-        return super.create(firstName, lastName, trainingType);
-    }
-
-    /** Creates new Trainer and send it to database
-     * @param user (User)
-     * @param parameters (Object...)
-     * @return Trainer
-     */
-    @Override
-    protected Trainer createModel(Object user, Object... parameters) {
+        log.info("Creating " + getModelName());
         Trainer trainer = new Trainer();
-        trainer.setUser((User) user);
-        trainer.setSpecialization((TrainingType) parameters[0]);
-        return trainer;
+        User user = userDao.setNewUser(firstName, lastName);
+        log.info("Creating " + getModelName() + " with user " + firstName + " " + lastName);
+        trainer.setUser(user);
+        trainer.setSpecialization(trainingType);
+        log.info("Created " + getModelName() + "and parametrized");
+        return gymDao.create(trainer);
     }
 
-    /**
-     * Updates Trainer in database
-     * @param oldUsername (String)
-     * @param oldPassword (String)
-     * @param id (int)
-     * @param upadatedModel (Trainer)
-     * @return Trainer
-     * @throws VerificationException if username or password is incorrect
-     */
     public Trainer update(String oldUsername, String oldPassword, int id, Trainer upadatedModel) throws VerificationException {
-        super.verify(oldUsername, oldPassword);
+        User user = selectUserByUsername(oldUsername);
+        super.verify(oldUsername, oldPassword, user);
         return super.update(id, upadatedModel);
     }
 
-    /**
-     * Deletes Trainer from database
-     * @param username (String)
-     * @param password (String)
-     * @param id (int)
-     * @return Trainer
-     * @throws VerificationException if username or password is incorrect
-     */
     public Trainer select(String username, String password, int id) throws VerificationException {
-        super.verify(username, password);
+        User user = selectUserByUsername(username);
+        super.verify(username, password, user);
         return super.select(id);
     }
 
-    /**
-     * Selects all Trainers from database
-     * @param username (String)
-     * @param password (String)
-     * @return List<Trainer>
-     * @throws VerificationException if username or password is incorrect
-     */
     protected List<Trainer> selectAll(String username, String password) throws VerificationException {
-        super.verify(username, password);
+        User user = selectUserByUsername(username);
+        super.verify(username, password, user);
         return super.selectAll();
     }
 
@@ -104,32 +81,42 @@ public class TrainerService extends GymAbstractService<Trainer> {
      * @throws VerificationException if username or password is incorrect
      */
     public Trainer selectByUsername(String username, String password) throws VerificationException {
-        super.verify(username, password);
-        return super.selectByUsername(username);
+        User user = selectUserByUsername(username);
+        super.verify(username, password, user);
+        return gymDao.getModelByUser(user);
     }
 
-    /**
-     * Changes password for user with username
-     * @param username (String)
-     * @param oldPassword (String)
-     * @param newPassword (String)
-     * @throws VerificationException if username or password is incorrect
-     */
-    public void changePassword(String username, String oldPassword, String newPassword)throws VerificationException {
-        super.verify(username, oldPassword);
-        super.changePassword(username, newPassword);
+    public void changePassword(String username, String oldPassword, String newPassword) throws VerificationException {
+        User user;
+        try {
+            user = super.selectUserByUsername(username);
+            verify(username, oldPassword, user);
+        } catch (ResourceNotFoundException e) {
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        };
+        log.info("Changing password for " + username);
+        if (user.getPassword().equals(newPassword)) {
+            throw new ProhibitedActionException("It is not possible to change password for user it is already");
+        }
+        user.setPassword(newPassword);
+        userDao.update(user.getId(), user);
     }
 
 
-    /**
-     * Changes active status for user with username
-     * @param username (String)
-     * @param password (String)
-     * @param isActive (boolean)
-     * @throws VerificationException if username or password is incorrect
-     */
     public void setActive(String username, String password, boolean isActive) throws VerificationException {
-        super.verify(username, password);
-        super.setActive(username, isActive);
+        User user;
+        try {
+            user = selectUserByUsername(username);
+        } catch (ResourceNotFoundException e) {
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        };
+        verify(username, password, user);
+        if (user.isActive() != isActive) userDao.update(user.getId(), user);
+        log.info("Setting active status for " + username + " to " + isActive);
+    }
+
+    @Override
+    protected String getModelName() {
+        return "Trainer";
     }
 }
