@@ -43,7 +43,7 @@ public class App {
 //        trainingService.create(trainee3_Username, trainee3_Password, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
 //        trainingService.create(trainee4_Username, trainee4_Password, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
         trainingService.create(trainee4_Username, trainee4_Password, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
-        trainingService.create(trainee5_Username, trainer2_Password, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
+        trainingService.create(trainee5_Username, trainee5_Password, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
 
         trainerService.update(user1.getUsername(), user1.getPassword(), trainer1.getId(),
                 new Trainer(new TrainingType(4, TrainingType.TrainingName.WORKOUT), user1));

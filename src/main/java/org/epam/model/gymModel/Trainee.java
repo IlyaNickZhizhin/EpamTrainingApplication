@@ -1,6 +1,7 @@
 package org.epam.model.gymModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.epam.model.User;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,7 +46,19 @@ public class Trainee {
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainee",
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SELECT)
     private List<Training> trainings;
 
+    @Override
+    public String toString() {
+        return "Trainee{" +
+                "id=" + id +
+                ", dateOfBirth=" + dateOfBirth +
+                ", address='" + address + '\'' +
+                ", user=" + user +
+                ", trainings =" + trainings +
+                '}';
+    }
 }

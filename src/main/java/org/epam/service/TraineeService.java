@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;

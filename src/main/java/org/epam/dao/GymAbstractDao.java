@@ -99,18 +99,11 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
 
     public M getModelByUser(User user) {
         log.info("Getting " + getModelName() + " with user №" + user.getId() + " " + user.getUsername());
-        try {
-            M model = sessionFactory.getCurrentSession()
-                    .createQuery("from " + getModelName() + " where user = :user", getModelClass())
-                    .setParameter("user", user)
-                    .getSingleResult();
-            if (model == null) throw new ResourceNotFoundException(getModelName(), user.getId());
-            return model;
-        } catch (Exception e) {
-            log.error("Error getting " + getModelName()
-                    + " with user №" + user.getId() + " " + user.getUsername(), e);
-            throw e;
-        }
+        M model = sessionFactory.getCurrentSession()
+                .createQuery("from " + getModelName() + " where user = :user", getModelClass())
+                .setParameter("user", user)
+                .getSingleResultOrNull();
+        return model;
     }
 
     protected abstract String getModelName();

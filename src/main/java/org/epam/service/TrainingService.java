@@ -15,6 +15,7 @@ import org.epam.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -94,17 +95,12 @@ public class TrainingService {
                                                                           List<TrainingType> types) {
         Trainee trainee = null;
         Trainer trainer = null;
-        try {
-            trainee = traineeService.selectByUsername(username, password);
-        } catch (ResourceNotFoundException e1) {
-            try {
-            trainer = trainerService.selectByUsername(username, password);
-            } catch (ResourceNotFoundException e2) {
-                throw new ProhibitedActionException("You are not a trainer or a trainee");
-            }
+        trainee = traineeService.selectByUsername(username, password);
+        if (trainee!=null) {
+            return trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainee);
         }
-        return trainee != null ? trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainee) :
-                trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainer);
+        trainer = trainerService.selectByUsername(username, password);
+        return trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainer);
     }
 
 }

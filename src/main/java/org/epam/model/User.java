@@ -6,17 +6,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode
 @Entity
 @Table(name = "users")
 public class User {
