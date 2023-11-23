@@ -31,7 +31,7 @@ public class IntegrationTest {
     @Autowired
     private TrainingService trainingService;
     @Test
-    public void scenario() {
+    public void traineeTrainerTrainingIntegrationTest() {
         String p1 = trainerService.create(trainer1_FirstName, trainer1_LastName, trainingType1).getUser().getPassword();
         String p2 = trainerService.create(trainer2_FirstName, trainer2_LastName, trainingType2).getUser().getPassword();
         String p3 = traineeService.create(trainee3_FirstName, trainee3_LastName, trainee3_Address, trainee3_Birthday).getUser().getPassword();
@@ -47,20 +47,20 @@ public class IntegrationTest {
         traineeService.changePassword(user6.getUsername(), p6, trainee6_Password);
         trainingService.create(trainer1_Username, trainer1_Password, trainee3, "BASIC", trainingType1, traning1_Date, traning1_Duration);
         trainingService.create(trainer2_Username, trainer2_Password, trainee4, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
-//        trainingService.create(trainee3_Username, trainee3_Password, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
-//        trainingService.create(trainee4_Username, trainee4_Password, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
+//      trainingService.create(trainee3_Username, trainee3_Password, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
+//      trainingService.create(trainee4_Username, trainee4_Password, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
         trainingService.create(trainee4_Username, trainee4_Password, trainer1, "BASIC", trainingType1, traning1_Date, traning1_Duration);
         trainingService.create(trainee5_Username, trainee5_Password, trainer2, "CARDIO", trainingType2, traning2_Date, traning2_Duration);
         trainerService.update(user1.getUsername(), user1.getPassword(), trainer1.getId(),
                 new Trainer(new TrainingType(4, WORKOUT), user1));
 
-//        trainerService.update(trainer2.getId(),
+//      trainerService.update(trainer2.getId(),
 //                new Trainer(new TrainingType(5, TrainingType.TrainingName.YOGA), user2),  // wrong password exception
 //                user2.getUsername(), user1.getPassword());
         //trainerService.delete(trainer1.getId(), user1.getUsername(), user1.getPassword()); // unsupported operation exception
         System.out.println(trainerService.select(user1.getUsername(), user1.getPassword(), trainer1.getId())
                 .getSpecialization().getTrainingName());
-//        System.out.println(trainerService.select(trainer1.getId(), user2.getUsername(), user2.getPassword())
+//      System.out.println(trainerService.select(trainer1.getId(), user2.getUsername(), user2.getPassword())
 //                .getSpecialization().getTrainingName()); // wrong password exception
         System.out.println(trainerService.selectByUsername(user1.getUsername(), user1.getPassword())
                 .getSpecialization().getTrainingName());
