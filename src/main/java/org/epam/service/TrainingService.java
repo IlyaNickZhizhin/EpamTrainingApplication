@@ -46,7 +46,7 @@ public class TrainingService {
     public Training create(String username, String password,
                            Trainer trainer, String trainingName,
                            TrainingType trainingType, LocalDate trainingDate,
-                           Double duration) {;
+                           Double duration) {
         Trainee trainee = traineeService.selectByUsername(username, password);
         Training training = setOtherFields(trainingName, trainingType, trainingDate, duration);
         training.setTrainer(trainer);

@@ -68,13 +68,10 @@ public class IntegrationTest {
         System.out.println(trainerService.selectByUsername(user1.getUsername(), user1.getPassword())
                 .getUser().isActive());
         trainerService.setActive(user1.getUsername(), user1.getPassword(), false);
-        System.out.println("List of trainings fo trainee");
-        System.out.println(trainingService.getTrainingsByUsernameAndTrainingTypes(trainee4_Username, trainee4_Password, List.of(trainingType2)));
-        System.out.println("List of trainings fo trainer");
-        System.out.println(trainingService.getTrainingsByUsernameAndTrainingTypes(trainer2_Username, trainer2_Password, List.of(trainingType2)));
-        System.out.println("List of trainers fo trainee");
-        System.out.println(trainingService.getAllTrainersAvalibleForTrainee(trainee4_Username, trainee4_Password));
-        System.out.println(trainingService.getAllTrainersAvalibleForTrainee(trainee6_Username, trainee6_Password));
+        trainingService.getTrainingsByUsernameAndTrainingTypes(trainee4_Username, trainee4_Password, List.of(trainingType2));
+        trainingService.getTrainingsByUsernameAndTrainingTypes(trainer2_Username, trainer2_Password, List.of(trainingType2));
+        trainingService.getAllTrainersAvalibleForTrainee(trainee4_Username, trainee4_Password);
+        trainingService.getAllTrainersAvalibleForTrainee(trainee6_Username, trainee6_Password);
         traineeService.delete(trainee4_Username, trainee4_Password, trainee4.getId());
         traineeService.delete(trainee3_Username, trainee3_Password, trainee3.getId());
         traineeService.delete(trainee5_Username, trainee5_Password, trainee5.getId());

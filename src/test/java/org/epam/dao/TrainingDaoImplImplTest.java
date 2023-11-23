@@ -69,8 +69,8 @@ public class TrainingDaoImplImplTest {
         training1 = reader.readTraining("trainings/training1");
         training2 = reader.readTraining("trainings/training2");
         trainingType1 = reader.readType("trainingtypes/trainingType1");
-        trainee3_Username = new String(user3.getUsername());
-        trainer1_Username = new String(user1.getUsername());
+        trainee3_Username = user3.getUsername();
+        trainer1_Username = user1.getUsername();
     }
 
 
@@ -118,7 +118,7 @@ public class TrainingDaoImplImplTest {
         List<Training> trainings = new ArrayList<>();
         trainings.add(new Training());
         trainings.add(new Training());
-        Query query = mock(Query.class);
+        Query<Training> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.list()).thenReturn(trainings);
         assertEquals(trainings, trainingDaoImpl.getAll());
@@ -126,7 +126,7 @@ public class TrainingDaoImplImplTest {
 
     @Test
     public void testUpdateTrainersList() {
-        Query query = mock(Query.class);
+        Query<Training> query = mock(Query.class);
         List<Training> ts =  new ArrayList<>();
         ts.add(training1);
         ts.add(training2);
@@ -138,7 +138,7 @@ public class TrainingDaoImplImplTest {
 
     @Test
     public void testGetAllTrainersAvalibleForTrainee() {
-        Query query = mock(Query.class);
+        Query<Training> query = mock(Query.class);
         List<Trainer> ts =  new ArrayList<>();
         ts.add(trainer2);
         ts.add(trainer1);
@@ -152,9 +152,9 @@ public class TrainingDaoImplImplTest {
     @Test
     public void testGetAllByTRAINERUsernameAndTrainingTypes() {
         when(userDao.getByUsername(trainer1_Username)).thenReturn(user1);
-        Query query = mock(Query.class);
-        Query query1 = mock(Query.class);
-        Query query2 = mock(Query.class);
+        Query<Training> query = mock(Query.class);
+        Query<Trainee> query1 = mock(Query.class);
+        Query<Trainer> query2 = mock(Query.class);
         when(userDao.getByUsername(trainer1_Username)).thenReturn(user1);
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
@@ -171,9 +171,9 @@ public class TrainingDaoImplImplTest {
     @Test
     public void testGetAllByTRAINEEUsernameAndTrainingTypes() {
         when(userDao.getByUsername(trainee3_Username)).thenReturn(user3);
-        Query query = mock(Query.class);
-        Query query1 = mock(Query.class);
-        Query query2 = mock(Query.class);
+        Query<Training> query = mock(Query.class);
+        Query<Trainee> query1 = mock(Query.class);
+        Query<Trainer> query2 = mock(Query.class);
         when(userDao.getByUsername(trainee3_Username)).thenReturn(user3);
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);

@@ -41,7 +41,6 @@ public abstract class GymAbstractService<M> {
 
     protected void delete(int id) {
         log.info("Deleting " + getModelName() + " with id " + id);
-        M model = gymDao.get(id);
         try {
             gymDao.delete(id);
         } catch (Exception e) {

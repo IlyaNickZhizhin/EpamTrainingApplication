@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.time.LocalDate;
-
 import static org.epam.TestDatabaseInitializer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -73,26 +71,18 @@ class TraineeServiceTest {
 
     @Test
     public void testCreateBirthday(){
-        Trainee trainee = trainee5;
-        String name = trainee5_FirstName;
-        String suname = trainee5_LastName;
-        LocalDate date = trainee5_Birthday;
-        when(mockUserDao.setNewUser(name, suname)).thenReturn(user5);
-        when(mockTraineeDaoImpl.get(3)).thenReturn(trainee);
-        traineeService.create(trainee5_FirstName, trainee5_LastName, date);
-        assertEquals(trainee, traineeService.select(trainee5_Username, trainee5_Password, 3));
+        when(mockUserDao.setNewUser(trainee5_FirstName, trainee5_LastName)).thenReturn(user5);
+        when(mockTraineeDaoImpl.get(3)).thenReturn(trainee5);
+        traineeService.create(trainee5_FirstName, trainee5_LastName, trainee5_Birthday);
+        assertEquals(trainee5, traineeService.select(trainee5_Username, trainee5_Password, 3));
     }
 
     @Test
     public void testCreateAdress(){
-        Trainee trainee = trainee6;
-        String name = trainee6_FirstName;
-        String suname = trainee6_LastName;
-        String address = trainee6_Address;
-        when(mockUserDao.setNewUser(name, suname)).thenReturn(user6);
-        when(mockTraineeDaoImpl.get(4)).thenReturn(trainee);
-        traineeService.create(trainee6_FirstName, trainee6_LastName, address);
-        assertEquals(trainee, traineeService.select(trainee6_Username, trainee6_Password, 4));
+        when(mockUserDao.setNewUser(trainee6_FirstName, trainee6_LastName)).thenReturn(user6);
+        when(mockTraineeDaoImpl.get(4)).thenReturn(trainee6);
+        traineeService.create(trainee6_FirstName, trainee6_LastName, trainee6_Address);
+        assertEquals(trainee6, traineeService.select(trainee6_Username, trainee6_Password, 4));
     }
 
 

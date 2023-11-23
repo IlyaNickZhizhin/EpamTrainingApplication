@@ -97,7 +97,7 @@ public class UserDaoImplTest {
     public void testGetByUsername() {
         User user = reader.readUser("users/user1");
         String username = reader.readUser("users/user1").getUsername();
-        Query query = mock(Query.class);
+        Query<User> query = mock(Query.class);
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", username)).thenReturn(query);
         when(query.getSingleResultOrNull()).thenReturn(user);
@@ -110,7 +110,7 @@ public class UserDaoImplTest {
         User user = new User();
         user.setFirstName(trainer2_FirstName);
         user.setLastName(trainer2_LastName);
-        Query query = mock(Query.class);
+        Query<User> query = mock(Query.class);
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", trainer2_Username)).thenReturn(query);
         when(query.getSingleResultOrNull()).thenReturn(null);
@@ -128,7 +128,7 @@ public class UserDaoImplTest {
         user.setLastName(trainer2_LastName);
         when(session.createQuery("from User where username = :username", User.class)).thenAnswer(
                 invoks -> {
-                    Query query = mock(Query.class);
+                    Query<User> query = mock(Query.class);
                     when(query.setParameter(anyString(), any())). thenAnswer(
                         querys -> {
                             String username = querys.getArgument(1);

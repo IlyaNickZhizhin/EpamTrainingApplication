@@ -15,8 +15,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 @Configuration
@@ -86,20 +84,12 @@ public class TestConfig {
 
         return sessionFactory;
     }
-    private final Properties hibernateProperties() {
+    private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", ddl_auto);
         hibernateProperties.setProperty("hibernate.dialect", dialect);
         hibernateProperties.setProperty("hibernate.show-sql", show_sql);
         return hibernateProperties;
-    }
-
-    private final void fillTrainingTypes(){
-        List<TrainingType.TrainingName> list = Arrays.asList(TrainingType.TrainingName.values());
-        for (TrainingType.TrainingName trainingName : list) {
-            TrainingType trainingType = new TrainingType();
-            trainingType.setTrainingName(trainingName);
-        }
     }
 
 }

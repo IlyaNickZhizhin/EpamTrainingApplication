@@ -84,7 +84,7 @@ public class TrainerService extends GymAbstractService<Trainer> {
             verify(username, oldPassword, user);
         } catch (Exception e) {
             throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
-        };
+        }
         log.info("Changing password for " + username);
         if (user.getPassword().equals(newPassword)) {
             throw new ProhibitedActionException("It is not possible to change password for user it is already");
@@ -100,7 +100,7 @@ public class TrainerService extends GymAbstractService<Trainer> {
             user = selectUserByUsername(username);
         } catch (Exception e) {
             throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
-        };
+        }
         verify(username, password, user);
         if (user.isActive() != isActive) userDao.update(user.getId(), user);
         log.info("Setting active status for " + username + " to " + isActive);

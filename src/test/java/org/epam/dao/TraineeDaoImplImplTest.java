@@ -93,7 +93,7 @@ public class TraineeDaoImplImplTest {
         User user = user3;
         when(userDao.get(userId)).thenReturn(user);
         Trainee trainee = trainee3;
-        Query query = mock(Query.class);
+        Query<Trainee> query = mock(Query.class);
         when(factory.getCurrentSession()).thenReturn(session);
         when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);

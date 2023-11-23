@@ -9,7 +9,6 @@ import org.epam.model.gymModel.TrainingType;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TrainingDaoImpl extends GymAbstractDao<Training>{
 
-    public TrainingDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao, TraineeDaoImpl traineeDao, TrainerDaoImpl trainerDao) {
+    public TrainingDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
         super(sessionFactory, userDao);
     }
 
@@ -48,7 +47,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
         try {
             return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
                     .setParameter("trainee", traineeForUpdateList)
-                    .getResultStream().peek(ing-> System.out.println("ing - " + ing.getTrainingName() + " " + ing.getTrainer().getUser().getUsername())).map(Training::getTrainer).peek(tr-> System.out.println("er - "+tr.getUser().getUsername())).collect(Collectors.toList());
+                    .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error updating trainers list for trainee №" + traineeForUpdateList.getId(), e);
             throw e;
