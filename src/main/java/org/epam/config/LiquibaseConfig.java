@@ -14,9 +14,6 @@ public class LiquibaseConfig {
     @Value("${spring.datasource.url}")
     private String url;
 
-    @Value("${spring.datasource.url.test}")
-    private String testUrl;
-
     @Value("${spring.datasource.username}")
     private String username;
 
@@ -31,6 +28,9 @@ public class LiquibaseConfig {
 
     @Bean
     public SpringLiquibase liquibase() {
+        if (!enabled) {
+            return null;
+        }
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);

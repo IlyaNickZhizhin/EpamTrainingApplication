@@ -69,8 +69,7 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     public M get(int id) {
         try {
             log.info("Getting " + getModelName() + " with id " + id);
-            M model = sessionFactory.getCurrentSession().get(getModelClass(), id);
-            return model;
+            return sessionFactory.getCurrentSession().get(getModelClass(), id);
         } catch (Exception e) {
             log.error("Error getting " + getModelName() + " with id " + id, e);
             throw e;
@@ -80,9 +79,8 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     public List<M> getAll(){
         try {
             log.info("Getting all " + getModelName() + "s");
-            List<M> models = sessionFactory.getCurrentSession()
+            return sessionFactory.getCurrentSession()
                     .createQuery("from " + getModelName(), getModelClass()).list();
-            return models;
         } catch (Exception e) {
             log.error("Error getting all " + getModelName() + "s", e);
             throw e;
@@ -93,11 +91,10 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
 
     public M getModelByUser(User user) {
         log.info("Getting " + getModelName() + " with user №" + user.getId() + " " + user.getUsername());
-        M model = sessionFactory.getCurrentSession()
+        return sessionFactory.getCurrentSession()
                 .createQuery("from " + getModelName() + " where user = :user", getModelClass())
                 .setParameter("user", user)
                 .getSingleResultOrNull();
-        return model;
     }
 
     protected abstract String getModelName();

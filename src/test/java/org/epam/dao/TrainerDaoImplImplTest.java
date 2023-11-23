@@ -39,7 +39,6 @@ public class TrainerDaoImplImplTest {
     private static Trainer trainer1;
     private static Trainer trainer2;
     private static TrainingType trainingType1;
-    private static User user1;
     private static Reader reader;
 
     @BeforeEach
@@ -94,7 +93,7 @@ public class TrainerDaoImplImplTest {
         User user = reader.readUser("users/user1");
         int userId = user.getId();
         when(userDao.get(userId)).thenReturn(user);
-        Query query = mock(Query.class);
+        Query<Trainer> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         Trainer trainer = reader.readTrainer("trainers/trainer1");
@@ -109,7 +108,7 @@ public class TrainerDaoImplImplTest {
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer1);
         trainers.add(trainer2);
-        Query query = mock(Query.class);
+        Query<Trainer> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query);
         when(query.list()).thenReturn(trainers);
         assertEquals(trainers, trainerDaoImpl.getAll());

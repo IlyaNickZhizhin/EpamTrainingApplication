@@ -27,9 +27,8 @@ public class TeatIninDB {
     void initDatabase() {
         if (!enabled) {
             List<TrainingType.TrainingName> list =  TrainingType.TrainingName.getTrainingNames();
-            Session session = sessionFactory.openSession();
-            Transaction transaction = null;
-            try {
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = null;
                 transaction = session.beginTransaction();
                 for (TrainingType.TrainingName trainingName : list) {
                     TrainingType trainingType = new TrainingType();
@@ -38,13 +37,8 @@ public class TeatIninDB {
                 }
                 transaction.commit();
             } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
-                }
                 System.out.println("Error while loading data");
                 e.printStackTrace();
-            } finally {
-                session.close();
             }
         }
     }

@@ -27,16 +27,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TrainingDaoImpl extends GymAbstractDao<Training>{
 
-    @Autowired
-    private final TraineeDaoImpl traineeDao;
-
-    @Autowired
-    private final TrainerDaoImpl trainerDao;
-
     public TrainingDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao, TraineeDaoImpl traineeDao, TrainerDaoImpl trainerDao) {
         super(sessionFactory, userDao);
-        this.traineeDao = traineeDao;
-        this.trainerDao = trainerDao;
     }
 
 
@@ -63,11 +55,6 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
         }
     }
 
-    /**
-     * This method gets all available active Trainers, have not set for a Trainee yet.
-     * @param trainee
-     * @param trainers - all existing in gym trainers
-     */
     public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, List<Trainer> trainers) {
         try {
             log.info("Getting all trainers avalible for trainee with id: " + trainee.getId());
@@ -83,7 +70,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
         }
     }
 
-    public List<Training> getAllByUsernameAndTrainingTypes(String username, List<TrainingType> types, Trainer trainer) {
+    public List<Training> getAllByUsernameAndTrainingTypes(List<TrainingType> types, Trainer trainer) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Training where trainer = :trainer", Training.class)
                         .setParameter("trainer", trainer)
@@ -95,7 +82,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
         }
     }
 
-    public List<Training> getAllByUsernameAndTrainingTypes(String username, List<TrainingType> types, Trainee trainee) {
+    public List<Training> getAllByUsernameAndTrainingTypes(List<TrainingType> types, Trainee trainee) {
         try (Session session = sessionFactory.openSession()) {
         return session.createQuery("from Training where trainee = :trainee", Training.class)
                 .setParameter("trainee", trainee)

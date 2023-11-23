@@ -106,7 +106,7 @@ public class TraineeDaoImplImplTest {
         List<Trainee> models = new ArrayList<>();
         models.add(trainee3);
         models.add(trainee4);
-        Query query = mock(Query.class);
+        Query<Trainee> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.list()).thenReturn(models);
         assertEquals(models, traineeDaoImpl.getAll());

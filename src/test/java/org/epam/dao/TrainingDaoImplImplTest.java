@@ -165,7 +165,7 @@ public class TrainingDaoImplImplTest {
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
         when(query2.setParameter(anyString(), any())).thenReturn(query2);
         when(query2.getSingleResultOrNull()).thenReturn(trainer1);
-        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(trainer1_Username, List.of(trainingType1), trainer1));
+        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainer1));
     }
 
     @Test
@@ -184,7 +184,7 @@ public class TrainingDaoImplImplTest {
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
         when(query2.setParameter(anyString(), any())).thenReturn(query2);
         when(query2.getSingleResultOrNull()).thenReturn(null);
-        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(trainee3_Username, List.of(trainingType1), trainee3));
+        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainee3));
     }
 
 }

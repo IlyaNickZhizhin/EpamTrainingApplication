@@ -65,13 +65,9 @@ class TraineeServiceTest {
     @Test
     public void testCreateFull(){
         Trainee trainee = trainee3;
-        String name = trainee3_FirstName;
-        String suname = trainee3_LastName;
-        LocalDate date = trainee3_Birthday;
-        String address = trainee3_Address;
-        when(mockUserDao.setNewUser(name, suname)).thenReturn(user3);
+        when(mockUserDao.setNewUser(trainee3_FirstName, trainee3_LastName)).thenReturn(user3);
         when(mockTraineeDaoImpl.get(1)).thenReturn(trainee);
-        traineeService.create(trainee3_FirstName, trainee3_LastName, address, date);
+        traineeService.create(trainee3_FirstName, trainee3_LastName, trainee3_Address, trainee3_Birthday);
         assertEquals(trainee, traineeService.select(trainee3_Username, trainee3_Password, 1));
     }
 
@@ -118,7 +114,6 @@ class TraineeServiceTest {
 
     @Test
     public void testDelete() {
-        Trainee trainee = trainee4;
         String name = user4.getFirstName();
         String surname = user4.getLastName();
         when(mockUserDao.setNewUser(name, surname)).thenReturn(user4);

@@ -81,10 +81,10 @@ public class TrainingService {
         Trainer trainer = null;
         trainee = traineeService.selectByUsername(username, password);
         if (trainee!=null) {
-            return trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainee);
+            return trainingDao.getAllByUsernameAndTrainingTypes(types, trainee);
         }
         trainer = trainerService.selectByUsername(username, password);
-        return trainingDao.getAllByUsernameAndTrainingTypes(username, types, trainer);
+        return trainingDao.getAllByUsernameAndTrainingTypes(types, trainer);
     }
 
 }

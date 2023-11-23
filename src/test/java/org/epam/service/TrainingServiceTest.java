@@ -39,7 +39,7 @@ class TrainingServiceTest {
     @InjectMocks
     private TrainingService trainingService;
 
-    private static Reader reader = new Reader();
+    private final static Reader reader = new Reader();
 
 
     @BeforeEach
@@ -78,7 +78,7 @@ class TrainingServiceTest {
         TrainingType trainingType2 = reader.readType("trainingtypes/trainingType2");
         when(mockUserDao.getByUsername(trainer2_Username)).thenReturn(user2);
         when(mockTrainingDaoImpl
-                .getAllByUsernameAndTrainingTypes(trainer2_Username, List.of(trainingType2), trainer2))
+                .getAllByUsernameAndTrainingTypes(List.of(trainingType2), trainer2))
                 .thenReturn(List.of(training2));
         when(mockTrainerService.selectByUsername(trainer2_Username, trainer2_Password))
                 .thenReturn(trainer2);
@@ -100,7 +100,7 @@ class TrainingServiceTest {
         TrainingType trainingType2 = reader.readType("trainingtypes/trainingType2");
         when(mockUserDao.getByUsername(trainee4_Username)).thenReturn(user4);
         when(mockTrainingDaoImpl
-                .getAllByUsernameAndTrainingTypes(trainee4_Username, List.of(trainingType2), trainee4))
+                .getAllByUsernameAndTrainingTypes(List.of(trainingType2), trainee4))
                 .thenReturn(List.of(training2));
         when(mockTraineeService.selectByUsername(trainee4_Username, trainee4_Password)).thenReturn(trainee4);
         assertEquals(List.of(training2),

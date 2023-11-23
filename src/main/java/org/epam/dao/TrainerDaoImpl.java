@@ -7,12 +7,6 @@ import org.epam.model.gymModel.Trainer;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-/**
- * This class is the DAO for Trainer models.
- * @see org.epam.model.gymModel.Trainer
- * @see GymAbstractDao
- * @see TrainerDaoImpl#update(int, Trainer)
- */
 @Repository
 @Slf4j
 public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
@@ -21,12 +15,6 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
         super(sessionFactory, userDao);
     }
 
-    /**
-     * This method updates a Trainer in the database using its ID and an updated Trainer object.
-     * It logs an informational message before the update operation.
-     * @param id
-     * @param updatedTrainer
-     */
     @Override
     public void update(int id, Trainer updatedTrainer) {
         log.info("Updating trainer with id: " + id);

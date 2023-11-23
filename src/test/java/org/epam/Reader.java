@@ -31,8 +31,7 @@ public class Reader {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             InputStream inputStream = new FileInputStream(startPath +path+ endPath);
-            User user = objectMapper.readValue(inputStream, User.class);
-            return user;
+            return objectMapper.readValue(inputStream, User.class);
         } catch (IOException e) {
             return null;
         }
@@ -42,8 +41,7 @@ public class Reader {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             InputStream inputStream = new FileInputStream(startPath +path+ endPath);
-            TrainingType type = objectMapper.readValue(inputStream, TrainingType.class);
-            return type;
+            return objectMapper.readValue(inputStream, TrainingType.class);
         } catch (IOException e) {
             return null;
         }
