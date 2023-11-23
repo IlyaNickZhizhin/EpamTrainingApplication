@@ -3,9 +3,6 @@ package org.epam.config;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.UserDaoImpl;
-import org.epam.model.User;
-
-import java.util.logging.Logger;
 
 @AllArgsConstructor
 @Slf4j

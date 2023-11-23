@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.GymAbstractDao;
 import org.epam.dao.UserDaoImpl;
-import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public abstract class GymAbstractService<M> {
         log.info("Updating " + getModelName() + " with id: " + id);
         try {
             gymDao.update(id, updatedModel);
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             log.error("Error updating " + getModelName() + " with id: " + id, e);
             throw e;
         }
@@ -45,7 +44,7 @@ public abstract class GymAbstractService<M> {
         M model = gymDao.get(id);
         try {
             gymDao.delete(id);
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             log.error("Error deleting " + getModelName() + " with id " + id, e);
             throw e;
         }
@@ -55,7 +54,7 @@ public abstract class GymAbstractService<M> {
         log.info("Selecting " + getModelName() + " with id " + id);
         try {
             return gymDao.get(id);
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             log.error("Error selecting " + getModelName() + " with id " + id, e);
             throw e;
         }
@@ -65,7 +64,7 @@ public abstract class GymAbstractService<M> {
         log.info("Selecting all " + getModelName() + "s");
         try {
             return gymDao.getAll();
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             log.error("Error selecting all " + getModelName() + "s", e);
             throw e;
         }
@@ -76,7 +75,7 @@ public abstract class GymAbstractService<M> {
         log.info("Selecting " + getModelName() + " with username " + username);
         try {
             return gymDao.getModelByUserId(selectUserByUsername(username).getId());
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             log.error("Error selecting " + getModelName() + " with username " + username, e);
             throw e;
         }
@@ -88,12 +87,7 @@ public abstract class GymAbstractService<M> {
 
     User selectUserByUsername(String username) {
         log.info("Selecting User with username " + username);
-        try {
-            return userDao.getByUsername(username);
-        } catch (ResourceNotFoundException e) {
-            log.error("Error selecting " + getModelName() + " with username " + username, e);
-            throw e;
-        }
+        return userDao.getByUsername(username);
     }
 
     protected abstract String getModelName();

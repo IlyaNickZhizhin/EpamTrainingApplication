@@ -1,7 +1,9 @@
 package org.epam.dao;
 
+import org.epam.Reader;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.TrainingType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -13,10 +15,6 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.epam.TestDatabaseInitializer.trainer1;
-import static org.epam.TestDatabaseInitializer.trainer2;
-import static org.epam.TestDatabaseInitializer.trainingType1;
-import static org.epam.TestDatabaseInitializer.user1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -37,14 +35,26 @@ public class TrainerDaoImplImplTest {
     private UserDaoImpl userDao = mock(UserDaoImpl.class);
     @InjectMocks
     private TrainerDaoImpl trainerDaoImpl;
+
+    private static Trainer trainer1;
+    private static Trainer trainer2;
+    private static TrainingType trainingType1;
+    private static User user1;
+    private static Reader reader;
+
     @BeforeEach
     public void setup() {
         initMocks(this);
+        reader = new Reader();
+        reader.setStartPath("src/test/resources/models/");
+        reader.setEndPath(".json");
         when(sessionFactory.getCurrentSession()).thenReturn(session);
     }
 
     @Test
     public void testUpdate() {
+        trainer1 = reader.readTrainer("trainers/trainer1");
+        trainingType1 = reader.readType("trainingTypes/trainingType1");
         Trainer trainer = trainer1;
         Trainer updatedTrainer = new Trainer();
         updatedTrainer.setId(trainer.getId());
@@ -81,19 +91,21 @@ public class TrainerDaoImplImplTest {
 
     @Test
     public void testGetByUserId() {
-        int userId = user1.getId();
-        User user = user1;
+        User user = reader.readUser("users/user1");
+        int userId = user.getId();
         when(userDao.get(userId)).thenReturn(user);
         Query query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
-        Trainer trainer = new Trainer();
-        when(query.getSingleResult()).thenReturn(trainer);
+        Trainer trainer = reader.readTrainer("trainers/trainer1");
+        when(query.getSingleResultOrNull()).thenReturn(trainer);
         assertEquals(trainer, trainerDaoImpl.getModelByUserId(userId));
     }
 
     @Test
     public void testGetAll() {
+        trainer1 = reader.readTrainer("trainers/trainer1");
+        trainer2 = reader.readTrainer("trainers/trainer2");
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer1);
         trainers.add(trainer2);

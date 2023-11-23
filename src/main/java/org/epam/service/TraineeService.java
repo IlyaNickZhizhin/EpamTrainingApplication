@@ -1,11 +1,9 @@
 package org.epam.service;
 
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.exceptions.ProhibitedActionException;
-import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
@@ -14,22 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-/**
- * This class is the Service for Trainee models.
- * @see org.epam.model.gymModel.Trainee
- * @see org.epam.service.GymAbstractService
- * @see TraineeDaoImpl
- * @see org.epam.service.TraineeService#create(String, String)
- * @see org.epam.service.TraineeService#create(String, String, String)
- * @see org.epam.service.TraineeService#create(String, String, LocalDate)
- * @see org.epam.service.TraineeService#create(String, String, String, LocalDate)
- * @see org.epam.service.TraineeService#update(String, String, int, Trainee)
- * @see org.epam.service.TraineeService#delete(String, String, int)
- * @see org.epam.service.TraineeService#select(String, String, int)
- * @see org.epam.service.TraineeService#selectByUsername(String, String)
- * @see org.epam.service.TraineeService#changePassword(String, String, String)
- * @see org.epam.service.TraineeService#setActive(String, String, boolean)
- */
 @Service
 @Slf4j
 @Transactional
@@ -96,7 +78,7 @@ public class TraineeService extends GymAbstractService<Trainee> {
         try {
             user = super.selectUserByUsername(username);
             verify(username, oldPassword, user);
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
         };
         log.info("Changing password for " + username);
@@ -111,7 +93,7 @@ public class TraineeService extends GymAbstractService<Trainee> {
         User user;
         try {
             user = selectUserByUsername(username);
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
         };
         verify(username, password, user);

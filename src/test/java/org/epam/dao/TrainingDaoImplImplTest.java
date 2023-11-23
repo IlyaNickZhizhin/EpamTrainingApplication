@@ -1,11 +1,15 @@
 package org.epam.dao;
 
+import org.epam.Reader;
+import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
+import org.epam.model.gymModel.TrainingType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,17 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.epam.TestDatabaseInitializer.trainee3;
-import static org.epam.TestDatabaseInitializer.trainee3_Username;
-import static org.epam.TestDatabaseInitializer.trainee4;
-import static org.epam.TestDatabaseInitializer.trainer1;
-import static org.epam.TestDatabaseInitializer.trainer1_Username;
-import static org.epam.TestDatabaseInitializer.trainer2;
-import static org.epam.TestDatabaseInitializer.training1;
-import static org.epam.TestDatabaseInitializer.training2;
-import static org.epam.TestDatabaseInitializer.trainingType1;
-import static org.epam.TestDatabaseInitializer.user1;
-import static org.epam.TestDatabaseInitializer.user3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -48,6 +41,39 @@ public class TrainingDaoImplImplTest {
     private UserDaoImpl userDao = mock(UserDaoImpl.class);
     @InjectMocks
     private TrainingDaoImpl trainingDaoImpl;
+
+    static User user1;
+    static User user3;
+    static Trainee trainee3;
+    static Trainee trainee4;
+    static Trainer trainer1;
+    static Trainer trainer2;
+    static String trainee3_Username;
+    static String trainer1_Username;
+    static Training training1;
+    static Training training2;
+    static TrainingType trainingType1;
+
+
+    @BeforeAll
+    public static void init() {
+        Reader reader = new Reader();
+        reader.setStartPath("src/test/resources/models/");
+        reader.setEndPath(".json");
+        user1 = reader.readUser("users/user1");
+        user3 = reader.readUser("users/user2");
+        trainee3 = reader.readTrainee("trainees/trainee1");
+        trainee4 = reader.readTrainee("trainees/trainee2");
+        trainer1 = reader.readTrainer("trainers/trainer1");
+        trainer2 = reader.readTrainer("trainers/trainer2");
+        training1 = reader.readTraining("trainings/training1");
+        training2 = reader.readTraining("trainings/training2");
+        trainingType1 = reader.readType("trainingtypes/trainingType1");
+        trainee3_Username = new String(user3.getUsername());
+        trainer1_Username = new String(user1.getUsername());
+    }
+
+
     @BeforeEach
     public void setup() {
         initMocks(this);

@@ -16,24 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 
 import static org.epam.TestDatabaseInitializer.*;
-import static org.epam.TestDatabaseInitializer.trainee4;
-import static org.epam.TestDatabaseInitializer.trainee4_Password;
-import static org.epam.TestDatabaseInitializer.trainee4_Username;
-import static org.epam.TestDatabaseInitializer.trainee5_Password;
-import static org.epam.TestDatabaseInitializer.trainee5_Username;
-import static org.epam.TestDatabaseInitializer.trainee6_Password;
-import static org.epam.TestDatabaseInitializer.trainee6_Username;
-import static org.epam.TestDatabaseInitializer.trainer1;
-import static org.epam.TestDatabaseInitializer.trainer2;
-import static org.epam.TestDatabaseInitializer.trainer2_Password;
-import static org.epam.TestDatabaseInitializer.trainer2_Username;
-import static org.epam.TestDatabaseInitializer.trainingType1;
-import static org.epam.TestDatabaseInitializer.trainingType2;
-import static org.epam.TestDatabaseInitializer.traning1_Date;
-import static org.epam.TestDatabaseInitializer.traning1_Duration;
-import static org.epam.TestDatabaseInitializer.traning2_Date;
-import static org.epam.TestDatabaseInitializer.traning2_Duration;
-import static org.epam.TestDatabaseInitializer.user1;
 import static org.epam.model.gymModel.TrainingType.TrainingName.WORKOUT;
 
 

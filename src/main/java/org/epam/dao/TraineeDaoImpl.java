@@ -1,7 +1,7 @@
 package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.epam.exceptions.ResourceNotFoundException;
+import org.epam.exceptions.InvalidDataException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.hibernate.SessionFactory;
@@ -34,19 +34,17 @@ public class TraineeDaoImpl extends GymAbstractDao<Trainee> {
                 sessionFactory.getCurrentSession().merge(trainee);
             } catch (Exception e) {
                 log.error("Error updating trainee with id: " + id, e);
+                throw e;
             }
         } else {
             log.error("Trainee with id: " + id + " not found");
-            throw new ResourceNotFoundException(Trainee.class.getSimpleName(), id);
+            throw new InvalidDataException(Trainee.class.getSimpleName());
         }
     }
 
-    public Trainee getModelByUserId(int userId) throws ResourceNotFoundException{
+    public Trainee getModelByUserId(int userId) {
         log.info("Getting Trainee with user №" + userId);
         User user = userDao.get(userId);
-        if (user == null) {
-            throw new ResourceNotFoundException("User", userId);
-        }
         return getModelByUser(user);
     }
 

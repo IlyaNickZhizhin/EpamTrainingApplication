@@ -5,9 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.exceptions.InvaildDeveloperException;
-import org.epam.exceptions.ProhibitedActionException;
-import org.epam.exceptions.ResourceNotFoundException;
-import org.epam.exceptions.VerificationException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -15,7 +12,6 @@ import org.epam.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,18 +33,6 @@ public class TrainingService {
     @Autowired
     PasswordChecker passwordChecker;
 
-    /** This method take parameters of a new Training object and saves it to the database.
-     * It logs an informational message before the create operation.
-     * @param username (String)
-     * @param password (String)
-     * @param opponent (UserSetter)
-     * @param trainingName (String)
-     * @param trainingType (TrainingType)
-     * @param trainingDate (LocalDate)
-     * @param duration (Number)
-     * @return The Training object that was parametrized.
-     * @throws VerificationException if username or password is incorrect
-     */
     public Training create(String username, String password,
                            Trainee trainee, String trainingName,
                            TrainingType trainingType, LocalDate trainingDate,

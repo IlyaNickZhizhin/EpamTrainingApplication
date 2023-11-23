@@ -1,5 +1,6 @@
 package org.epam.dao;
 
+import org.epam.Reader;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.model.User;
@@ -42,10 +43,14 @@ public class UserDaoImplTest {
     @InjectMocks
     private UserDaoImpl userDao;
 
+    Reader reader = new Reader();
+
     @BeforeEach
     public void setup() {
         initMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
+        reader.setStartPath("src/test/resources/models/");
+        reader.setEndPath(".json");
     }
 
     @Test
@@ -90,11 +95,12 @@ public class UserDaoImplTest {
 
     @Test
     public void testGetByUsername() {
-        String username = user1.getUsername();
+        User user = reader.readUser("users/user1");
+        String username = reader.readUser("users/user1").getUsername();
         Query query = mock(Query.class);
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", username)).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(user1);
+        when(query.getSingleResultOrNull()).thenReturn(user);
         assertEquals(user1, userDao.getByUsername(username));
     }
 

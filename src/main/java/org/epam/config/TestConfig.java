@@ -1,11 +1,5 @@
 package org.epam.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import liquibase.integration.spring.SpringLiquibase;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.epam.model.User;
@@ -24,8 +18,6 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Configuration
 @Profile("test")

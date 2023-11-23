@@ -1,14 +1,12 @@
 package org.epam.service;
 
+import org.epam.Reader;
 import org.epam.TestDatabaseInitializer;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
-import org.epam.testBeans.filereader.FileToModelsWriter;
-import org.epam.testBeans.storageInFile.Storage;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,8 +15,6 @@ import org.mockito.Mock;
 import java.time.LocalDate;
 
 import static org.epam.TestDatabaseInitializer.*;
-import static org.epam.testBeans.storageInFile.Storage.trainees;
-import static org.epam.testBeans.storageInFile.Storage.users;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -44,19 +40,22 @@ class TraineeServiceTest {
     @InjectMocks
     private  TraineeService traineeService = new TraineeService();
 
-    private static Storage storage = new Storage();
+    Reader reader = new Reader();
 
     @BeforeEach
     public void setUp() {
+        reader.setStartPath("src/test/resources/models/");
+        reader.setEndPath(".json");
         initMocks(this);
         traineeService.setTraineeDao(mockTraineeDaoImpl);
     }
 
     @Test
     public void testCreate(){
-        Trainee trainee = trainees.get(1);
-        String name = users.get(1).getFirstName();
-        String suname = users.get(1).getLastName();
+        Trainee trainee = reader.readTrainee("trainees/trainee1");
+        User user = reader.readUser("users/user1");
+        String name = user.getFirstName();
+        String suname = user.getLastName();
         when(mockUserDao.setNewUser(name, suname)).thenReturn(user3);
         when(mockTraineeDaoImpl.get(1)).thenReturn(trainee);
         traineeService.create(trainee3_FirstName, trainee3_LastName);

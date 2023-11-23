@@ -2,7 +2,6 @@ package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.ProhibitedActionException;
-import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -57,10 +56,10 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
         try {
             return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
                     .setParameter("trainee", traineeForUpdateList)
-                    .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
+                    .getResultStream().peek(ing-> System.out.println("ing - " + ing.getTrainingName() + " " + ing.getTrainer().getUser().getUsername())).map(Training::getTrainer).peek(tr-> System.out.println("er - "+tr.getUser().getUsername())).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error updating trainers list for trainee №" + traineeForUpdateList.getId(), e);
-            throw new ResourceNotFoundException("List<Trainer> fo trainee №", traineeForUpdateList.getId());
+            throw e;
         }
     }
 
@@ -80,7 +79,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
             return trainers;
         } catch (Exception e) {
             log.error("Error getting all trainers avalible for trainee with id: " + trainee.getId(), e);
-            throw new ResourceNotFoundException(Trainee.class.getSimpleName(), trainee.getId());
+            throw e;
         }
     }
 
@@ -91,7 +90,8 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
                         .getResultStream().filter(training -> types.contains(training.getTrainingType()))
                         .collect(Collectors.toList());
         } catch (HibernateException e) {
-            throw new RuntimeException("Something went wrong while getting the list of trainings", e);
+            log.error("Something went wrong while getting the list of trainings", e);
+            throw e;
         }
     }
 
@@ -107,7 +107,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
     }
 
     @Override
-    public Training getModelByUserId(int userId) throws ResourceNotFoundException {
+    public Training getModelByUserId(int userId) {
         throw new ProhibitedActionException("You can't get Training by User ID");
     }
 

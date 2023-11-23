@@ -1,21 +1,22 @@
 package org.epam.service;
 
+import org.epam.Reader;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.dao.UserDaoImpl;
-import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
+import org.epam.model.gymModel.TrainingType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.epam.TestDatabaseInitializer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -37,13 +38,25 @@ class TrainingServiceTest {
 
     @InjectMocks
     private TrainingService trainingService;
+
+    private static Reader reader = new Reader();
+
+
     @BeforeEach
     void setUp() {
         initMocks(this);
+        reader.setStartPath("src/test/resources/models/");
+        reader.setEndPath(".json");
     }
 
     @Test
     public void testGetAllTrainersAvalibleForTrainee() {
+        Trainer trainer1 = reader.readTrainer("trainers/trainer1");
+        Trainer trainer2 = reader.readTrainer("trainers/trainer2");
+        User user3 = reader.readUser("users/user3");
+        String trainee3_Username = user3.getUsername();
+        String trainee3_Password = user3.getPassword();
+        Trainee trainee3 = reader.readTrainee("trainees/trainee3");
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer1);
         trainers.add(trainer2);
@@ -57,12 +70,16 @@ class TrainingServiceTest {
 
     @Test
     public void testGetTrainingsByTRAINERusernameAndTrainingTypes() {
+        Trainer trainer2 = reader.readTrainer("trainers/trainer2");
+        User user2 = reader.readUser("users/user2");
+        String trainer2_Username = user2.getUsername();
+        String trainer2_Password = user2.getPassword();
+        Training training2 = reader.readTraining("trainings/training2");
+        TrainingType trainingType2 = reader.readType("trainingtypes/trainingType2");
         when(mockUserDao.getByUsername(trainer2_Username)).thenReturn(user2);
         when(mockTrainingDaoImpl
                 .getAllByUsernameAndTrainingTypes(trainer2_Username, List.of(trainingType2), trainer2))
                 .thenReturn(List.of(training2));
-        when(mockTraineeService.selectByUsername(trainer2_Username, trainer2_Password))
-                .thenThrow(ResourceNotFoundException.class);
         when(mockTrainerService.selectByUsername(trainer2_Username, trainer2_Password))
                 .thenReturn(trainer2);
         assertEquals(List.of(training2),
@@ -75,6 +92,12 @@ class TrainingServiceTest {
 
     @Test
     public void testGetTrainingsByTRAINEEusernameAndTrainingTypesForTrainee() {
+        Trainee trainee4 = reader.readTrainee("trainees/trainee4");
+        User user4 = reader.readUser("users/user4");
+        String trainee4_Username = user4.getUsername();
+        String trainee4_Password = user4.getPassword();
+        Training training2 = reader.readTraining("trainings/training2");
+        TrainingType trainingType2 = reader.readType("trainingtypes/trainingType2");
         when(mockUserDao.getByUsername(trainee4_Username)).thenReturn(user4);
         when(mockTrainingDaoImpl
                 .getAllByUsernameAndTrainingTypes(trainee4_Username, List.of(trainingType2), trainee4))
@@ -91,26 +114,16 @@ class TrainingServiceTest {
 
     @Test
     public void testCreate() {
-        Training training = new Training();
-        Trainer trainer = new Trainer();
-        trainer.setId(1);
-        trainer.setUser(new User(1, trainer1_FirstName, trainer1_LastName, trainer1_Username, trainer1_Password, trainer1_Active));
-        trainer.setSpecialization(trainingType1);
-        Trainee trainee = new Trainee();
-        trainee.setId(1);
-        trainee.setUser(new User(3, trainee3_FirstName, trainee3_LastName, trainee3_Username, trainee3_Password, trainee3_Active));
-        trainee.setAddress(trainee3_Address);
-        trainee.setDateOfBirth(trainee3_Birthday);
-        training.setTrainer(trainer);
-        training.setTrainee(trainee);
-        training.setTrainingName("name");
-        training.setDuration(traning1_Duration);
-        training.setTrainingDate(traning1_Date);
-        training.setTrainingType(trainingType1);
-        Training training2 = new Training(1,  training.getTrainee(), training.getTrainer(),
-                training.getTrainingName(), training.getTrainingType(), training.getTrainingDate(),
-                training.getDuration());
-        when(mockTrainingDaoImpl.create(training)).thenReturn(training2);
+        Training training = reader.readTraining("trainings/training1");
+        TrainingType trainingType1 = reader.readType("trainingtypes/trainingType1");
+        Trainer trainer = reader.readTrainer("trainers/trainer1");
+        Trainee trainee = reader.readTrainee("trainees/trainee1");
+        String trainer1_Username = trainer.getUser().getUsername();
+        String trainer1_Password = trainer.getUser().getPassword();
+        LocalDate traning1_Date = training.getTrainingDate();
+        Double traning1_Duration = training.getDuration();
+        training.setId(0);
+        when(mockTrainingDaoImpl.create(training)).thenReturn(training);
         when(mockTrainerService.selectByUsername(trainer1_Username, trainer1_Password)).thenReturn(trainer);
         Training newTraining = trainingService.create(trainer.getUser().getUsername(), trainer.getUser().getPassword(),
                 trainee, training.getTrainingName(), trainingType1, traning1_Date,

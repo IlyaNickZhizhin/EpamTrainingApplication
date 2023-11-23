@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
-import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -53,25 +52,15 @@ public class UserDaoImpl {
     public User get(int id) {
         log.info("Getting user with id: " + id);
         Session session = factory.getCurrentSession();
-        try {
-            return session.get(User.class, id);
-        } catch (Exception e) {
-            log.error("Error getting user with id: " + id, e);
-            throw new ResourceNotFoundException(User.class.getSimpleName(), id);
-        }
+        return session.get(User.class, id);
     }
 
     public User getByUsername(String username) {
         Session session = factory.getCurrentSession();
         log.info("Getting user with username: " + username);
-        try {
-            return session.createQuery("from User where username = :username", User.class)
+        return session.createQuery("from User where username = :username", User.class)
                         .setParameter("username", username)
-                        .getSingleResult();
-        } catch (Exception e) {
-            log.error("Error getting user with username: " + username, e);
-            throw new ResourceNotFoundException(User.class.getSimpleName(), username);
-        }
+                        .getSingleResultOrNull();
     }
 
     public User setNewUser(String firstName, String lastName) {

@@ -1,6 +1,6 @@
 package org.epam.dao;
 
-import org.epam.exceptions.ResourceNotFoundException;
+import org.epam.Reader;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.hibernate.Session;
@@ -14,11 +14,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.epam.TestDatabaseInitializer.trainee3;
-import static org.epam.TestDatabaseInitializer.trainee4;
-import static org.epam.TestDatabaseInitializer.user3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -31,7 +27,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class TraineeDaoImplImplTest {
 
     @Mock
-    private SessionFactory sessionFactory = mock(SessionFactory.class);
+    private SessionFactory factory = mock(SessionFactory.class);
     @Mock
     private Session session = mock(Session.class);
     @Mock
@@ -39,11 +35,21 @@ public class TraineeDaoImplImplTest {
     @InjectMocks
     private TraineeDaoImpl traineeDaoImpl;
 
+    private static Trainee trainee3;
+    private static Trainee trainee4;
+    private static User user3;
+
 
     @BeforeEach
     public void setup() {
         initMocks(this);
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(factory.getCurrentSession()).thenReturn(session);
+        Reader reader = new Reader();
+        reader.setStartPath("src/test/resources/models/");
+        reader.setEndPath(".json");
+        user3 = reader.readUser("users/user3");
+        trainee3 = reader.readTrainee("trainees/trainee1");
+        trainee4 = reader.readTrainee("trainees/trainee2");
     }
 
     @Test
@@ -86,11 +92,12 @@ public class TraineeDaoImplImplTest {
         int userId = user3.getId();
         User user = user3;
         when(userDao.get(userId)).thenReturn(user);
+        Trainee trainee = trainee3;
         Query query = mock(Query.class);
+        when(factory.getCurrentSession()).thenReturn(session);
         when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
-        Trainee trainee = trainee3;
-        when(query.getSingleResult()).thenReturn(trainee);
+        when(query.getSingleResultOrNull()).thenReturn(trainee);
         assertEquals(trainee, traineeDaoImpl.getModelByUserId(userId));
     }
 
@@ -115,26 +122,7 @@ public class TraineeDaoImplImplTest {
         verify(session).remove(trainee);
     }
 
-    @Test
-    public void testDeleteThrowsException() {
-        int id = 99999999;
-        when(session.get(Trainee.class, id)).thenReturn(null);
-        assertThrows(ResourceNotFoundException.class, () -> traineeDaoImpl.delete(id));
-    }
 
-    @Test
-    public void testGetThrowsException() {
-        int id = 99999;
-        when(session.get(Trainee.class, id)).thenReturn(null);
-        assertThrows(ResourceNotFoundException.class, () -> traineeDaoImpl.get(id));
-    }
-
-    @Test
-    public void testGetByUserIdThrowsException() {
-        int userId = 1;
-        when(userDao.get(userId)).thenReturn(null);
-        assertThrows(ResourceNotFoundException.class, () -> traineeDaoImpl.getModelByUserId(userId));
-    }
 
 
 }

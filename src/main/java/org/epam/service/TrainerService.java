@@ -1,11 +1,9 @@
 package org.epam.service;
 
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.exceptions.ProhibitedActionException;
-import org.epam.exceptions.ResourceNotFoundException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
@@ -73,14 +71,6 @@ public class TrainerService extends GymAbstractService<Trainer> {
         super.verify(username, password, user);
         return super.selectAll();
     }
-
-    /**
-     * Selects Trainer from database by username
-     * @param username (String)
-     * @param password (String)
-     * @return Trainer
-     * @throws VerificationException if username or password is incorrect
-     */
     public Trainer selectByUsername(String username, String password) throws VerificationException {
         User user = selectUserByUsername(username);
         super.verify(username, password, user);
@@ -92,7 +82,7 @@ public class TrainerService extends GymAbstractService<Trainer> {
         try {
             user = super.selectUserByUsername(username);
             verify(username, oldPassword, user);
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
         };
         log.info("Changing password for " + username);
@@ -108,7 +98,7 @@ public class TrainerService extends GymAbstractService<Trainer> {
         User user;
         try {
             user = selectUserByUsername(username);
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
         };
         verify(username, password, user);

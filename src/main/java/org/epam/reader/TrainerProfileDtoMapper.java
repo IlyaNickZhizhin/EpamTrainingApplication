@@ -1,4 +1,4 @@
-package org.epam.mapper;
+package org.epam.reader;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
