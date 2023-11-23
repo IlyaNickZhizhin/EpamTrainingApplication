@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="create-trainings" author="IlyaZhizhin">
+        <createTable tableName="trainings">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="trainee_id" type="int">
+                <constraints foreignKeyName="fk_trainee_id" references="trainees(id)" nullable="false" />
+            </column>
+            <column name="trainer_id" type="int">
+                <constraints foreignKeyName="fk_trainer_id" references="trainers(id)" nullable="false" />
+            </column>
+            <column name="training_name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="training_type_id" type="int">
+                <constraints foreignKeyName="fk_training_type_id" references="training_types(id)" nullable="false" />
+            </column>
+            <column name="training_date" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="duration" type="float">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

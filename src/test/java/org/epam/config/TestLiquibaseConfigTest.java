@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = LiquibaseConfig.class)
-public class LiquibaseConfigTest {
+public class TestLiquibaseConfigTest {
 
     @Autowired
     private ApplicationContext context;

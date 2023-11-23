@@ -31,27 +31,14 @@ public class TrainingType {
     @JsonProperty("training_name")
     private TrainingName trainingName;
 
-    /**
-     * This enum is used to store information about training names.
-     */
-    public static enum TrainingName {
-        BASIC,
-        CARDIO,
-        STRENGTH,
-        WORKOUT,
-        YOGA,
-        PILATES,
-        DANCE,
-        BOXING,
-        BODYBUILDING,
-        CROSSFIT,
-        AEROBICS,
-        ZUMBA;
+    public enum TrainingName {
+        BASIC, CARDIO, STRENGTH, WORKOUT, YOGA, PILATES, DANCE, BOXING, BODYBUILDING, CROSSFIT, AEROBICS, ZUMBA;
 
-        public static List<TrainingName> gelList() {
-            return Arrays.asList(values());
+        public static List<TrainingName> getTrainingNames() {
+            return Arrays.asList(TrainingName.values());
         }
     }
 }
+
 
 

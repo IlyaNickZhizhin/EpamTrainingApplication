@@ -45,6 +45,7 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
             sessionFactory.getCurrentSession().persist(model);
         } catch (Exception e) {
             log.error("Error saving " + model, e);
+            throw e;
         }
 
     }

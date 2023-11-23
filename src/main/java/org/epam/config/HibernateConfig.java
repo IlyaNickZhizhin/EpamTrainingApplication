@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -26,6 +27,8 @@ public class HibernateConfig {
 
     @Value("${spring.datasource.url}")
     private String url;
+    @Value("${test.spring.datasource.url}")
+    private String testUrl;
     @Value("${spring.datasource.username}")
     private String username;
     @Value("${spring.datasource.password}")
@@ -51,7 +54,6 @@ public class HibernateConfig {
                 Trainee.class.getPackageName(),
                 Training.class.getPackageName());
         sessionFactory.setHibernateProperties(hibernateProperties());
-
         return sessionFactory;
     }
 

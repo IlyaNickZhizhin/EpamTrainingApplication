@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import static org.epam.model.gymModel.TrainingType.TrainingName.BASIC;
 import static org.epam.model.gymModel.TrainingType.TrainingName.CARDIO;
 
+
 public interface TestDatabaseInitializer {
 
     String trainer1_FirstName = "Petr"; String trainer1_LastName = "Petrov";  boolean trainer1_Active = true;
