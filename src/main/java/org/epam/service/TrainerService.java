@@ -1,6 +1,5 @@
 package org.epam.service;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.exceptions.ProhibitedActionException;
@@ -13,22 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * This class is the Service for Trainer models.
- * @see org.epam.model.gymModel.Trainer
- * @see org.epam.service.GymAbstractService
- * @see TrainerDaoImpl
- * @see org.epam.service.TrainerService#create(String, String, TrainingType)
- * @see org.epam.service.TrainerService#update(String, String, int, Trainer)
- * @see org.epam.service.TrainerService#select(String, String, int)
- * @see org.epam.service.TrainerService#selectAll(String, String)
- * @see org.epam.service.TrainerService#selectByUsername(String, String)
- * @see org.epam.service.TrainerService#changePassword(String, String, String)
- * @see org.epam.service.TrainerService#setActive(String, String, boolean)
- */
 @Slf4j
 @Service
-@Transactional
 public class TrainerService extends GymAbstractService<Trainer> {
 
     @Autowired
