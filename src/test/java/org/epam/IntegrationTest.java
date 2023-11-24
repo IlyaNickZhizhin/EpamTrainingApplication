@@ -1,11 +1,15 @@
 package org.epam;
 
 import org.epam.config.Config;
+import org.epam.dao.TrainingDaoImpl;
+import org.epam.dao.UserDaoImpl;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;
 import org.epam.service.TraineeService;
 import org.epam.service.TrainerService;
 import org.epam.service.TrainingService;
+import org.epam.testBeans.TestConfig;
+import org.epam.testBeans.TestInitDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +21,11 @@ import java.util.List;
 
 import static org.epam.TestDatabaseInitializer.*;
 import static org.epam.model.gymModel.TrainingType.TrainingName.WORKOUT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = Config.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInitDB.class, Config.class})
 @ActiveProfiles("test")
 public class IntegrationTest {
 
@@ -30,6 +35,7 @@ public class IntegrationTest {
     private TrainerService trainerService;
     @Autowired
     private TrainingService trainingService;
+
     @Test
     public void traineeTrainerTrainingIntegrationTest() {
         String p1 = trainerService.create(trainer1_FirstName, trainer1_LastName, trainingType1).getUser().getPassword();

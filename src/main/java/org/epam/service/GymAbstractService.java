@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Setter
 @Transactional
 @Slf4j
 public abstract class GymAbstractService<M> {

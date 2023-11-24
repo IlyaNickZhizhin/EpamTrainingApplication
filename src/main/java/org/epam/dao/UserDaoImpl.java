@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -80,5 +82,11 @@ public class UserDaoImpl {
         return session.createQuery("from User where username = :username", User.class)
                 .setParameter("username", username)
                 .getSingleResultOrNull();
+    }
+
+    public List<User> getAll(){
+        log.info("Getting all users");
+        return factory.getCurrentSession()
+                .createQuery("from User", User.class).list();
     }
 }

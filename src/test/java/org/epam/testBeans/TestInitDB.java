@@ -1,4 +1,4 @@
-package org.epam.config;
+package org.epam.testBeans;
 
 import org.epam.model.gymModel.TrainingType;
 import org.hibernate.Session;
@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.List;
 
 @Configuration
 @Profile("test")
-public class TeatIninDB {
+@PropertySource("classpath:test.properties")
+public class TestInitDB {
 
     @Value("${spring.liquibase.enabled.test}")
     private boolean enabled;

@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.exceptions.ProhibitedActionException;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 public class TrainerService extends GymAbstractService<Trainer> {
 
     @Autowired

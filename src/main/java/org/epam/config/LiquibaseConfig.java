@@ -4,6 +4,7 @@ import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -27,6 +28,7 @@ public class LiquibaseConfig {
     private boolean enabled;
 
     @Bean
+    @Profile("!test")
     public SpringLiquibase liquibase() {
         if (!enabled) {
             return null;
