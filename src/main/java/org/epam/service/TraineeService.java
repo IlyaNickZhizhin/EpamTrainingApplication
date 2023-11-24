@@ -1,6 +1,6 @@
 package org.epam.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.exceptions.ProhibitedActionException;
@@ -14,7 +14,6 @@ import java.time.LocalDate;
 
 @Service
 @Slf4j
-@Transactional
 public class TraineeService extends GymAbstractService<Trainee> {
 
     @Autowired
@@ -23,24 +22,26 @@ public class TraineeService extends GymAbstractService<Trainee> {
     }
 
 
+    @Transactional
     public Trainee create(String firstName, String lastName) {
         return gymDao.create(prepare(firstName, lastName));
     }
 
 
+    @Transactional
     public Trainee create(String firstName, String lastName, String address) {
         Trainee trainee = prepare(firstName, lastName);
         trainee.setAddress(address);
         return gymDao.create(trainee);
     }
 
-
+    @Transactional
     public Trainee create(String firstName, String lastName, LocalDate dateOfBirth) {
         Trainee trainee = prepare(firstName, lastName);
         trainee.setDateOfBirth(dateOfBirth);
         return gymDao.create(trainee);
     }
-
+    @Transactional
     public Trainee create(String firstName, String lastName, String address, LocalDate dateOfBirth) {
         Trainee trainee = prepare(firstName, lastName);
         trainee.setAddress(address);
@@ -48,19 +49,20 @@ public class TraineeService extends GymAbstractService<Trainee> {
         return gymDao.create(trainee);
     }
 
-
+    @Transactional
     public Trainee update(String oldUsername, String oldPassword, int id, Trainee updatedModel) throws VerificationException {
         User user = selectUserByUsername(oldUsername);
         super.verify(oldUsername, oldPassword, user);
         return super.update(id, updatedModel);
     }
-
+    @Transactional
     public void delete(String username, String password, int id) throws VerificationException {
         User user = selectUserByUsername(username);
         super.verify(username, password, user);
         super.delete(id);
     }
 
+    @Transactional(readOnly = true)
     public Trainee select(String username, String password, int id) throws VerificationException {
         User user = selectUserByUsername(username);
         super.verify(username, password, user);
@@ -73,6 +75,7 @@ public class TraineeService extends GymAbstractService<Trainee> {
         return gymDao.getModelByUser(user);
     }
 
+    @Transactional
     public void changePassword(String username, String oldPassword, String newPassword) throws VerificationException {
         User user;
         try {
@@ -89,6 +92,7 @@ public class TraineeService extends GymAbstractService<Trainee> {
         userDao.update(user.getId(), user);
     }
 
+    @Transactional
     public void setActive(String username, String password, boolean isActive) throws VerificationException {
         User user;
         try {
@@ -101,6 +105,7 @@ public class TraineeService extends GymAbstractService<Trainee> {
         log.info("Setting active status for " + username + " to " + isActive);
     }
 
+    @Transactional
     private Trainee prepare(String firstName, String lastName) {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();

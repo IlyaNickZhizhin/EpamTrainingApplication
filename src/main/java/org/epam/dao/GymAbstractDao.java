@@ -37,7 +37,6 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     }
 
     @Override
-    @Transactional
     public void save(M model) {
         try {
             log.info("Saving " + model);
@@ -53,7 +52,6 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     public abstract void update(int id, M model);
 
     @Override
-    @Transactional
     public void delete(int id) {
         try {
             log.info("Deleting " + getModelName() + " with id " + id);

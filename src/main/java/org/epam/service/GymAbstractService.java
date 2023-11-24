@@ -38,6 +38,7 @@ public abstract class GymAbstractService<M> {
         return updatedModel;
     }
 
+
     protected void delete(int id) {
         log.info("Deleting " + getModelName() + " with id " + id);
         try {

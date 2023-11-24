@@ -1,6 +1,5 @@
 package org.epam.service;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainingDaoImpl;
@@ -10,6 +9,7 @@ import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +17,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
 public class TrainingService {
 
     @Autowired
@@ -32,6 +31,7 @@ public class TrainingService {
     @Autowired
     PasswordChecker passwordChecker;
 
+    @Transactional
     public Training create(String username, String password,
                            Trainee trainee, String trainingName,
                            TrainingType trainingType, LocalDate trainingDate,
@@ -42,6 +42,7 @@ public class TrainingService {
         training.setTrainee(trainee);
         return trainingDao.create(training);
     }
+    @Transactional
     public Training create(String username, String password,
                            Trainer trainer, String trainingName,
                            TrainingType trainingType, LocalDate trainingDate,
@@ -53,6 +54,7 @@ public class TrainingService {
         return trainingDao.create(training);
     }
 
+
     private Training setOtherFields(String trainingName, TrainingType trainingType,
                                           LocalDate trainingDate, Double duration){
         Training training = new Training();
@@ -62,18 +64,19 @@ public class TrainingService {
         training.setDuration(duration);
         return training;
     }
-
+    @Transactional(readOnly = true)
     public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
         return trainingDao.updateTrainersList(traineeForUpdateList);
     }
 
+    @Transactional(readOnly = true)
     public List<Trainer> getAllTrainersAvalibleForTrainee(String username, String password) {
         Trainee trainee = traineeService.selectByUsername(username, password);
         List<Trainer> trainers = trainerService.selectAll();
         return trainingDao.getAllTrainersAvalibleForTrainee(trainee, trainers);
     }
 
-
+    @Transactional(readOnly = true)
     public List<Training> getTrainingsByUsernameAndTrainingTypes (String username, String password,
                                                                           List<TrainingType> types) {
         Trainee trainee = null;
