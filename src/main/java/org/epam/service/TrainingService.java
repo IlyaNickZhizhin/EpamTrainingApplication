@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainingDaoImpl;
-import org.epam.exceptions.InvaildDeveloperException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -68,7 +67,7 @@ public class TrainingService {
         return trainingDao.updateTrainersList(traineeForUpdateList);
     }
 
-    public List<Trainer> getAllTrainersAvalibleForTrainee(String username, String password) throws InvaildDeveloperException{
+    public List<Trainer> getAllTrainersAvalibleForTrainee(String username, String password) {
         Trainee trainee = traineeService.selectByUsername(username, password);
         List<Trainer> trainers = trainerService.selectAll();
         return trainingDao.getAllTrainersAvalibleForTrainee(trainee, trainers);

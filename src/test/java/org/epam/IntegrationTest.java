@@ -58,15 +58,15 @@ public class IntegrationTest {
 //                new Trainer(new TrainingType(5, TrainingType.TrainingName.YOGA), user2),  // wrong password exception
 //                user2.getUsername(), user1.getPassword());
         //trainerService.delete(trainer1.getId(), user1.getUsername(), user1.getPassword()); // unsupported operation exception
-        System.out.println(trainerService.select(user1.getUsername(), user1.getPassword(), trainer1.getId())
-                .getSpecialization().getTrainingName());
+        trainerService.select(user1.getUsername(), user1.getPassword(), trainer1.getId())
+                .getSpecialization().getTrainingName();
 //      System.out.println(trainerService.select(trainer1.getId(), user2.getUsername(), user2.getPassword())
 //                .getSpecialization().getTrainingName()); // wrong password exception
-        System.out.println(trainerService.selectByUsername(user1.getUsername(), user1.getPassword())
-                .getSpecialization().getTrainingName());
+        trainerService.selectByUsername(user1.getUsername(), user1.getPassword())
+                .getSpecialization().getTrainingName();
         trainerService.setActive(user1.getUsername(), user1.getPassword(),false);
-        System.out.println(trainerService.selectByUsername(user1.getUsername(), user1.getPassword())
-                .getUser().isActive());
+        trainerService.selectByUsername(user1.getUsername(), user1.getPassword())
+                .getUser().isActive();
         trainerService.setActive(user1.getUsername(), user1.getPassword(), false);
         trainingService.getTrainingsByUsernameAndTrainingTypes(trainee4_Username, trainee4_Password, List.of(trainingType2));
         trainingService.getTrainingsByUsernameAndTrainingTypes(trainer2_Username, trainer2_Password, List.of(trainingType2));
