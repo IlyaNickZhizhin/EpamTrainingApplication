@@ -50,6 +50,7 @@ public class Trainee {
     @Fetch(FetchMode.SELECT)
     private List<Training> trainings;
 
+
     @Override
     public String toString() {
         return "Trainee{" +
