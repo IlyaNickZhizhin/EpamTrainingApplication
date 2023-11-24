@@ -27,6 +27,17 @@ public class Reader {
         Reader.endPath = endPath;
     }
 
+
+    public<M> M readEntity(String path, Class<M> clazz) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            InputStream inputStream = new FileInputStream(startPath +path+ endPath);
+            return objectMapper.readValue(inputStream, clazz);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     public User readUser(String path){
         try {
             ObjectMapper objectMapper = new ObjectMapper();

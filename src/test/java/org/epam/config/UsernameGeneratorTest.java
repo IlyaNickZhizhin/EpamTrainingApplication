@@ -21,10 +21,10 @@ class UsernameGeneratorTest {
     void testGetDefaultUsername() {
         reader.setStartPath("src/test/resources/models/users/");
         reader.setEndPath(".json");
-        User user1 = reader.readUser("user1");
-        User user2 = reader.readUser("user1");
+        User user1 = reader.readEntity("user1", User.class);
+        User user2 = reader.readEntity("user1", User.class);
         user2.setUsername(user1.getUsername()+"1");
-        User user3 = reader.readUser("user1");
+        User user3 = reader.readEntity("user1", User.class);
         user3.setUsername(user1.getUsername()+"2");
         when(mock.getByUsernameForUsernameGenerator(user1.getUsername())).thenReturn(user1);
         when(mock.getByUsernameForUsernameGenerator(user2.getUsername())).thenReturn(user2);
