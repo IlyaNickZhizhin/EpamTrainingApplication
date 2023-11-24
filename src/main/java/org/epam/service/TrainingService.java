@@ -3,7 +3,11 @@ package org.epam.service;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainingDaoImpl;
-import org.epam.model.gymModel.Trainee;
+import org.epam.dto.TraineeDto;
+import org.epam.dto.TrainerDto;
+import org.epam.dto.TrainingDto;
+import org.epam.exceptions.VerificationException;
+import org.epam.mapper.GymMapper;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
@@ -11,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -31,62 +34,54 @@ public class TrainingService {
     @Autowired
     PasswordChecker passwordChecker;
 
+    @Autowired
+    GymMapper gymMapper;
+
     @Transactional
-    public Training create(String username, String password,
-                           Trainee trainee, String trainingName,
-                           TrainingType trainingType, LocalDate trainingDate,
-                           Double duration) {
-        Trainer trainer = trainerService.selectByUsername(username, password);
-        Training training = setOtherFields(trainingName, trainingType, trainingDate, duration);
-        training.setTrainer(trainer);
-        training.setTrainee(trainee);
-        return trainingDao.create(training);
-    }
-    @Transactional
-    public Training create(String username, String password,
-                           Trainer trainer, String trainingName,
-                           TrainingType trainingType, LocalDate trainingDate,
-                           Double duration) {
-        Trainee trainee = traineeService.selectByUsername(username, password);
-        Training training = setOtherFields(trainingName, trainingType, trainingDate, duration);
-        training.setTrainer(trainer);
-        training.setTrainee(trainee);
-        return trainingDao.create(training);
-    }
-
-
-    private Training setOtherFields(String trainingName, TrainingType trainingType,
-                                          LocalDate trainingDate, Double duration){
-        Training training = new Training();
-        training.setTrainingName(trainingName);
-        training.setTrainingType(trainingType);
-        training.setTrainingDate(trainingDate);
-        training.setDuration(duration);
-        return training;
-    }
-    @Transactional(readOnly = true)
-    public List<Trainer> updateTrainersList(int id, Trainee traineeForUpdateList) {
-        return trainingDao.updateTrainersList(traineeForUpdateList);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Trainer> getAllTrainersAvalibleForTrainee(String username, String password) {
-        Trainee trainee = traineeService.selectByUsername(username, password);
-        List<Trainer> trainers = trainerService.selectAll();
-        return trainingDao.getAllTrainersAvalibleForTrainee(trainee, trainers);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Training> getTrainingsByUsernameAndTrainingTypes (String username, String password,
-                                                                          List<TrainingType> types) {
-        Trainee trainee = null;
-        Trainer trainer = null;
-        trainee = traineeService.selectByUsername(username, password);
-        if (trainee!=null) {
-            return trainingDao.getAllByUsernameAndTrainingTypes(types, trainee);
+    public TrainingDto create(TrainerDto trainerDto,
+                           TraineeDto traineeDto, TrainingDto trainingDto) {
+        try {
+            trainerService.selectByUsername(trainerDto);
+        } catch (VerificationException e) {
+            try {
+                traineeService.selectByUsername(traineeDto);
+            } catch (VerificationException ex) {
+                throw new VerificationException("Incorrect password for training creating");
+            }
         }
-        trainer = trainerService.selectByUsername(username, password);
-        return trainingDao.getAllByUsernameAndTrainingTypes(types, trainer);
+        Training training = gymMapper.trainingDtoToTraining(trainingDto);
+        training.setTrainer(gymMapper.trainerDtoToTrainer(trainerDto));
+        training.setTrainee(gymMapper.traineeDtoToTrainee(traineeDto));
+        return gymMapper.trainingToTrainingDto(
+                trainingDao.create(training)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainerDto> updateTrainersList(TraineeDto traineeForUpdateList) {
+        traineeService.selectByUsername(traineeForUpdateList); // password cheking
+        List<Trainer> trainers = trainingDao.updateTrainersList(
+                gymMapper.traineeDtoToTrainee(traineeForUpdateList));
+        return gymMapper.trainersToTrainerDtos(trainers);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainerDto> getAllTrainersAvalibleForTrainee(TraineeDto traineeDto) {
+        traineeService.selectByUsername(traineeDto); // password cheking
+        List<Trainer> existingTrainers = trainerService.selectAll();
+        List<Trainer> avalibleTrainers = trainingDao.getAllTrainersAvalibleForTrainee(
+                gymMapper.traineeDtoToTrainee(traineeDto), existingTrainers);
+        return gymMapper.trainersToTrainerDtos(avalibleTrainers);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainingDto> getTrainingsByUsernameAndTrainingTypes (TraineeDto traineeDto,
+                                                                          List<TrainingType> types) {
+        TraineeDto trainee = traineeService.selectByUsername(traineeDto);
+        List<Training> trainings = trainingDao
+                .getAllByUsernameAndTrainingTypes
+                        (types, gymMapper.traineeDtoToTrainee(traineeDto));
+        return gymMapper.trainingsToTrainingDtos(trainings);
     }
 
 }

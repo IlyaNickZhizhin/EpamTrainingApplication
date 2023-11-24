@@ -1,8 +1,6 @@
 package org.epam;
 
 import org.epam.config.Config;
-import org.epam.dao.TrainingDaoImpl;
-import org.epam.dao.UserDaoImpl;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;
 import org.epam.service.TraineeService;
@@ -21,7 +19,6 @@ import java.util.List;
 
 import static org.epam.TestDatabaseInitializer.*;
 import static org.epam.model.gymModel.TrainingType.TrainingName.WORKOUT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @ExtendWith(SpringExtension.class)

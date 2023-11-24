@@ -1,6 +1,5 @@
 package org.epam.dao;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.model.User;
 import org.hibernate.SessionFactory;

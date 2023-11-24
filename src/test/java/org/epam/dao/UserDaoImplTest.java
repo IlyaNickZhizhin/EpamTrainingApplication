@@ -12,15 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.epam.TestDatabaseInitializer.trainer1_Username;
 import static org.epam.TestDatabaseInitializer.trainer2_FirstName;
 import static org.epam.TestDatabaseInitializer.trainer2_LastName;
 import static org.epam.TestDatabaseInitializer.trainer2_Username;
 import static org.epam.TestDatabaseInitializer.user1;
-import static org.epam.TestDatabaseInitializer.user2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

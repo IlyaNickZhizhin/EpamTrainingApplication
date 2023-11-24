@@ -9,7 +9,7 @@ import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GymMapperTest {
 

@@ -11,8 +11,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Mapper
+@Component
 public interface GymMapper {
 
     GymMapper INSTANCE = Mappers.getMapper(GymMapper.class);
@@ -66,6 +70,14 @@ public interface GymMapper {
     @Mapping(source = "trainer", target = "trainer")
     @Mapping(source = "trainee", target = "trainee")
     Training trainingDtoToTraining(TrainingDto trainingDto);
+
+    List<Trainer> trainerDtosToTrainers(List<TrainerDto> trainerDtos);
+
+    List<TrainerDto> trainersToTrainerDtos(List<Trainer> trainers);
+
+    List<Training> trainingDtosToTrainings(List<TrainingDto> trainingDtos);
+
+    List<TrainingDto> trainingsToTrainingDtos(List<Training> trainings);
 
     @Named("tNameToTrainingType")
     default TrainingType stringToTrainingType(TrainingType.TrainingName type) {
