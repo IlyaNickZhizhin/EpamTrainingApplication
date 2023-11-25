@@ -10,4 +10,5 @@ public class UpdateTraineeTrainerListRequest {
     private String traineeUsername;
     @NotEmpty
     private List<String> trainerUsernames;
+
 }

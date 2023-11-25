@@ -5,5 +5,6 @@ import org.epam.model.gymModel.TrainingType;
 import java.util.List;
 
 public class GetTrainingTypesResponse {
-    private List<TrainingType.TrainingName> trainingTypes;
+    private List<TrainingType> trainingTypes;
+
 }

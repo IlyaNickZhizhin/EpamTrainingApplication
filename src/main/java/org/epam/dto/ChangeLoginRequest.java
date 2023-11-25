@@ -9,4 +9,5 @@ public class ChangeLoginRequest {
     private String oldPassword;
     @NotBlank
     private String newPassword;
+
 }

@@ -2,7 +2,10 @@ package org.epam.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
+import org.epam.dto.LoginRequest;
 import org.epam.dto.traineeDto.TraineeDto;
+import org.epam.dto.traineeDto.TraineeRegistrationRequest;
+import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.VerificationException;
 import org.epam.mapper.TraineeMapper;
@@ -25,14 +28,14 @@ public class TraineeService extends GymAbstractService<Trainee> {
     }
 
     @Transactional
-    public TraineeDto create(TraineeDto traineeDto) {
-        Trainee trainee = gymDao.create(prepare(traineeDto.getFirstname(), traineeDto.getLastname()));
+    public TraineeDto create(TraineeRegistrationRequest request) {
+        Trainee trainee = gymDao.create(prepare(request);
         return gymGeneralMapper.traineeToTraineeDto(trainee);
     }
 
     @Transactional
-    public TraineeDto update(TraineeDto oldDto, TraineeDto newDto) throws VerificationException {
-        User user = selectUserByUsername(oldDto.getUsername());
+    public TraineeDto update(LoginRequest login, UpdateTraineeProfileRequest request) throws VerificationException {
+        User user = selectUserByUsername(login.get);
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
         super.verify(oldDto.getUsername(), oldDto.getPassword(), user);
@@ -91,12 +94,14 @@ public class TraineeService extends GymAbstractService<Trainee> {
         return forOutput;
     }
 
-    private Trainee prepare(String firstName, String lastName) {
+    private Trainee prepare(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
-        User user = userDao.setNewUser(firstName, lastName);
-        log.info("Creating " + getModelName() + " with user " + firstName + " " + lastName);
+        User user = userDao.setNewUser(request.getFirstName(), request.getLastName());
+        log.info("Creating " + getModelName() + " with user " + request.getFirstName() + " " + request.getLastName());
         trainee.setUser(user);
+        trainee.setAddress(request.getAddress());
+        trainee.setDateOfBirth(request.getDateOfBirth());
         log.info("Created " + getModelName() + "and parametrized");
         return trainee;
     }

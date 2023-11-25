@@ -1,6 +1,6 @@
 package org.epam.dto.traineeDto;
 
-import org.epam.dto.trainerDto.TrainerDto;
+import org.epam.dto.trainerDto.ShotTrainerDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,5 +12,5 @@ public class UpdateTraineeProfileResponse {
     private LocalDate dateOfBirth;
     private String address;
     private boolean isActive;
-    private List<TrainerDto> trainers;
+    private List<ShotTrainerDto> trainers;
 }

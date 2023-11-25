@@ -8,13 +8,11 @@ import java.time.LocalDate;
 
 public class AddTrainingRequest {
     @NotBlank
-    private String username;
+    private String traineeUsername;
     @NotBlank
-    private String password;
+    private String trainerUsername;
     @NotBlank
     private String trainingName;
-    @NotBlank
-    private TrainingType.TrainingName trainingType;
     @NotNull
     private LocalDate trainingDate;
     @NotNull

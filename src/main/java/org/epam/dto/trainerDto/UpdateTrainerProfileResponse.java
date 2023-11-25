@@ -1,5 +1,6 @@
 package org.epam.dto.trainerDto;
 
+import org.epam.dto.traineeDto.ShotTraineeDto;
 import org.epam.dto.traineeDto.TraineeDto;
 import org.epam.model.gymModel.TrainingType;
 
@@ -11,5 +12,5 @@ public class UpdateTrainerProfileResponse {
     private String lastName;
     private TrainingType.TrainingName specialization;
     private boolean isActive;
-    private List<TraineeDto> trainees;
+    private List<ShotTraineeDto> trainees;
 }

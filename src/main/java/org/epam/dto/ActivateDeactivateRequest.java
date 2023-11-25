@@ -1,10 +1,9 @@
-package org.epam.dto.traineeDto;
+package org.epam.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class ActivateDeactivateTraineeRequest {
+public class ActivateDeactivateRequest {
     @NotBlank
     private String username;
     private boolean isActive;
 }
-

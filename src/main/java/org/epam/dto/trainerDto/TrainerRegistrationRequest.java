@@ -12,5 +12,6 @@ public class TrainerRegistrationRequest {
     private String lastName;
     @NotNull
     private TrainingType.TrainingName specialization;
+
 }
 
