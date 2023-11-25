@@ -3,9 +3,11 @@ package org.epam.service;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.dto.LoginRequest;
+import org.epam.dto.RegistrationResponse;
 import org.epam.dto.traineeDto.TraineeDto;
 import org.epam.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
+import org.epam.dto.traineeDto.UpdateTraineeProfileResponse;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.VerificationException;
 import org.epam.mapper.TraineeMapper;
@@ -28,21 +30,25 @@ public class TraineeService extends GymAbstractService<Trainee> {
     }
 
     @Transactional
-    public TraineeDto create(TraineeRegistrationRequest request) {
-        Trainee trainee = gymDao.create(prepare(request);
-        return gymGeneralMapper.traineeToTraineeDto(trainee);
+    public RegistrationResponse create(TraineeRegistrationRequest request) {
+        Trainee trainee = gymDao.create(prepare(request));
+        log.info("Created " + getModelName() + " with id " + trainee.getId());
+        TraineeDto traineeDto = gymGeneralMapper.traineeToTraineeDto(trainee);
+        return traineeMapper.traineeToRegistrationResponse(traineeDto);
     }
 
     @Transactional
-    public TraineeDto update(LoginRequest login, UpdateTraineeProfileRequest request) throws VerificationException {
-        User user = selectUserByUsername(login.get);
+    public UpdateTraineeProfileResponse update(LoginRequest login, UpdateTraineeProfileRequest request) throws VerificationException {
+        User user = selectUserByUsername(login.getUsername());
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
-        super.verify(oldDto.getUsername(), oldDto.getPassword(), user);
-        TraineeDto forOutput = gymGeneralMapper.traineeToTraineeDto(
-                super.update(oldDto.getId(),
-                        gymGeneralMapper.traineeDtoToTrainee(newDto)));
-        forOutput.setPassword("*********");
+        super.verify(login.getUsername(), login.getPassword(), user);
+        TraineeDto newDto = gymGeneralMapper.traineeToTraineeDto(trainee);
+        trainee = super.update(trainee.getId(),
+                        gymGeneralMapper.traineeDtoToTrainee(newDto));
+        UpdateTraineeProfileResponse forOutput = traineeMapper
+                .traineeDtoToUpdateResponse(gymGeneralMapper
+                        .traineeToTraineeDto(trainee));
         return forOutput;
     }
 
