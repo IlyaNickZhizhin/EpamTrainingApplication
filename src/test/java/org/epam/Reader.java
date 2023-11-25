@@ -2,6 +2,7 @@ package org.epam;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.epam.mapper.GymGeneralMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Reader {
 
@@ -27,6 +29,8 @@ public class Reader {
         Reader.endPath = endPath;
     }
 
+    GymGeneralMapper gymGeneralMapper = GymGeneralMapper.INSTANCE;
+
 
     public<M> M readEntity(String path, Class<M> clazz) {
         try {
@@ -36,6 +40,11 @@ public class Reader {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public<D, E> D readDto(String path, Function<String, E> reader, Function<E, D> mapper) {
+        E entity = reader.apply(path);
+        return mapper.apply(entity);
     }
 
     public User readUser(String path){
@@ -99,7 +108,7 @@ public class Reader {
     public Training readTraining(String path) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            InputStream inputStream = new FileInputStream(startPath +path+ endPath);
+            InputStream inputStream = new FileInputStream(startPath + path + endPath);
             Map<String, Object> trainingMap = objectMapper.readValue(inputStream, new TypeReference<>() {
             });
             Training training = new Training();
@@ -113,9 +122,9 @@ public class Reader {
             training.setTrainingType(readType("trainingtypes/trainingType" + typeNumber));
             training.setTrainingDate(LocalDate.parse((String) trainingMap.get("trainingDate")));
             training.setDuration((Double) trainingMap.get("duration"));
-        return training;
+            return training;
         } catch (IOException e) {
-        return null;
+            return null;
         }
     }
 }

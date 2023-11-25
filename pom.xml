@@ -31,6 +31,7 @@
     <modelmapper.version>3.1.1</modelmapper.version>
     <hibernate-core.version>6.2.13.Final</hibernate-core.version>
     <hibernate-entitymanager.version>5.6.15.Final</hibernate-entitymanager.version>
+    <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
     <liquibase-core.version>4.23.0</liquibase-core.version>
     <postgres.version>42.6.0</postgres.version>
     <commons-dbcp.version>1.4</commons-dbcp.version>
@@ -148,6 +149,12 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
       <version>${hibernate-entitymanager.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate-validator.version}</version>
     </dependency>
 
     <dependency>

@@ -1,8 +1,8 @@
 package org.epam.mapper;
 
-import org.epam.dto.TraineeDto;
-import org.epam.dto.TrainerDto;
-import org.epam.dto.TrainingDto;
+import org.epam.dto.traineeDto.TraineeDto;
+import org.epam.dto.trainerDto.TrainerDto;
+import org.epam.dto.trainingDto.TrainingDto;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -17,9 +17,9 @@ import java.util.List;
 
 @Mapper
 @Component
-public interface GymMapper {
+public interface GymGeneralMapper {
 
-    GymMapper INSTANCE = Mappers.getMapper(GymMapper.class);
+    GymGeneralMapper INSTANCE = Mappers.getMapper(GymGeneralMapper.class);
 
     @Mapping(source = "user.firstName", target = "firstname")
     @Mapping(source = "user.lastName", target = "lastname")

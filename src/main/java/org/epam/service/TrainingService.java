@@ -3,11 +3,12 @@ package org.epam.service;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainingDaoImpl;
-import org.epam.dto.TraineeDto;
-import org.epam.dto.TrainerDto;
-import org.epam.dto.TrainingDto;
+import org.epam.dto.traineeDto.TraineeDto;
+import org.epam.dto.trainerDto.TrainerDto;
+import org.epam.dto.trainingDto.TrainingDto;
 import org.epam.exceptions.VerificationException;
-import org.epam.mapper.GymMapper;
+import org.epam.mapper.GymGeneralMapper;
+import org.epam.mapper.TrainingMapper;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
@@ -35,7 +36,10 @@ public class TrainingService {
     PasswordChecker passwordChecker;
 
     @Autowired
-    GymMapper gymMapper;
+    TrainingMapper trainingMapper;
+
+    @Autowired
+    GymGeneralMapper gymGeneralMapper;
 
     @Transactional
     public TrainingDto create(TrainerDto trainerDto,
@@ -49,10 +53,10 @@ public class TrainingService {
                 throw new VerificationException("Incorrect password for training creating");
             }
         }
-        Training training = gymMapper.trainingDtoToTraining(trainingDto);
-        training.setTrainer(gymMapper.trainerDtoToTrainer(trainerDto));
-        training.setTrainee(gymMapper.traineeDtoToTrainee(traineeDto));
-        return gymMapper.trainingToTrainingDto(
+        Training training = gymGeneralMapper.trainingDtoToTraining(trainingDto);
+        training.setTrainer(gymGeneralMapper.trainerDtoToTrainer(trainerDto));
+        training.setTrainee(gymGeneralMapper.traineeDtoToTrainee(traineeDto));
+        return gymGeneralMapper.trainingToTrainingDto(
                 trainingDao.create(training)
         );
     }
@@ -61,8 +65,8 @@ public class TrainingService {
     public List<TrainerDto> updateTrainersList(TraineeDto traineeForUpdateList) {
         traineeService.selectByUsername(traineeForUpdateList); // password cheking
         List<Trainer> trainers = trainingDao.updateTrainersList(
-                gymMapper.traineeDtoToTrainee(traineeForUpdateList));
-        return gymMapper.trainersToTrainerDtos(trainers);
+                gymGeneralMapper.traineeDtoToTrainee(traineeForUpdateList));
+        return gymGeneralMapper.trainersToTrainerDtos(trainers);
     }
 
     @Transactional(readOnly = true)
@@ -70,8 +74,8 @@ public class TrainingService {
         traineeService.selectByUsername(traineeDto); // password cheking
         List<Trainer> existingTrainers = trainerService.selectAll();
         List<Trainer> avalibleTrainers = trainingDao.getAllTrainersAvalibleForTrainee(
-                gymMapper.traineeDtoToTrainee(traineeDto), existingTrainers);
-        return gymMapper.trainersToTrainerDtos(avalibleTrainers);
+                gymGeneralMapper.traineeDtoToTrainee(traineeDto), existingTrainers);
+        return gymGeneralMapper.trainersToTrainerDtos(avalibleTrainers);
     }
 
     @Transactional(readOnly = true)
@@ -80,8 +84,8 @@ public class TrainingService {
         TraineeDto trainee = traineeService.selectByUsername(traineeDto);
         List<Training> trainings = trainingDao
                 .getAllByUsernameAndTrainingTypes
-                        (types, gymMapper.traineeDtoToTrainee(traineeDto));
-        return gymMapper.trainingsToTrainingDtos(trainings);
+                        (types, gymGeneralMapper.traineeDtoToTrainee(traineeDto));
+        return gymGeneralMapper.trainingsToTrainingDtos(trainings);
     }
 
 }

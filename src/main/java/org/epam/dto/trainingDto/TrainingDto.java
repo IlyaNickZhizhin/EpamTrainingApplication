@@ -1,6 +1,8 @@
-package org.epam.dto;
+package org.epam.dto.trainingDto;
 
 import lombok.Data;
+import org.epam.dto.traineeDto.TraineeDto;
+import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.model.gymModel.TrainingType;
 
 import java.time.LocalDate;

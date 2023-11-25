@@ -1,4 +1,4 @@
-package org.epam.dto;
+package org.epam.dto.trainerDto;
 
 import lombok.Data;
 import org.epam.model.gymModel.TrainingType;

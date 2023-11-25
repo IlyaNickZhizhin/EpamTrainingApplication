@@ -1,6 +1,7 @@
-package org.epam.dto;
+package org.epam.dto.traineeDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.epam.dto.trainingDto.TrainingDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,5 @@ public class TraineeDto {
     private LocalDate dateOfBirth;
     private String address;
     private List<TrainingDto> trainings;
-
 }
 

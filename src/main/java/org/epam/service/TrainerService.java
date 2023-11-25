@@ -2,9 +2,10 @@ package org.epam.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TrainerDaoImpl;
-import org.epam.dto.TrainerDto;
+import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.VerificationException;
+import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,34 +19,35 @@ import java.util.List;
 public class TrainerService extends GymAbstractService<Trainer> {
 
     @Autowired
+    private TrainerMapper trainerMapper;
+    @Autowired
     public void setTrainerDao(TrainerDaoImpl trainerDaoImpl) {
         super.gymDao = trainerDaoImpl;
     }
 
-
     @Transactional
     public TrainerDto create(TrainerDto trainerDto) {
         log.info("Creating " + getModelName());
-        Trainer trainer = gymMapper.trainerDtoToTrainer(trainerDto);
+        Trainer trainer = gymGeneralMapper.trainerDtoToTrainer(trainerDto);
         User user = userDao.setNewUser(trainerDto.getFirstname(), trainerDto.getLastname());
         log.info("Creating " + getModelName() + " with user " + trainerDto.getFirstname() + " " + trainerDto.getLastname());
         trainer.setUser(user);
         log.info("Created " + getModelName() + "and parametrized");
-        return gymMapper.trainerToTrainerDto(gymDao.create(trainer));
+        return gymGeneralMapper.trainerToTrainerDto(gymDao.create(trainer));
     }
     @Transactional
     public TrainerDto update(TrainerDto oldDto, TrainerDto newDto) throws VerificationException {
         User user = selectUserByUsername(oldDto.getUsername());
         super.verify(oldDto.getUsername(), oldDto.getPassword(), user);
-        Trainer updatedTrainer = gymMapper.trainerDtoToTrainer(newDto);
+        Trainer updatedTrainer = gymGeneralMapper.trainerDtoToTrainer(newDto);
         updatedTrainer = super.update(oldDto.getId(), updatedTrainer);
-        return gymMapper.trainerToTrainerDto(updatedTrainer);
+        return gymGeneralMapper.trainerToTrainerDto(updatedTrainer);
     }
     @Transactional(readOnly = true)
     public TrainerDto select(TrainerDto trainerDto) throws VerificationException {
         User user = selectUserByUsername(trainerDto.getUsername());
         super.verify(trainerDto.getUsername(), trainerDto.getPassword(), user);
-        return gymMapper.trainerToTrainerDto(super.select(trainerDto.getId()));
+        return gymGeneralMapper.trainerToTrainerDto(super.select(trainerDto.getId()));
     }
     @Transactional(readOnly = true)
     public List<TrainerDto> selectAll(TrainerDto trainerDto) throws VerificationException {
@@ -53,13 +55,13 @@ public class TrainerService extends GymAbstractService<Trainer> {
         super.verify(trainerDto.getUsername(), trainerDto.getPassword(), user);
         List<Trainer> trainers = super.selectAll();
         log.info("Selecting all " + getModelName() + "s");
-        return gymMapper.trainersToTrainerDtos(trainers);
+        return gymGeneralMapper.trainersToTrainerDtos(trainers);
     }
     @Transactional(readOnly = true)
     public TrainerDto selectByUsername(TrainerDto trainerDto) throws VerificationException {
         User user = selectUserByUsername(trainerDto.getUsername());
         super.verify(trainerDto.getUsername(), trainerDto.getPassword(), user);
-        return gymMapper.trainerToTrainerDto(gymDao.getModelByUser(user));
+        return gymGeneralMapper.trainerToTrainerDto(gymDao.getModelByUser(user));
     }
     @Transactional
     public void changePassword(TrainerDto oldDto, TrainerDto newDto) throws VerificationException {

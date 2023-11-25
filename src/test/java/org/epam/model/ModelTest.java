@@ -1,6 +1,5 @@
 package org.epam.model;
 
-import org.epam.TestDatabaseInitializer;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;

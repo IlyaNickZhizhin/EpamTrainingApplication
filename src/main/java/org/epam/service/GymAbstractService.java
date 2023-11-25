@@ -6,7 +6,7 @@ import org.epam.config.security.PasswordChecker;
 import org.epam.dao.GymAbstractDao;
 import org.epam.dao.UserDaoImpl;
 import org.epam.exceptions.VerificationException;
-import org.epam.mapper.GymMapper;
+import org.epam.mapper.GymGeneralMapper;
 import org.epam.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,8 @@ public abstract class GymAbstractService<M> {
     protected PasswordChecker passwordChecker;
 
     @Autowired
-    protected GymMapper gymMapper;
+    protected GymGeneralMapper gymGeneralMapper;
+
 
     protected M update(int id, M updatedModel) {
         log.info("Updating " + getModelName() + " with id: " + id);

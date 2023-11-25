@@ -2,9 +2,10 @@ package org.epam.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
-import org.epam.dto.TraineeDto;
+import org.epam.dto.traineeDto.TraineeDto;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.VerificationException;
+import org.epam.mapper.TraineeMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class TraineeService extends GymAbstractService<Trainee> {
 
     @Autowired
+    private TraineeMapper traineeMapper;
+
+    @Autowired
     public void setTraineeDao(TraineeDaoImpl traineeDaoImpl) {
         super.gymDao = traineeDaoImpl;
     }
 
-
     @Transactional
     public TraineeDto create(TraineeDto traineeDto) {
         Trainee trainee = gymDao.create(prepare(traineeDto.getFirstname(), traineeDto.getLastname()));
-        return gymMapper.traineeToTraineeDto(trainee);
+        return gymGeneralMapper.traineeToTraineeDto(trainee);
     }
 
     @Transactional
@@ -33,9 +36,9 @@ public class TraineeService extends GymAbstractService<Trainee> {
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
         super.verify(oldDto.getUsername(), oldDto.getPassword(), user);
-        TraineeDto forOutput = gymMapper.traineeToTraineeDto(
+        TraineeDto forOutput = gymGeneralMapper.traineeToTraineeDto(
                 super.update(oldDto.getId(),
-                        gymMapper.traineeDtoToTrainee(newDto)));
+                        gymGeneralMapper.traineeDtoToTrainee(newDto)));
         forOutput.setPassword("*********");
         return forOutput;
     }
@@ -75,7 +78,7 @@ public class TraineeService extends GymAbstractService<Trainee> {
     public TraineeDto select(TraineeDto traineeDto) throws VerificationException {
         User user = selectUserByUsername(traineeDto.getUsername());
         super.verify(traineeDto.getUsername(), traineeDto.getPassword(), user);
-        TraineeDto forOutput = gymMapper.traineeToTraineeDto(super.select(traineeDto.getId()));
+        TraineeDto forOutput = gymGeneralMapper.traineeToTraineeDto(super.select(traineeDto.getId()));
         forOutput.setPassword("*********");
         return forOutput;
     }
@@ -83,7 +86,7 @@ public class TraineeService extends GymAbstractService<Trainee> {
     public TraineeDto selectByUsername(TraineeDto traineeDto) throws VerificationException {
         User user = selectUserByUsername(traineeDto.getUsername());
         super.verify(traineeDto.getUsername(), traineeDto.getPassword(), user);
-        TraineeDto forOutput = gymMapper.traineeToTraineeDto(super.select(traineeDto.getId()));
+        TraineeDto forOutput = gymGeneralMapper.traineeToTraineeDto(super.select(traineeDto.getId()));
         forOutput.setPassword("*********");
         return forOutput;
     }

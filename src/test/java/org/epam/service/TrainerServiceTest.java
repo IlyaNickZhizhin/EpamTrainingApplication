@@ -1,7 +1,6 @@
 package org.epam.service;
 
 
-import org.epam.TestDatabaseInitializer;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDaoImpl;
