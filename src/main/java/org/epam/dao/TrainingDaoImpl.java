@@ -31,6 +31,15 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
     }
 
 
+    public List<TrainingType> getAllTrainingTypes() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from TrainingType", TrainingType.class).getResultList();
+        } catch (Exception e) {
+            log.error("Something went wrong while getting the list of training types", e);
+            throw e;
+        }
+    }
+
     @Override
     public void update(int id, Training updatedTraining) {
         Training training = get(id);
@@ -68,6 +77,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
             throw e;
         }
     }
+
 
     public List<Training> getAllByUsernameAndTrainingTypes(List<TrainingType> types, Trainer trainer) {
         try (Session session = sessionFactory.openSession()) {

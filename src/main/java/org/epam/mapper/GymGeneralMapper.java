@@ -1,6 +1,10 @@
 package org.epam.mapper;
 
+import org.epam.dto.ChangeLoginRequest;
+import org.epam.dto.LoginRequest;
+import org.epam.dto.traineeDto.ShotTraineeDto;
 import org.epam.dto.traineeDto.TraineeDto;
+import org.epam.dto.trainerDto.ShotTrainerDto;
 import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.dto.trainingDto.TrainingDto;
 import org.epam.model.gymModel.Trainee;
@@ -71,6 +75,16 @@ public interface GymGeneralMapper {
     @Mapping(source = "trainee", target = "trainee")
     Training trainingDtoToTraining(TrainingDto trainingDto);
 
+    @Mapping(source = "username", target = "username")
+    @Mapping(source = "oldPassword", target = "password")
+    LoginRequest changeLoginToLogin(ChangeLoginRequest changeLoginRequest);
+
+    ShotTraineeDto traineeDtoToShot(TraineeDto traineeDto);
+
+    ShotTrainerDto trainerDtoToShot(TrainerDto trainerDto);
+
+    List<TraineeDto> traineesToTraineeDtos(List<Trainee> trainees);
+
     List<Trainer> trainerDtosToTrainers(List<TrainerDto> trainerDtos);
 
     List<TrainerDto> trainersToTrainerDtos(List<Trainer> trainers);
@@ -78,6 +92,10 @@ public interface GymGeneralMapper {
     List<Training> trainingDtosToTrainings(List<TrainingDto> trainingDtos);
 
     List<TrainingDto> trainingsToTrainingDtos(List<Training> trainings);
+
+    List<ShotTraineeDto> traineesDtoToShot(List<TraineeDto> trainees);
+
+    List<ShotTrainerDto> trainersDtoToShot(List<TrainerDto> trainers);
 
     @Named("tNameToTrainingType")
     default TrainingType stringToTrainingType(TrainingType.TrainingName type) {

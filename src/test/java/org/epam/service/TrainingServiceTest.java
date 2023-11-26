@@ -65,7 +65,7 @@ class TrainingServiceTest {
         when(mockTrainingDaoImpl.getAllTrainersAvalibleForTrainee(trainee3, trainers)).thenReturn(List.of(trainer2));
         when(mockTraineeService.selectByUsername(trainee3_Username, trainee3_Password))
                 .thenReturn(trainee3);
-        assertEquals(List.of(trainer2), trainingService.getAllTrainersAvalibleForTrainee(trainee3_Username, trainee3_Password));
+        assertEquals(List.of(trainer2), trainingService.getNotAssignedOnTraineeActiveTrainers(trainee3_Username, trainee3_Password));
     }
 
     @Test
@@ -84,7 +84,7 @@ class TrainingServiceTest {
                 .thenReturn(trainer2);
         assertEquals(List.of(training2),
                 trainingService
-                        .getTrainingsByUsernameAndTrainingTypes(
+                        .getTraineeTrainingsList(
                                 trainer2_Username,
                                 trainer2_Password,
                                 List.of(trainingType2)));
@@ -105,7 +105,7 @@ class TrainingServiceTest {
         when(mockTraineeService.selectByUsername(trainee4_Username, trainee4_Password)).thenReturn(trainee4);
         assertEquals(List.of(training2),
                 trainingService
-                        .getTrainingsByUsernameAndTrainingTypes(
+                        .getTraineeTrainingsList(
                                 trainee4_Username,
                                 trainee4_Password,
                                 List.of(trainingType2)));

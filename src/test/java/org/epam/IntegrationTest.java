@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import java.util.List;
 
 
@@ -82,10 +83,10 @@ public class IntegrationTest {
         trainerService.selectByUsername(user1.getUsername(), user1.getPassword())
                 .getUser().isActive();
         trainerService.setActive(user1.getUsername(), user1.getPassword(), false);
-        trainingService.getTrainingsByUsernameAndTrainingTypes(trainee4_Username, trainee4_Password, List.of(trainingType2));
-        trainingService.getTrainingsByUsernameAndTrainingTypes(trainer2_Username, trainer2_Password, List.of(trainingType2));
-        trainingService.getAllTrainersAvalibleForTrainee(trainee4_Username, trainee4_Password);
-        trainingService.getAllTrainersAvalibleForTrainee(trainee6_Username, trainee6_Password);
+        trainingService.getTraineeTrainingsList(trainee4_Username, trainee4_Password, List.of(trainingType2));
+        trainingService.getTraineeTrainingsList(trainer2_Username, trainer2_Password, List.of(trainingType2));
+        trainingService.getNotAssignedOnTraineeActiveTrainers(trainee4_Username, trainee4_Password);
+        trainingService.getNotAssignedOnTraineeActiveTrainers(trainee6_Username, trainee6_Password);
         traineeService.delete(trainee4_Username, trainee4_Password, trainee4.getId());
         traineeService.delete(trainee3_Username, trainee3_Password, trainee3.getId());
         traineeService.delete(trainee5_Username, trainee5_Password, trainee5.getId());

@@ -1,10 +1,12 @@
 package org.epam.dto.trainingDto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 import org.epam.model.gymModel.TrainingType;
 
 import java.time.LocalDate;
 
+@Getter
 public class GetTraineeTrainingsListRequest {
     @NotBlank
     private String username;

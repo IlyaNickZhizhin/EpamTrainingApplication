@@ -46,6 +46,10 @@ public class Training {
     @Column(name = "duration", nullable = false)
     private Double duration;
 
+    public Trainer getTrainer() {
+        return trainer;
+    }
+
     @Override
     public String toString() {
         return "Training{" +

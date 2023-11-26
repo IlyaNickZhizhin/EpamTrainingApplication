@@ -30,8 +30,6 @@ import static org.epam.TestDatabaseInitializer.trainer2_Username;
 import static org.epam.TestDatabaseInitializer.user1;
 import static org.epam.TestDatabaseInitializer.user2;
 import static org.epam.TestDatabaseInitializer.user3;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;

@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 public class TraineeDto {
-
     private int id;
     private String firstname;
     private String lastname;

@@ -63,6 +63,16 @@ public abstract class GymAbstractService<M> {
         }
     }
 
+     M selectByUsername(String username) {
+        log.info("Selecting " + getModelName() + " with username " + username);
+        try {
+            return gymDao.getModelByUser(selectUserByUsername(username));
+        } catch (Exception e) {
+            log.error("Error selecting " + getModelName() + " with username " + username, e);
+            throw e;
+        }
+    }
+
     List<M> selectAll() {
         log.info("Selecting all " + getModelName() + "s");
         try {
@@ -86,6 +96,15 @@ public abstract class GymAbstractService<M> {
 
     final void verify(String username, String password, User user) throws VerificationException {
         passwordChecker.checkPassword(username, password, user);
+    }
+
+    final void setActive(User user, boolean isActive){
+        if (user.isActive() != isActive) {
+            user.setActive(isActive);
+            userDao.update(user.getId(), user);
+            log.info("Setting active status for " + user.getUsername() + " to " + isActive);
+        }
+        log.info("Setting active status for " + user.getUsername() + " failed it is allready" + isActive);
     }
 
     User selectUserByUsername(String username) {
