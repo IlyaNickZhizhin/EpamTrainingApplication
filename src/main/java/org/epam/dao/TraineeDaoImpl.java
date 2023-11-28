@@ -1,7 +1,6 @@
 package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.epam.exceptions.InvalidDataException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.hibernate.SessionFactory;
@@ -23,22 +22,13 @@ public class TraineeDaoImpl extends GymAbstractDao<Trainee> {
     }
 
     @Override
-    public void update(int id, Trainee updatedTrainee) {
+    public Trainee update(int id, Trainee updatedTrainee) {
         log.info("Updating trainee with id: " + id);
-        Trainee trainee = get(id);
-        if (trainee != null) {
-            trainee.setUser(updatedTrainee.getUser());
-            trainee.setAddress(updatedTrainee.getAddress());
-            trainee.setDateOfBirth(updatedTrainee.getDateOfBirth());
-            try {
-                sessionFactory.getCurrentSession().merge(trainee);
-            } catch (Exception e) {
-                log.error("Error updating trainee with id: " + id, e);
-                throw e;
-            }
-        } else {
-            log.error("Trainee with id: " + id + " not found");
-            throw new InvalidDataException(Trainee.class.getSimpleName());
+        try {
+            return sessionFactory.getCurrentSession().merge(updatedTrainee);
+        } catch (Exception e) {
+            log.error("Error updating trainee with id: " + id, e);
+            throw e;
         }
     }
 

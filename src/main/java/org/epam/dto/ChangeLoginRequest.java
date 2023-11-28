@@ -11,5 +11,10 @@ public class ChangeLoginRequest {
     private String oldPassword;
     @NotBlank
     private String newPassword;
-
+    public LoginRequest getLogin(){
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername(username);
+        loginRequest.setPassword(oldPassword);
+        return loginRequest;
+    }
 }

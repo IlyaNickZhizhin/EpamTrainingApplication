@@ -52,8 +52,8 @@ public class TrainerDaoImplImplTest {
 
     @Test
     public void testUpdate() {
-        trainer1 = reader.readTrainer("trainers/trainer1");
-        trainingType1 = reader.readType("trainingTypes/trainingType1");
+        trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
+        trainingType1 = reader.readEntity("trainingTypes/trainingType1", TrainingType.class);
         Trainer trainer = trainer1;
         Trainer updatedTrainer = new Trainer();
         updatedTrainer.setId(trainer.getId());
@@ -90,21 +90,21 @@ public class TrainerDaoImplImplTest {
 
     @Test
     public void testGetByUserId() {
-        User user = reader.readUser("users/user1");
+        User user = reader.readEntity("users/user1", User.class);
         int userId = user.getId();
         when(userDao.get(userId)).thenReturn(user);
         Query<Trainer> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
-        Trainer trainer = reader.readTrainer("trainers/trainer1");
+        Trainer trainer = reader.readEntity("trainers/trainer1", Trainer.class);
         when(query.getSingleResultOrNull()).thenReturn(trainer);
         assertEquals(trainer, trainerDaoImpl.getModelByUserId(userId));
     }
 
     @Test
     public void testGetAll() {
-        trainer1 = reader.readTrainer("trainers/trainer1");
-        trainer2 = reader.readTrainer("trainers/trainer2");
+        trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
+        trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer1);
         trainers.add(trainer2);

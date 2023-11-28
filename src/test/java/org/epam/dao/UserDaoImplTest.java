@@ -12,10 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.epam.TestDatabaseInitializer.trainer2_FirstName;
-import static org.epam.TestDatabaseInitializer.trainer2_LastName;
-import static org.epam.TestDatabaseInitializer.trainer2_Username;
-import static org.epam.TestDatabaseInitializer.user1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -40,6 +36,7 @@ public class UserDaoImplTest {
     private UserDaoImpl userDao;
 
     Reader reader = new Reader();
+    User user1;
 
     @BeforeEach
     public void setup() {
@@ -47,6 +44,7 @@ public class UserDaoImplTest {
         when(sessionFactory.getCurrentSession()).thenReturn(session);
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
+        user1 = reader.readEntity("users/user1", User.class);
     }
 
     @Test
@@ -91,8 +89,8 @@ public class UserDaoImplTest {
 
     @Test
     public void testGetByUsername() {
-        User user = reader.readUser("users/user1");
-        String username = reader.readUser("users/user1").getUsername();
+        User user = reader.readEntity("users/user1", User.class);
+        String username = reader.readEntity("users/user1", User.class).getUsername();
         Query<User> query = mock(Query.class);
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", username)).thenReturn(query);
@@ -103,6 +101,10 @@ public class UserDaoImplTest {
 
     @Test
     public void testSetNewUser() {
+        User user2 = reader.readEntity("users/user2", User.class);;
+        String trainer2_FirstName = user2.getFirstName();
+        String trainer2_LastName = user2.getLastName();
+        String trainer2_Username = user2.getUsername();
         User user = new User();
         user.setFirstName(trainer2_FirstName);
         user.setLastName(trainer2_LastName);

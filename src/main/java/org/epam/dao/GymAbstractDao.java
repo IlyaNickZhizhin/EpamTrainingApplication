@@ -25,6 +25,7 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
 
     @Override
     public M create(M model) {
+        Object object = model;
         try {
             log.info("Creating " + model);
             save(model);
@@ -48,7 +49,7 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     }
 
     @Override
-    public abstract void update(int id, M model);
+    public abstract M update(int id, M model);
 
     @Override
     public void delete(int id) {

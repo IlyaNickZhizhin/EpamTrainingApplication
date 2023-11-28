@@ -10,9 +10,9 @@ public class UpdateTrainerProfileRequest {
     @NotBlank
     private String username;
     @NotBlank
-    private String firstName;
+    private String firstname;
     @NotBlank
-    private String lastName;
+    private String lastname;
     private TrainingType.TrainingName specialization;
     @NotNull
     private boolean isActive;

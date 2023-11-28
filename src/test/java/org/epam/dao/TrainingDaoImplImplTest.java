@@ -60,15 +60,15 @@ public class TrainingDaoImplImplTest {
         Reader reader = new Reader();
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
-        user1 = reader.readUser("users/user1");
-        user3 = reader.readUser("users/user2");
-        trainee3 = reader.readTrainee("trainees/trainee1");
-        trainee4 = reader.readTrainee("trainees/trainee2");
-        trainer1 = reader.readTrainer("trainers/trainer1");
-        trainer2 = reader.readTrainer("trainers/trainer2");
-        training1 = reader.readTraining("trainings/training1");
-        training2 = reader.readTraining("trainings/training2");
-        trainingType1 = reader.readType("trainingtypes/trainingType1");
+        user1 = reader.readEntity("users/user1", User.class);
+        user3 = reader.readEntity("users/user2", User.class);
+        trainee3 = reader.readEntity("trainees/trainee1", Trainee.class);
+        trainee4 = reader.readEntity("trainees/trainee2", Trainee.class);
+        trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
+        trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
+        training1 = reader.readEntity("trainings/training1", Training.class);
+        training2 = reader.readEntity("trainings/training2", Training.class);
+        trainingType1 = reader.readEntity("trainingtypes/trainingType1", TrainingType.class);
         trainee3_Username = user3.getUsername();
         trainer1_Username = user1.getUsername();
     }

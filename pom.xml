@@ -20,9 +20,8 @@
     <lombok.version>1.18.30</lombok.version>
     <jackson-databind.version>2.15.3</jackson-databind.version>
     <jackson-datatype-jsr310.version>2.15.3</jackson-datatype-jsr310.version>
-    <junit-jupiter-engine.version>5.9.3</junit-jupiter-engine.version>
-    <junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
-    <mockito-core.version>5.3.1</mockito-core.version>
+    <junit.version>5.9.3</junit.version>
+    <mockito.version>5.3.1</mockito.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <slf4j-api.version>2.0.9</slf4j-api.version>
     <log4j.version>2.22.0</log4j.version>
@@ -85,21 +84,21 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit-jupiter-engine.version}</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit-jupiter-api.version}</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito-core.version}</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     
@@ -181,7 +180,12 @@
       <version>${spring.version}</version>
       <scope>test</scope>
     </dependency>
-
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-junit-jupiter</artifactId>
+          <version>${mockito.version}</version>
+          <scope>test</scope>
+      </dependency>
 
 
   </dependencies>

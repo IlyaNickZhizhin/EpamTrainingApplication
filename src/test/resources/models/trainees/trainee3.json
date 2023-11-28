@@ -1,1 +1,3 @@
-{"id": 3, "dateOfBirth": "2002-03-03", "userId": 5}
+{"id": 3,
+  "dateOfBirth": "2002-03-03",
+  "user": {"id": 5, "firstName": "Semen", "lastName": "Semenov", "username": "Semen.Semenov", "password": "password05", "active": true}}

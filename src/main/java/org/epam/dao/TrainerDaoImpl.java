@@ -16,13 +16,18 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
     }
 
     @Override
-    public void update(int id, Trainer updatedTrainer) {
+    public Trainer update(int id, Trainer updatedTrainer) {
         log.info("Updating trainer with id: " + id);
         Trainer trainer = get(id);
         if (trainer != null) {
             trainer.setUser(updatedTrainer.getUser());
             trainer.setSpecialization(updatedTrainer.getSpecialization());
-            sessionFactory.getCurrentSession().merge(trainer);
+            try {
+                return sessionFactory.getCurrentSession().merge(trainer);
+            } catch (Exception e) {
+                log.error("Error updating trainer with id: " + id, e);
+                throw e;
+            }
         } else {
             log.error("Trainer with id: " + id + " not found");
             throw new InvalidDataException(Trainer.class.getSimpleName());

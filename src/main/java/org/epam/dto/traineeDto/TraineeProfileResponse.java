@@ -1,18 +1,18 @@
 package org.epam.dto.traineeDto;
 
 import lombok.Data;
-import org.epam.dto.trainerDto.ShotTrainerDto;
+import org.epam.dto.trainerDto.ShortTrainerDto;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
 public class TraineeProfileResponse {
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private LocalDate dateOfBirth;
     private String address;
     private boolean isActive;
-    private List<ShotTrainerDto> trainers;
+    private List<ShortTrainerDto> trainers;
 }
 

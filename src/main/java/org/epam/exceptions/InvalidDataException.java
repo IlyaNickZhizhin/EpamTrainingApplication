@@ -1,8 +1,10 @@
 package org.epam.exceptions;
 
+import org.epam.service.GymGeneralService;
+
 /**
  * This exception is thrown when parameters for methods are invalid.
- * @see org.epam.service.GymAbstractService
+ * @see GymGeneralService
  * @see org.epam.service.TraineeService
  * @see org.epam.service.TrainerService
  * @see org.epam.service.TrainingService

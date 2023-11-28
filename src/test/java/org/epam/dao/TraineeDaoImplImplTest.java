@@ -47,9 +47,9 @@ public class TraineeDaoImplImplTest {
         Reader reader = new Reader();
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
-        user3 = reader.readUser("users/user3");
-        trainee3 = reader.readTrainee("trainees/trainee1");
-        trainee4 = reader.readTrainee("trainees/trainee2");
+        user3 = reader.readEntity("users/user3", User.class);
+        trainee3 = reader.readEntity("trainees/trainee1", Trainee.class);
+        trainee4 = reader.readEntity("trainees/trainee2", Trainee.class);
     }
 
     @Test

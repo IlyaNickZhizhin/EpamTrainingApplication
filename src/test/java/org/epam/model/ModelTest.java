@@ -1,5 +1,6 @@
 package org.epam.model;
 
+import org.epam.Reader;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -8,21 +9,30 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.epam.TestDatabaseInitializer.trainee3;
-import static org.epam.TestDatabaseInitializer.trainee4;
-import static org.epam.TestDatabaseInitializer.user1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ModelTest {
 
+    Reader reader = new Reader();
+    Trainee trainee3;
+    Trainee trainee4;
+    User user1;
+
+    {
+        reader.setStartPath("src/test/resources/models/");
+        reader.setEndPath(".json");
+        user1 = reader.readEntity("users/user1", User.class);
+        trainee3 = reader.readEntity("trainees/trainee1", Trainee.class);
+        trainee4 = reader.readEntity("trainees/trainee2", Trainee.class);
+    }
+
     @Test
     public void testUserEqualsAndHashCode() {
-        User user1 = TestDatabaseInitializer.user1;
         User user2 = user1;
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
-        user2 = TestDatabaseInitializer.user2;
+        user2 = reader.readEntity("users/user2", User.class);
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
@@ -68,11 +78,11 @@ public class ModelTest {
 
     @Test
     public void testTrainingEqualsAndHashCode() {
-        Training training1 = TestDatabaseInitializer.training1;
-        Training training2 = TestDatabaseInitializer.training1;
+        Training training1 = reader.readEntity("trainings/training1", Training.class);
+        Training training2 = reader.readEntity("trainings/training1", Training.class);
         assertEquals(training1, training2);
         assertEquals(training1.hashCode(), training2.hashCode());
-        training2 = TestDatabaseInitializer.training2;
+        training2 = reader.readEntity("trainings/training2", Training.class);
         assertNotEquals(training1, training2);
         assertNotEquals(training1.hashCode(), training2.hashCode());
     }

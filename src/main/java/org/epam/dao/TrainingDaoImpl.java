@@ -1,6 +1,7 @@
 package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
+import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
@@ -41,13 +42,21 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
     }
 
     @Override
-    public void update(int id, Training updatedTraining) {
+    public Training update(int id, Training updatedTraining) {
         Training training = get(id);
         if (training != null) {
             training.setTrainer(updatedTraining.getTrainer());
             training.setTrainee(updatedTraining.getTrainee());
             training.setTrainingDate(updatedTraining.getTrainingDate());
-            sessionFactory.getCurrentSession().merge(training);
+            try {
+               return sessionFactory.getCurrentSession().merge(training);
+            } catch (Exception e) {
+                log.error("Error updating trainee with id: " + id, e);
+                throw e;
+            }
+        } else {
+            log.error("Training with id: " + id + " not found");
+            throw new InvalidDataException(Training.class.getSimpleName());
         }
     }
 

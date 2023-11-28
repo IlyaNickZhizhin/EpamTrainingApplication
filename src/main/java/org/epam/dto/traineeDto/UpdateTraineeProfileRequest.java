@@ -11,9 +11,9 @@ public class UpdateTraineeProfileRequest {
     @NotBlank
     private String username;
     @NotBlank
-    private String firstName;
+    private String firstname;
     @NotBlank
-    private String lastName;
+    private String lastname;
     private LocalDate dateOfBirth;
     private String address;
     @NotNull

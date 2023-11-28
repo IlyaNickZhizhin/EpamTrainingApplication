@@ -1,106 +1,88 @@
 package org.epam.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
+import org.epam.dao.UserDaoImpl;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.LoginRequest;
 import org.epam.dto.RegistrationResponse;
-import org.epam.dto.traineeDto.TraineeDto;
 import org.epam.dto.traineeDto.TraineeProfileResponse;
 import org.epam.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
-import org.epam.dto.trainerDto.ShotTrainerDto;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.VerificationException;
 import org.epam.mapper.TraineeMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.Training;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @Slf4j
-public class TraineeService extends GymAbstractService<Trainee> {
+@RequiredArgsConstructor
+public class TraineeService {
 
-    @Autowired
-    private TraineeMapper traineeMapper;
-
-    @Autowired
-    public void setTraineeDao(TraineeDaoImpl traineeDaoImpl) {
-        super.gymDao = traineeDaoImpl;
-    }
+    private final TraineeMapper traineeMapper;
+    private final TraineeDaoImpl gymDao;
+    private final UserDaoImpl userDao;
+    private final GymGeneralService<Trainee> superService;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
+        log.info("Creating " + getModelName());
         Trainee trainee = gymDao.create(prepare(request));
         log.info("Created " + getModelName() + " with id " + trainee.getId());
-        TraineeDto traineeDto = gymGeneralMapper.traineeToTraineeDto(trainee);
-        return traineeMapper.traineeToRegistrationResponse(traineeDto);
+        return traineeMapper.traineeToRegistrationResponse(trainee);
     }
 
     @Transactional
-    public TraineeProfileResponse update(LoginRequest login, UpdateTraineeProfileRequest request) throws VerificationException {
-        Trainee trainee = loginAndTakeModel(login);
-        TraineeDto newDto = traineeMapper.updateTraineeProfileResponseToTraineeDto(request);
-        trainee = super.update(trainee.getId(),
-                        gymGeneralMapper.traineeDtoToTrainee(newDto));
-        TraineeProfileResponse response = traineeMapper
-                .traineeDtoToProfileResponse(gymGeneralMapper
-                        .traineeToTraineeDto(trainee));
-        List<Trainer> trainers = trainee.getTrainings().stream().map(Training::getTrainer).collect(Collectors.toList());
-        response.setTrainers(gymGeneralMapper.trainersDtoToShot(
-                gymGeneralMapper.trainersToTrainerDtos(trainers)));
-        return response;
+    public TraineeProfileResponse update(UpdateTraineeProfileRequest request) throws VerificationException {
+        Trainee trainee = superService.selectByUsername(request.getUsername());
+        User user = trainee.getUser();
+        user.setUsername(request.getUsername());
+        user.setFirstName(request.getFirstname());
+        user.setLastName(request.getLastname());
+        user.setActive(request.isActive());
+        trainee.setUser(user);
+        if (request.getDateOfBirth() != null) trainee.setDateOfBirth(request.getDateOfBirth());
+        if (request.getAddress() != null) trainee.setAddress(request.getAddress());
+        trainee = gymDao.update(trainee.getId(), trainee);
+        return traineeMapper.traineeToProfileResponse(trainee);
     }
 
     @Transactional
     public void changePassword(ChangeLoginRequest request) throws VerificationException {
-        Trainee trainee = loginAndTakeModel(gymGeneralMapper.changeLoginToLogin(request));
-        User user = trainee.getUser();
-        if (user.getPassword().equals(request.getNewPassword())) {
-            throw new ProhibitedActionException("It is not possible to change password for user it is already ");
-        }
-        user.setPassword(request.getNewPassword());
-        userDao.update(user.getId(), user);
-    }
-
-    @Transactional
-    public void setActive(LoginRequest login, ActivateDeactivateRequest request) throws VerificationException {
-        Trainee trainee = loginAndTakeModel(login);
+        Trainee trainee = superService.selectByUsername(request.getUsername());
         if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
-        super.setActive(trainee.getUser(), request.isActive());
+        superService.changePassword(trainee.getUser(), request.getNewPassword());
     }
 
     @Transactional
-    public void delete(LoginRequest login, String username) throws VerificationException {
-        Trainee trainee = loginAndTakeModel(login);
-        super.delete(trainee.getId());
+    public void setActive(ActivateDeactivateRequest request) throws VerificationException {
+        Trainee trainee = superService.selectByUsername(request.getUsername());
+        if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        superService.setActive(trainee.getUser(), request.isActive());
     }
 
-    public TraineeProfileResponse selectByUsername(LoginRequest request, String username) throws VerificationException {
-        Trainee trainee = loginAndTakeModel(request);
-        TraineeDto traineeDto = gymGeneralMapper.traineeToTraineeDto(trainee);
-        List<Trainer> trainers = trainee.getTrainings().stream().map(Training::getTrainer).collect(Collectors.toList());
-        List<ShotTrainerDto> shotTrainerDtos = gymGeneralMapper
-                .trainersDtoToShot(gymGeneralMapper
-                        .trainersToTrainerDtos(trainers));
-        TraineeProfileResponse response = traineeMapper.traineeDtoToProfileResponse(traineeDto);
-        response.setTrainers(shotTrainerDtos);
-        return response;
+    @Transactional
+    public void delete(String username) throws VerificationException {
+        Trainee trainee = superService.selectByUsername(username);
+        superService.delete(trainee.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public TraineeProfileResponse selectByUsername(String username) throws VerificationException {
+        Trainee trainee = superService.selectByUsername(username);
+        return traineeMapper.traineeToProfileResponse(trainee);
     }
 
     private Trainee prepare(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
-        User user = userDao.setNewUser(request.getFirstName(), request.getLastName());
-        log.info("Creating " + getModelName() + " with user " + request.getFirstName() + " " + request.getLastName());
+        User user = userDao.setNewUser(request.getFirstname(), request.getLastname());
+        log.info("Creating " + getModelName() + " with user " + request.getFirstname() + " " + request.getLastname());
         trainee.setUser(user);
         trainee.setAddress(request.getAddress());
         trainee.setDateOfBirth(request.getDateOfBirth());
@@ -108,18 +90,6 @@ public class TraineeService extends GymAbstractService<Trainee> {
         return trainee;
     }
 
-    Trainee loginAndTakeModel(LoginRequest login) throws VerificationException, ProhibitedActionException {
-        log.info("Login " + getModelName() + " with username " + login.getUsername());
-        User user = selectUserByUsername(login.getUsername());
-        log.info("Getting " + getModelName() + "with username" + user.getUsername());
-        Trainee trainee = gymDao.getModelByUser(user);
-        if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
-        log.info("Verifying " + getModelName() + " with username " + login.getUsername());
-        super.verify(login.getUsername(), login.getPassword(), user);
-        return trainee;
-    }
-
-    @Override
     protected String getModelName() {
         return "Trainee";
     }

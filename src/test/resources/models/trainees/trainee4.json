@@ -1,1 +1,3 @@
-{"id": 3, "address": "Bukhara", "userId": 6}
+{"id": 4,
+  "address": "Bukhara",
+  "user": {"id": 6, "firstName": "Pavel", "lastName": "Pavlov", "username": "Pavel.Pavlov", "password": "password06", "active": true}}

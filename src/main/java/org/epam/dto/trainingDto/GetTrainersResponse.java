@@ -1,11 +1,11 @@
 package org.epam.dto.trainingDto;
 
 import lombok.Setter;
-import org.epam.dto.trainerDto.ShotTrainerDto;
+import org.epam.dto.trainerDto.ShortTrainerDto;
 
 import java.util.List;
 
 @Setter
 public class GetTrainersResponse {
-    private List<ShotTrainerDto> trainers;
+    private List<ShortTrainerDto> trainers;
 }

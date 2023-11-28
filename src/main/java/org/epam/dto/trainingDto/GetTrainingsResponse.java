@@ -5,5 +5,5 @@ import lombok.Setter;
 import java.util.List;
 @Setter
 public class GetTrainingsResponse {
-    private List<ShotTrainingDto> trainings;
+    private List<ShortTrainingDto> trainings;
 }

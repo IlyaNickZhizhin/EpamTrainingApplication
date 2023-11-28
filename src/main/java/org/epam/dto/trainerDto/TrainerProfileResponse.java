@@ -1,7 +1,7 @@
 package org.epam.dto.trainerDto;
 
 import lombok.Data;
-import org.epam.dto.traineeDto.ShotTraineeDto;
+import org.epam.dto.traineeDto.ShortTraineeDto;
 import org.epam.model.gymModel.TrainingType;
 
 import java.util.List;
@@ -11,6 +11,6 @@ public class TrainerProfileResponse {
     private String lastName;
     private TrainingType.TrainingName specialization;
     private boolean isActive;
-    private List<ShotTraineeDto> trainees;
+    private List<ShortTraineeDto> trainees;
 }
 

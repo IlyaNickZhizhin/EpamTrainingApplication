@@ -1,1 +1,3 @@
-{"id": 1, "specialization": 1, "userId": 1}
+{"id": 1,
+  "specialization": {"id": 1, "training_name": "BASIC"},
+  "user": {"id": 1, "firstName": "Petr", "lastName": "Petrov", "username": "Petr.Petrov", "password": "password01", "active": true}}
