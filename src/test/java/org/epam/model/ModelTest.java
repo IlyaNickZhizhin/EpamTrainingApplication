@@ -42,12 +42,12 @@ public class ModelTest {
         Trainer trainer1 = new Trainer();
         trainer1.setId(1);
         trainer1.setSpecialization(new TrainingType());
-        trainer1.setUser(new User(1, "T", "U", "TU", "p", true));
+        trainer1.setUser(new User(1, "T", "U", "TU", "p", true, null));
 
         Trainer trainer2 = new Trainer();
         trainer2.setId(1);
         trainer2.setSpecialization(new TrainingType());
-        trainer2.setUser(new User(1, "T", "U", "TU", "p", true));
+        trainer2.setUser(new User(1, "T", "U", "TU", "p", true, null));
 
         assertEquals(trainer1, trainer2);
         assertEquals(trainer1.hashCode(), trainer2.hashCode());

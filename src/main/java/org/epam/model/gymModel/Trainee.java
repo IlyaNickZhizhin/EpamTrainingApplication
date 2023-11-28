@@ -43,10 +43,6 @@ public class Trainee extends Role{
     @Column(name = "address")
     private String address;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
-    private User user;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "trainees_trainers",
             joinColumns = @JoinColumn(name = "trainee_id"),
@@ -65,7 +61,7 @@ public class Trainee extends Role{
                 "id=" + id +
                 ", dateOfBirth=" + dateOfBirth +
                 ", address='" + address + '\'' +
-                ", user=" + user +
+                ", user=" + super.getUser().getUsername() +
                 ", trainings =" + trainings +
                 '}';
     }

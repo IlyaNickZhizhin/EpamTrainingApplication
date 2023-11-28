@@ -24,10 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TraineeService {
 
-    private final TraineeMapper traineeMapper;
+    private final TraineeMapper traineeMapper = TraineeMapper.INSTANCE;
     private final TraineeDaoImpl gymDao;
     private final UserDaoImpl userDao;
-    private final GymGeneralService<Trainee> superService;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
@@ -39,13 +38,12 @@ public class TraineeService {
 
     @Transactional
     public TraineeProfileResponse update(UpdateTraineeProfileRequest request) throws VerificationException {
-        Trainee trainee = superService.selectByUsername(request.getUsername());
-        User user = trainee.getUser();
+        User user = userDao.getByUsername(request.getUsername());
         user.setUsername(request.getUsername());
         user.setFirstName(request.getFirstname());
         user.setLastName(request.getLastname());
         user.setActive(request.isActive());
-        trainee.setUser(user);
+        Trainee trainee = (Trainee) user.getRole();
         if (request.getDateOfBirth() != null) trainee.setDateOfBirth(request.getDateOfBirth());
         if (request.getAddress() != null) trainee.setAddress(request.getAddress());
         trainee = gymDao.update(trainee.getId(), trainee);
@@ -53,16 +51,27 @@ public class TraineeService {
     }
 
     @Transactional
-    public void changePassword(ChangeLoginRequest request) throws VerificationException {
-        Trainee trainee = superService.selectByUsername(request.getUsername());
-        if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
-        superService.changePassword(trainee.getUser(), request.getNewPassword());
+    public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainee trainee;
+        try {
+            trainee = (Trainee) user.getRole();
+        } catch (ClassCastException e) {
+            throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        }
+        user.setPassword(request.getNewPassword());
+        return userDao.update(user.getId(), user).getRole().equals(trainee);
     }
 
     @Transactional
     public void setActive(ActivateDeactivateRequest request) throws VerificationException {
-        Trainee trainee = superService.selectByUsername(request.getUsername());
-        if (trainee==null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        User user = userDao.getByUsername(request.getUsername());
+        Trainee trainee;
+        try {
+            trainee = (Trainee) user.getRole();
+        } catch (ClassCastException e) {
+            throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        }
         superService.setActive(trainee.getUser(), request.isActive());
     }
 

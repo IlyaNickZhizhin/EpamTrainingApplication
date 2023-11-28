@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.epam.dao.TrainingDaoImpl;
@@ -29,19 +30,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TrainingService {
-
-    @Autowired
-    GymGeneralService<Trainee> traineeService;
-
-    @Autowired
-    GymGeneralService<Trainer> trainerService;
-
-    @Autowired
-    TrainingDaoImpl trainingDao;
-
-    @Autowired
-    TrainingMapper trainingMapper;
+    private final GymGeneralService<Trainee> traineeService;
+    private final GymGeneralService<Trainer> trainerService;
+    private final TrainingDaoImpl trainingDao;
+    private final TrainingMapper trainingMapper = TrainingMapper.INSTANCE;
 
 
 
@@ -77,7 +71,7 @@ public class TrainingService {
         List<Trainer> trainers = newTrainers.stream().map(trainerService::selectByUsername).collect(Collectors.toList());
         org.apache.commons.collections4.CollectionUtils.emptyIfNull(trainee.getTrainers()).addAll(trainers);
         traineeService.update(trainee.getId(), trainee);
-        return getTrainersList(login, traineeUsername);
+        return getTrainersList(traineeUsername);
     }
 
     @Transactional(readOnly = true)

@@ -32,16 +32,10 @@ public class UserDaoImpl {
         factory.getCurrentSession().persist(user);
     }
 
-    public void update(int id, User user) {
+    public User update(int id, User user) {
         log.info("Updating user with id: " + id);
         Session session = factory.getCurrentSession();
-        User userToUpdate = session.get(User.class, id);
-        userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setLastName(user.getLastName());
-        userToUpdate.setUsername(user.getUsername());
-        userToUpdate.setPassword(user.getPassword());
-        userToUpdate.setActive(user.isActive());
-        session.merge(userToUpdate);
+        return session.merge(user);
     }
 
     public void delete(int id) {

@@ -12,6 +12,7 @@ import org.epam.model.gymModel.Role;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 
@@ -23,7 +24,8 @@ public class LoginService {
     private final UserDaoImpl userDao;
     private final PasswordChecker passwordChecker;
 
-    Role login(LoginRequest request) throws VerificationException, InvalidDataException {
+    @Transactional(readOnly = true)
+    public Role login(LoginRequest request) throws VerificationException, InvalidDataException {
         User user = userDao.getByUsername(request.getUsername());
         if (user==null) throw new InvalidDataException("User with username: " + request.getUsername() + " not found");
         boolean check = passwordChecker.checkPassword(request.getUsername(), request.getPassword(), user);

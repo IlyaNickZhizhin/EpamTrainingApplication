@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class TrainerService {
-    private final TrainerMapper trainerMapper;
+    private final TrainerMapper trainerMapper = TrainerMapper.INSTANCE;
     private final TrainerDaoImpl gymDao;
     private final UserDaoImpl userDao;
     private final GymGeneralService<Trainer> superService;
@@ -61,10 +61,11 @@ public class TrainerService {
     }
 
     @Transactional
-    public void changePassword(ChangeLoginRequest request) throws VerificationException {
+    public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
         Trainer trainer = superService.selectByUsername(request.getUsername());
         if (trainer==null) throw new ProhibitedActionException("No one except Trainer could not use TraineeService");
-        superService.changePassword(trainer.getUser(), request.getNewPassword());
+        superService.setGymDao(gymDao);
+        return superService.changePassword(trainer.getUser(), request.getNewPassword());
     }
     @Transactional
     public void setActive(ActivateDeactivateRequest request) throws VerificationException {

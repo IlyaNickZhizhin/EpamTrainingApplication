@@ -1,5 +1,6 @@
 package org.epam.service;
 
+import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,11 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Setter
 public class GymGeneralService<M> {
-    private final GymAbstractDao<M> gymDao;
-    private final UserDaoImpl userDao;
-    private final PasswordChecker passwordChecker;
 
+    GymAbstractDao<M> gymDao;
+    private final UserDaoImpl userDao;
 
     M update(int id, M updatedModel) {
         log.info("Updating " + updatedModel.getClass().getSimpleName() + " with id: " + id);
@@ -73,16 +74,13 @@ public class GymGeneralService<M> {
         }
     }
 
-    final void verify(String username, String password, User user) throws VerificationException {
-        passwordChecker.checkPassword(username, password, user);
-    }
 
-
-    final void changePassword(User user, @NotBlank String newPassword) {
+    final boolean changePassword(User user, @NotBlank String newPassword) {
         if (!user.getPassword().equals(newPassword)) {
             user.setPassword(newPassword);
             userDao.update(user.getId(), user);
             log.info("Changing password for " + user.getUsername() + "in userservice");
+            return true;
         } else {
             log.info("Changing password for " + user.getUsername() + " failed it is allready" + newPassword);
             throw new ProhibitedActionException("New password is the same as old");

@@ -3,6 +3,7 @@ package org.epam.service;
 import org.epam.Reader;
 import org.epam.TestMapper;
 import org.epam.config.security.PasswordChecker;
+import org.epam.dao.GymAbstractDao;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.dto.LoginRequest;
@@ -36,10 +37,10 @@ class TraineeServiceTest {
     private UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
 
     @Spy
-    private TraineeMapper traineeMapper = TraineeMapper.INSTANCE;
+    private GymGeneralService<Trainee> superService = new GymGeneralService<>(mockUserDao);
 
-    @Mock
-    private PasswordChecker mockPasswordChecker = mock(PasswordChecker.class);
+    @Spy
+    private TraineeMapper traineeMapper = TraineeMapper.INSTANCE;
 
     @InjectMocks
     private TraineeService traineeService;
@@ -75,12 +76,18 @@ class TraineeServiceTest {
 
     @Test
     void testUpdate() {
+        Trainee trainee = trainee3;
+        trainee.getUser().setFirstName("user5");
         UpdateTraineeProfileRequest request
                 = testMapper.traineeToUpdateRequest(trainee3);
+        request.setFirstname("user5");
         TraineeProfileResponse response
                 = traineeMapper.traineeToProfileResponse(trainee3);
-        LoginRequest login = testMapper.userToLoginRequest(user3);
-        assertEquals(response, traineeService.update(login, request));
+        response.setFirstname("user5");
+        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user5);
+        when(mockTraineeDaoImpl.getModelByUser(user5)).thenReturn(trainee3);
+        when(mockTraineeDaoImpl.update(1, trainee)).thenReturn(trainee);
+        assertEquals(response, traineeService.update(request));
     }
 
     @Test

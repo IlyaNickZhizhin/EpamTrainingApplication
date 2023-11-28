@@ -36,10 +36,6 @@ public class Trainer extends Role{
     @JoinColumn(name = "specialization")
     private TrainingType specialization;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
-    private User user;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "trainees_trainers",
             joinColumns = @JoinColumn(name = "trainer_id"),
@@ -56,7 +52,7 @@ public class Trainer extends Role{
         return "Trainer{" +
                 "id=" + id +
                 ", specialization=" + specialization +
-                ", user=" + user +
+                ", user=" + super.getUser().getUsername() +
                 ", trainings=" + trainings +
                 '}';
     }

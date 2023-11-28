@@ -96,7 +96,7 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     }
 
     protected abstract String getModelName();
-    
+
     protected abstract Class<M> getModelClass();
 
 }

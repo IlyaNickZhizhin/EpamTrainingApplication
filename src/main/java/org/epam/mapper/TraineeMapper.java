@@ -1,10 +1,13 @@
 package org.epam.mapper;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.epam.dto.RegistrationResponse;
+import org.epam.dto.traineeDto.ShortTraineeDto;
 import org.epam.dto.traineeDto.TraineeProfileResponse;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
 import org.epam.dto.trainerDto.ShortTrainerDto;
 import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper
-@Component
 public interface TraineeMapper {
     TraineeMapper INSTANCE = Mappers.getMapper(TraineeMapper.class);
 
@@ -29,18 +31,19 @@ public interface TraineeMapper {
     @Mapping(source = "user.active", target = "active")
     @Mapping(source = "dateOfBirth", target = "dateOfBirth")
     @Mapping(source = "address", target = "address")
-    @Mapping(source = "trainings", target = "trainers", qualifiedByName = "trainingsToTrainers")
+    @Mapping(source = "trainers", target = "trainers", qualifiedByName = "trainersToTrainersDto")
     TraineeProfileResponse traineeToProfileResponse(Trainee trainee);
 
-    @Named("trainingsToTrainers")
-    default List<ShortTrainerDto> trainingsToShortTrainersDto(List<Training> trainings) {
-        return trainings.stream().map(training -> {
-            ShortTrainerDto shortTrainerDto = new ShortTrainerDto();
-            shortTrainerDto.setFirstname(training.getTrainer().getUser().getFirstName());
-            shortTrainerDto.setLastname(training.getTrainer().getUser().getLastName());
-            shortTrainerDto.setUsername(training.getTrainer().getUser().getUsername());
-            shortTrainerDto.setSpecialization(training.getTrainer().getSpecialization().getTrainingName());
-            return shortTrainerDto;
-        }).collect(Collectors.toList());
+    @Mapping(source = "user.firstName", target = "firstname")
+    @Mapping(source = "user.lastName", target = "lastname")
+    @Mapping(source = "user.username", target = "username")
+    ShortTraineeDto traineeToShortTraineeDto(Trainee trainee);
+
+    List<ShortTraineeDto> traineesToShortTraineesDto(List<Trainee> trainees);
+
+    @Named("trainersToTrainersDto")
+    default List<ShortTrainerDto> trainersToTrainersDto(List<Trainer> trainers) {
+        return TrainerMapper.INSTANCE.trainersToShortTrainersDto(
+                CollectionUtils.emptyIfNull(trainers).stream().collect(Collectors.toList()));
     }
 }

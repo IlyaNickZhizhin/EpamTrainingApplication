@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Mapper
-@Component
 public interface TrainingMapper {
 
     TrainingMapper INSTANCE = Mappers.getMapper(TrainingMapper.class);
@@ -46,7 +45,7 @@ public interface TrainingMapper {
     @IterableMapping(qualifiedByName = "trainingForTrainer")
     List<ShortTrainingDto> trainerTrainingsToShortDtos(List<Training> trainings);
 
-    @Mapping(target = "trainers", source = "trainings", qualifiedByName = "trainingsToTrainers")
+    @Mapping(target = "trainers", source = "trainers", qualifiedByName = "trainersToSortTrainersDto")
     GetTrainersResponse traineeToTrainersResponse(Trainee trainee);
 
 
@@ -59,9 +58,9 @@ public interface TrainingMapper {
     default TrainingType.TrainingName trainingTypeToString(TrainingType trainingType) {
         return trainingType.getTrainingName();
     }
-    @Named("trainingsToTrainers")
-    default List<ShortTrainerDto> trainingsToShortTrainersDto(List<Training> trainings) {
-        return TraineeMapper.INSTANCE.trainingsToShortTrainersDto(trainings);
+    @Named("trainersToSortTrainersDto")
+    default List<ShortTrainerDto> trainingsToShortTrainersDto(List<Trainer> trainers) {
+        return TrainerMapper.INSTANCE.trainersToShortTrainersDto(trainers);
     }
 
     @Named("trainersToShortTrainersDto")

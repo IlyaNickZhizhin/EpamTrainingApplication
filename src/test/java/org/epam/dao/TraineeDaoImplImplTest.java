@@ -38,13 +38,13 @@ public class TraineeDaoImplImplTest {
     private static Trainee trainee3;
     private static Trainee trainee4;
     private static User user3;
+    Reader reader = new Reader();
 
 
     @BeforeEach
     public void setup() {
         initMocks(this);
         when(factory.getCurrentSession()).thenReturn(session);
-        Reader reader = new Reader();
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         user3 = reader.readEntity("users/user3", User.class);
@@ -54,14 +54,12 @@ public class TraineeDaoImplImplTest {
 
     @Test
     public void testUpdate() {
-        Trainee trainee = trainee3;
-        Trainee updatedTrainee = new Trainee();
-        updatedTrainee.setId(trainee.getId());
-        updatedTrainee.setAddress("New address");
-        when(session.get(Trainee.class, 1)).thenReturn(trainee);
-        traineeDaoImpl.update(1, updatedTrainee);
-        assertEquals(trainee.getAddress(), updatedTrainee.getAddress());
-        verify(session).merge(trainee);
+        Trainee updatedTrainee = reader.readEntity("trainees/trainee1", Trainee.class);
+        updatedTrainee.setAddress("new address");
+        when(session.merge(updatedTrainee)).thenReturn(updatedTrainee);
+        Trainee nt = traineeDaoImpl.update(1, updatedTrainee);
+        assertEquals(nt.getAddress(), updatedTrainee.getAddress());
+        verify(session).merge(updatedTrainee);
     }
 
     @Test
