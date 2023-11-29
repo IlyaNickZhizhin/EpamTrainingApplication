@@ -1,8 +1,8 @@
 package org.epam.mapper;
 
 import org.epam.dto.trainerDto.ShortTrainerDto;
+import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTrainersResponse;
-import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.dto.trainingDto.ShortTrainingDto;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
@@ -13,7 +13,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -48,6 +47,13 @@ public interface TrainingMapper {
     @Mapping(target = "trainers", source = "trainers", qualifiedByName = "trainersToSortTrainersDto")
     GetTrainersResponse traineeToTrainersResponse(Trainee trainee);
 
+    @Mapping(target = "traineeUsername", source = "trainee.user.username")
+    @Mapping(target = "trainerUsername", source = "trainer.user.username")
+    @Mapping(target = "trainingType", source = "trainingType.trainingName")
+    @Mapping(target = "trainingName", source = "trainingName")
+    @Mapping(target = "trainingDate", source = "trainingDate")
+    @Mapping(target = "trainingDuration", source = "duration")
+    AddTrainingRequest trainingToAddTrainingRequest(Training training);
 
     @Named("tNameToTrainingType")
     default TrainingType stringToTrainingType(TrainingType.TrainingName type) {

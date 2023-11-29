@@ -2,11 +2,15 @@ package org.epam.dto.trainingDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.epam.model.gymModel.TrainingType;
 
 import java.time.LocalDate;
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 public class AddTrainingRequest {
     @NotBlank
     private String traineeUsername;

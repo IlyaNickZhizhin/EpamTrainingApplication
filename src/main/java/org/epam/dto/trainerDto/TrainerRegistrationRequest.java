@@ -2,10 +2,12 @@ package org.epam.dto.trainerDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.epam.model.gymModel.TrainingType;
 
-@Data
+@Getter
+@Setter
 public class TrainerRegistrationRequest {
     @NotBlank
     private String firstName;

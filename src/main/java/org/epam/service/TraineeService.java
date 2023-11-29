@@ -6,7 +6,6 @@ import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
-import org.epam.dto.LoginRequest;
 import org.epam.dto.RegistrationResponse;
 import org.epam.dto.traineeDto.TraineeProfileResponse;
 import org.epam.dto.traineeDto.TraineeRegistrationRequest;
@@ -43,48 +42,44 @@ public class TraineeService {
         user.setFirstName(request.getFirstname());
         user.setLastName(request.getLastname());
         user.setActive(request.isActive());
-        Trainee trainee = (Trainee) user.getRole();
+        Trainee trainee = gymDao.getModelByUser(user);
         if (request.getDateOfBirth() != null) trainee.setDateOfBirth(request.getDateOfBirth());
         if (request.getAddress() != null) trainee.setAddress(request.getAddress());
+        trainee.setUser(user);
         trainee = gymDao.update(trainee.getId(), trainee);
         return traineeMapper.traineeToProfileResponse(trainee);
     }
-
+    @Transactional(readOnly = true)
+    public TraineeProfileResponse selectByUsername(String username) throws VerificationException {
+        User user = userDao.getByUsername(username);
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        return traineeMapper.traineeToProfileResponse(trainee);
+    }
     @Transactional
     public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
         User user = userDao.getByUsername(request.getUsername());
-        Trainee trainee;
-        try {
-            trainee = (Trainee) user.getRole();
-        } catch (ClassCastException e) {
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null)
             throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
-        }
+        if (user.getPassword().equals(request.getNewPassword())) throw new ProhibitedActionException("New password is the same as old");
         user.setPassword(request.getNewPassword());
-        return userDao.update(user.getId(), user).getRole().equals(trainee);
+        return userDao.update(user.getId(), user).getPassword().equals(request.getNewPassword());
     }
 
     @Transactional
-    public void setActive(ActivateDeactivateRequest request) throws VerificationException {
+    public boolean setActive(ActivateDeactivateRequest request) throws VerificationException {
         User user = userDao.getByUsername(request.getUsername());
-        Trainee trainee;
-        try {
-            trainee = (Trainee) user.getRole();
-        } catch (ClassCastException e) {
-            throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
-        }
-        superService.setActive(trainee.getUser(), request.isActive());
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        if (user.isActive() != request.isActive()) userDao.update(user.getId(), user);
+        return user.isActive();
     }
 
     @Transactional
-    public void delete(String username) throws VerificationException {
-        Trainee trainee = superService.selectByUsername(username);
-        superService.delete(trainee.getId());
-    }
-
-    @Transactional(readOnly = true)
-    public TraineeProfileResponse selectByUsername(String username) throws VerificationException {
-        Trainee trainee = superService.selectByUsername(username);
-        return traineeMapper.traineeToProfileResponse(trainee);
+    public boolean delete(String username) throws VerificationException {
+        User user = userDao.getByUsername(username);
+        return userDao.delete(user.getId()).equals(user);
     }
 
     private Trainee prepare(TraineeRegistrationRequest request) {

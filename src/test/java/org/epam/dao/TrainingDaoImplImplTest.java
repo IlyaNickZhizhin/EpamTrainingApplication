@@ -61,9 +61,9 @@ public class TrainingDaoImplImplTest {
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         user1 = reader.readEntity("users/user1", User.class);
-        user3 = reader.readEntity("users/user2", User.class);
-        trainee3 = reader.readEntity("trainees/trainee1", Trainee.class);
-        trainee4 = reader.readEntity("trainees/trainee2", Trainee.class);
+        user3 = reader.readEntity("users/user3", User.class);
+        trainee3 = reader.readEntity("trainees/trainee3", Trainee.class);
+        trainee4 = reader.readEntity("trainees/trainee4", Trainee.class);
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
         trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
         training1 = reader.readEntity("trainings/training1", Training.class);
@@ -122,18 +122,6 @@ public class TrainingDaoImplImplTest {
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.list()).thenReturn(trainings);
         assertEquals(trainings, trainingDaoImpl.getAll());
-    }
-
-    @Test
-    public void testUpdateTrainersList() {
-        Query<Training> query = mock(Query.class);
-        List<Training> ts =  new ArrayList<>();
-        ts.add(training1);
-        ts.add(training2);
-        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
-        when(query.setParameter(anyString(), any())).thenReturn(query);
-        when(query.getResultStream()).thenReturn(ts.stream());
-        assertEquals(List.of(trainer1, trainer2), trainingDaoImpl.updateTrainersList(trainee3));
     }
 
     @Test

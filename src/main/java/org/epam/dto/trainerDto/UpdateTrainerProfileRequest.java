@@ -2,10 +2,12 @@ package org.epam.dto.trainerDto;
 
 import com.sun.istack.NotNull;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.epam.model.gymModel.TrainingType;
 
-@Data
+@Getter
+@Setter
 public class UpdateTrainerProfileRequest {
     @NotBlank
     private String username;

@@ -1,11 +1,13 @@
 package org.epam.dto.trainingDto;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.epam.model.gymModel.TrainingType;
 
 import java.time.LocalDate;
 
-@Data
+@Setter
+@EqualsAndHashCode
 public class ShortTrainingDto {
     private int id;
     private String trainingName;

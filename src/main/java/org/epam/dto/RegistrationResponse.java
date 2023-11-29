@@ -1,8 +1,12 @@
 package org.epam.dto;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
+@EqualsAndHashCode
 public class RegistrationResponse {
     private String username;
     private String password;

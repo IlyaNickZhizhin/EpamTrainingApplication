@@ -23,8 +23,8 @@ public class ModelTest {
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         user1 = reader.readEntity("users/user1", User.class);
-        trainee3 = reader.readEntity("trainees/trainee1", Trainee.class);
-        trainee4 = reader.readEntity("trainees/trainee2", Trainee.class);
+        trainee3 = reader.readEntity("trainees/trainee3", Trainee.class);
+        trainee4 = reader.readEntity("trainees/trainee4", Trainee.class);
     }
 
     @Test

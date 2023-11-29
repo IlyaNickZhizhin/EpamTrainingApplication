@@ -1,11 +1,13 @@
 package org.epam.dto.trainerDto;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.epam.dto.traineeDto.ShortTraineeDto;
 import org.epam.model.gymModel.TrainingType;
 
 import java.util.List;
-@Data
+@Setter
+@EqualsAndHashCode
 public class TrainerProfileResponse {
     private String firstName;
     private String lastName;

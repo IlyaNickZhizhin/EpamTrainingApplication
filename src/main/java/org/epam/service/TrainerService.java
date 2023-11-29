@@ -6,7 +6,6 @@ import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDaoImpl;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
-import org.epam.dto.LoginRequest;
 import org.epam.dto.RegistrationResponse;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
@@ -26,7 +25,6 @@ public class TrainerService {
     private final TrainerMapper trainerMapper = TrainerMapper.INSTANCE;
     private final TrainerDaoImpl gymDao;
     private final UserDaoImpl userDao;
-    private final GymGeneralService<Trainer> superService;
 
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
@@ -43,35 +41,46 @@ public class TrainerService {
     }
     @Transactional
     public TrainerProfileResponse update(UpdateTrainerProfileRequest request) throws VerificationException {
-        Trainer trainer = superService.selectByUsername(request.getUsername());
-        User user = trainer.getUser();
+        User user = userDao.getByUsername(request.getUsername());
         user.setUsername(request.getUsername());
         user.setFirstName(request.getFirstname());
         user.setLastName(request.getLastname());
         user.setActive(request.isActive());
-        trainer.setUser(user);
-        if (request.getSpecialization() != null) trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
+        Trainer trainer = gymDao.getModelByUser(user);
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        if (request.getSpecialization() != null)
+            trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
         trainer = gymDao.update(trainer.getId(), trainer);
         return trainerMapper.trainerToProfileResponse(trainer);
     }
     @Transactional(readOnly = true)
     public TrainerProfileResponse selectByUsername(String username) throws VerificationException {
-        Trainer trainer = superService.selectByUsername(username);
+        User user = userDao.getByUsername(username);
+        Trainer trainer = gymDao.getModelByUser(user);
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
         return trainerMapper.trainerToProfileResponse(trainer);
     }
 
     @Transactional
     public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
-        Trainer trainer = superService.selectByUsername(request.getUsername());
-        if (trainer==null) throw new ProhibitedActionException("No one except Trainer could not use TraineeService");
-        superService.setGymDao(gymDao);
-        return superService.changePassword(trainer.getUser(), request.getNewPassword());
+        User user = userDao.getByUsername(request.getUsername());
+        Trainer trainer = gymDao.getModelByUser(user);
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        if (user.getPassword().equals(request.getNewPassword())) throw new ProhibitedActionException("New password is the same as old");
+        user.setPassword(request.getNewPassword());
+        return userDao.update(user.getId(), user).getPassword().equals(request.getNewPassword());
     }
     @Transactional
-    public void setActive(ActivateDeactivateRequest request) throws VerificationException {
-        Trainer trainer = superService.selectByUsername(request.getUsername());
-        if (trainer==null) throw new ProhibitedActionException("No one except Trainer could not use TraineeService");
-        superService.setActive(trainer.getUser(), request.isActive());
+    public boolean setActive(ActivateDeactivateRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainer trainer = gymDao.getModelByUser(user);
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        if (user.isActive() != request.isActive()) userDao.update(user.getId(), user);
+        return user.isActive();
     }
 
     protected String getModelName() {

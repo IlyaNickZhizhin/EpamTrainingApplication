@@ -1,5 +1,0 @@
-{"id": 1,
-  "dateOfBirth": "2000-01-01",
-  "address": "Tashkent",
-  "user": {"id": 3, "firstName": "Sidor", "lastName": "Sidorov", "username": "Sidor.Sidorov", "password": "password03", "active": true}
-}

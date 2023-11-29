@@ -2,7 +2,6 @@ package org.epam.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.epam.dao.UserDaoImpl;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.springframework.stereotype.Component;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class PasswordChecker {
-
-    private final UserDaoImpl userDao;
 
     public boolean checkPassword(String username, String password, User user) {
         log.info("Checking password for user: " + username);

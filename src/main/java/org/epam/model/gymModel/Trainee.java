@@ -11,17 +11,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.epam.model.User;
+import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -55,13 +55,20 @@ public class Trainee extends Role{
     private List<Training> trainings;
 
 
+    public List<Training> getTrainings() {
+        return CollectionUtils.emptyIfNull(trainings).stream().collect(Collectors.toList());
+    }
+
+    public List<Trainer> getTrainers() {
+        return CollectionUtils.emptyIfNull(trainers).stream().collect(Collectors.toList());
+    }
+
     @Override
     public String toString() {
         return "Trainee{" +
                 "id=" + id +
                 ", dateOfBirth=" + dateOfBirth +
                 ", address='" + address + '\'' +
-                ", user=" + super.getUser().getUsername() +
                 ", trainings =" + trainings +
                 '}';
     }

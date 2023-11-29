@@ -1,11 +1,13 @@
 package org.epam.dto.traineeDto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 public class TraineeRegistrationRequest {
     @NotBlank
     private String firstname;

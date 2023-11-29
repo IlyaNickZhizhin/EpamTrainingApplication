@@ -5,17 +5,10 @@ import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.LoginRequest;
 import org.epam.dto.RegistrationResponse;
 import org.epam.dto.traineeDto.TraineeRegistrationRequest;
-import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
-import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
-import org.epam.mapper.TraineeMapper;
-import org.epam.mapper.TrainerMapper;
-import org.epam.mapper.TrainingMapper;
 import org.epam.model.User;
-import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Training;
-import org.epam.model.gymModel.TrainingType;
+import org.epam.model.gymModel.Trainer;
 import org.epam.service.LoginService;
 import org.epam.service.TraineeService;
 import org.epam.service.TrainerService;
@@ -28,9 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -60,10 +50,10 @@ public class IntegrationTest {
     public void traineeTrainerTrainingIntegrationTest() {
         TrainerRegistrationRequest TrRQ1 = reader.readDto("trainers/trainer1", Trainer.class, testMapper::trainerToRegistrationRequest);
         TrainerRegistrationRequest TrRQ2 = reader.readDto("trainers/trainer2", Trainer.class, testMapper::trainerToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ3 = reader.readDto("trainees/trainee1", Trainee.class, testMapper::traineeToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ4 = reader.readDto("trainees/trainee2", Trainee.class, testMapper::traineeToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ5 = reader.readDto("trainees/trainee3", Trainee.class, testMapper::traineeToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ6 = reader.readDto("trainees/trainee4", Trainee.class, testMapper::traineeToRegistrationRequest);
+        TraineeRegistrationRequest TeRQ3 = reader.readDto("trainees/trainee3", Trainee.class, testMapper::traineeToRegistrationRequest);
+        TraineeRegistrationRequest TeRQ4 = reader.readDto("trainees/trainee4", Trainee.class, testMapper::traineeToRegistrationRequest);
+        TraineeRegistrationRequest TeRQ5 = reader.readDto("trainees/trainee5", Trainee.class, testMapper::traineeToRegistrationRequest);
+        TraineeRegistrationRequest TeRQ6 = reader.readDto("trainees/trainee6", Trainee.class, testMapper::traineeToRegistrationRequest);
         RegistrationResponse TrRR1 = trainerService.create(TrRQ1);
         RegistrationResponse TrRR2 = trainerService.create(TrRQ2);
         RegistrationResponse TeRR3 = traineeService.create(TeRQ3);

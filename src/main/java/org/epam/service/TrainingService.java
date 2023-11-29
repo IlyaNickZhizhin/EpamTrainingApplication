@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.epam.dao.TrainingDaoImpl;
-import org.epam.dto.LoginRequest;
+import org.epam.dao.UserDaoImpl;
 import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTraineeTrainingsListRequest;
 import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
@@ -12,18 +12,17 @@ import org.epam.dto.trainingDto.GetTrainersResponse;
 import org.epam.dto.trainingDto.GetTrainingTypesResponse;
 import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
+import org.epam.exceptions.ProhibitedActionException;
 import org.epam.mapper.TrainingMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TrainingService {
-    private final GymGeneralService<Trainee> traineeService;
-    private final GymGeneralService<Trainer> trainerService;
+    private final UserDaoImpl userDao;
     private final TrainingDaoImpl trainingDao;
     private final TrainingMapper trainingMapper = TrainingMapper.INSTANCE;
 
@@ -47,9 +45,11 @@ public class TrainingService {
     }
 
     @Transactional
-    public void create(AddTrainingRequest request) {
-        Trainer trainer = trainerService.selectByUsername(request.getTrainerUsername());
-        Trainee trainee = traineeService.selectByUsername(request.getTraineeUsername());
+    public AddTrainingRequest create(AddTrainingRequest request) {
+        User userEE = userDao.getByUsername(request.getTraineeUsername());
+        User userER = userDao.getByUsername(request.getTrainerUsername());
+        Trainee trainee = userEE.getTrainee();
+        Trainer trainer = userER.getTrainer();
         List<Object> eeEr = checkTraineeTrainerConnection(trainee, trainer);
         Training training = new Training();
         training.setTrainee((Trainee) eeEr.get(0));
@@ -58,42 +58,59 @@ public class TrainingService {
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
-        trainingDao.create(training);
+        return trainingMapper.trainingToAddTrainingRequest(trainingDao.create(training));
     }
 
     @Transactional
-    public GetTrainersResponse updateTrainersList(LoginRequest login, String traineeUsername, UpdateTraineeTrainerListRequest request) {
-        Trainee trainee = traineeService.selectByUsername(request.getTraineeUsername());
-        List<String> exist = trainee.getTrainings().stream()
-                .map(Training::getTrainer).map(Trainer::getUser).map(User::getUsername).collect(Collectors.toList());
+    public GetTrainersResponse updateTrainersList(UpdateTraineeTrainerListRequest request) {
+        User user = userDao.getByUsername(request.getTraineeUsername());
+        Trainee trainee = user.getTrainee();
+        if (trainee == null)
+            throw new ProhibitedActionException("Only Trainee could update trainers list");
+        List<String> exist = CollectionUtils.emptyIfNull(trainee.getTrainers()).stream()
+                .map(trainer -> trainer.getUser().getUsername())
+                .collect(Collectors.toList());
         List<String> newTrainers = request.getTrainerUsernames();
         newTrainers.removeAll(exist);
-        List<Trainer> trainers = newTrainers.stream().map(trainerService::selectByUsername).collect(Collectors.toList());
-        org.apache.commons.collections4.CollectionUtils.emptyIfNull(trainee.getTrainers()).addAll(trainers);
-        traineeService.update(trainee.getId(), trainee);
-        return getTrainersList(traineeUsername);
+        List<Trainer> trainers = newTrainers.stream()
+                .map(userDao::getByUsername)
+                .map(User::getTrainer)
+                .collect(Collectors.toList());
+        trainee.getTrainers().addAll(trainers);
+        user.setRole(trainee);
+        user = userDao.update(user.getId(), user);
+        return trainingMapper.traineeToTrainersResponse(user.getTrainee());
     }
 
     @Transactional(readOnly = true)
     public GetTrainersResponse getTrainersList(String traineeUsername) {
-        Trainee trainee = traineeService.selectByUsername(traineeUsername);
+        User user = userDao.getByUsername(traineeUsername);
+        Trainee trainee = user.getTrainee();
+        if (trainee == null)
+            throw new ProhibitedActionException("Only Trainee could get trainers list");
         return trainingMapper.traineeToTrainersResponse(trainee);
     }
 
     @Transactional(readOnly = true)
     public GetTrainersResponse getNotAssignedOnTraineeActiveTrainers(String traineeUsername) {
-        Trainee trainee = traineeService.selectByUsername(traineeUsername);
-        List<Trainer> existingTrainers = new ArrayList<>(CollectionUtils.emptyIfNull(trainee.getTrainers()));
-        List<Trainer> avalibleTrainers = trainingDao.getAllTrainersAvalibleForTrainee(
+        User user = userDao.getByUsername(traineeUsername);
+        Trainee trainee = user.getTrainee();
+        if (trainee == null)
+            throw new ProhibitedActionException("Only Trainee could get trainers list");
+        List<Trainer> existingTrainers = trainee.getTrainers();
+        List<Trainer> availableTrainers = trainingDao.getAllTrainersAvalibleForTrainee(
                 trainee, existingTrainers);
         GetTrainersResponse response = new GetTrainersResponse();
-        response.setTrainers(trainingMapper.trainersToShortTrainersDto(avalibleTrainers));
+        response.setTrainers(trainingMapper.trainersToShortTrainersDto(availableTrainers));
         return response;
     }
 
     @Transactional(readOnly = true)
     public GetTrainingsResponse getTraineeTrainingsList(GetTraineeTrainingsListRequest request) {
-        Trainee trainee = traineeService.selectByUsername(request.getUsername());
+        User user = userDao.getByUsername(request.getUsername());
+        Trainee trainee = user.getTrainee();
+        if (trainee == null)
+            throw new ProhibitedActionException("Only Trainee could get trainers list");
         List<Training> trainings = trainingFilterByDate(trainee.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
         if (request.getTrainingType() != null) {
             trainings = trainings.stream()
@@ -111,8 +128,11 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public GetTrainingsResponse getTrainerTrainingsList(LoginRequest login, GetTrainerTrainingsListRequest request) {
-        Trainer trainer = trainerService.selectByUsername(request.getUsername());
+    public GetTrainingsResponse getTrainerTrainingsList(GetTrainerTrainingsListRequest request) {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainer trainer = user.getTrainer();
+        if (trainer == null)
+            throw new ProhibitedActionException("only Trainer could get training list");
         List<Training> trainings = trainingFilterByDate(trainer.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
         if (request.getTraineeName() != null) {
             trainings = trainings.stream()
@@ -139,14 +159,14 @@ public class TrainingService {
     }
 
     private List<Object> checkTraineeTrainerConnection(Trainee trainee, Trainer trainer){
-        if(!CollectionUtils.emptyIfNull(trainee.getTrainers()).contains(trainer)) {
+        if(!trainee.getTrainers().contains(trainer)) {
             trainee.getTrainers().add(trainer);
         }
-        if(!CollectionUtils.emptyIfNull(trainer.getTrainees()).contains(trainee)) {
+        if(!trainer.getTrainees().contains(trainee)) {
             trainer.getTrainees().add(trainee);
         }
-        traineeService.update(trainee.getId(), trainee);
-        trainerService.update(trainer.getId(), trainer);
+        userDao.update(trainee.getUser().getId(), trainee.getUser());
+        userDao.update(trainer.getUser().getId(), trainer.getUser());
         return List.of(trainee, trainer);
     }
 

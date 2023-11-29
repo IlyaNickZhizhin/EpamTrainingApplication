@@ -1,9 +1,11 @@
 package org.epam.dto.traineeDto;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 
-@Data
+@Setter
+@EqualsAndHashCode
 public class ShortTraineeDto {
     private String firstname;
     private String lastname;

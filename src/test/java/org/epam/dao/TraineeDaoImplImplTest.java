@@ -48,13 +48,13 @@ public class TraineeDaoImplImplTest {
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         user3 = reader.readEntity("users/user3", User.class);
-        trainee3 = reader.readEntity("trainees/trainee1", Trainee.class);
-        trainee4 = reader.readEntity("trainees/trainee2", Trainee.class);
+        trainee3 = reader.readEntity("trainees/trainee3", Trainee.class);
+        trainee4 = reader.readEntity("trainees/trainee4", Trainee.class);
     }
 
     @Test
     public void testUpdate() {
-        Trainee updatedTrainee = reader.readEntity("trainees/trainee1", Trainee.class);
+        Trainee updatedTrainee = reader.readEntity("trainees/trainee3", Trainee.class);
         updatedTrainee.setAddress("new address");
         when(session.merge(updatedTrainee)).thenReturn(updatedTrainee);
         Trainee nt = traineeDaoImpl.update(1, updatedTrainee);

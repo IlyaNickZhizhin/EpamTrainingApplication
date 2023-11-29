@@ -1,9 +1,11 @@
 package org.epam.dto.trainerDto;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.epam.model.gymModel.TrainingType;
 
-@Data
+@Setter
+@EqualsAndHashCode
 public class ShortTrainerDto {
     private String firstname;
     private String lastname;

@@ -60,18 +60,6 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
         }
     }
 
-    public List<Trainer> updateTrainersList(Trainee traineeForUpdateList) {
-        log.info("Updating trainers list for trainee №" + traineeForUpdateList.getId());
-        try {
-            return sessionFactory.getCurrentSession().createQuery("from Training where trainee = :trainee", Training.class)
-                    .setParameter("trainee", traineeForUpdateList)
-                    .getResultStream().map(Training::getTrainer).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error updating trainers list for trainee №" + traineeForUpdateList.getId(), e);
-            throw e;
-        }
-    }
-
     public List<Trainer> getAllTrainersAvalibleForTrainee(Trainee trainee, List<Trainer> trainers) {
         try {
             log.info("Getting all trainers avalible for trainee with id: " + trainee.getId());

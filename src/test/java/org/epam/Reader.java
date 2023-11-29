@@ -1,6 +1,5 @@
 package org.epam;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
@@ -14,13 +13,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class Reader {
 
@@ -64,7 +62,7 @@ public class Reader {
         List<Training> trainings = new ArrayList<>(6);
         List<User> users = new ArrayList<>(6);
         List<TrainingType> trainingTypes = new ArrayList<>(12);
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 3; i <= 6; i++) {
             Trainee trainee = reader.readEntity("trainees/trainee" + i, Trainee.class);
             trainees.add(trainee);
         }
@@ -104,10 +102,10 @@ public class Reader {
 
         assertEquals(trainees.get(2).getUser(), users.get(4));
         assertEquals(trainees.get(2).getDateOfBirth(), LocalDate.of(2002, 3, 3));
-        assertEquals(trainees.get(2).getAddress(), null);
+        assertNull(trainees.get(2).getAddress());
 
         assertEquals(trainees.get(3).getUser(), users.get(5));
-        assertEquals(trainees.get(3).getDateOfBirth(), null);
+        assertNull(trainees.get(3).getDateOfBirth());
         assertEquals(trainees.get(3).getAddress(), "Bukhara");
 
         assertEquals(trainings.get(0).getTrainer(), trainers.get(0));

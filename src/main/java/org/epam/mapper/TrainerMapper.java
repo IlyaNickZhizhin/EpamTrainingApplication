@@ -1,22 +1,18 @@
 package org.epam.mapper;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.epam.dto.RegistrationResponse;
 import org.epam.dto.traineeDto.ShortTraineeDto;
 import org.epam.dto.trainerDto.ShortTrainerDto;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
-import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper
 public interface TrainerMapper {
@@ -44,8 +40,7 @@ public interface TrainerMapper {
     @Named("traineesToShortTraineesDto")
     default List<ShortTraineeDto> traineesToShortTraineesDto(List<Trainee> trainees) {
         return TraineeMapper.INSTANCE.traineesToShortTraineesDto(
-                CollectionUtils.emptyIfNull(trainees).stream().collect(Collectors.toList())
-        );
+                trainees);
     }
 
     @Named("tNameToTrainingType")

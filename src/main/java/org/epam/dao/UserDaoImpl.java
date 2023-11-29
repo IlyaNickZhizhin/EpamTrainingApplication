@@ -38,11 +38,12 @@ public class UserDaoImpl {
         return session.merge(user);
     }
 
-    public void delete(int id) {
+    public User delete(int id) {
         log.info("Deleting user with id: " + id);
         Session session = factory.getCurrentSession();
         User user = session.get(User.class, id);
         session.remove(user);
+        return user;
     }
 
     public User get(int id) {

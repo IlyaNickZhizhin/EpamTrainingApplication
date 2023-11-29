@@ -1,12 +1,14 @@
 package org.epam.dto.traineeDto;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.epam.dto.trainerDto.ShortTrainerDto;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Setter
+@EqualsAndHashCode
 public class TraineeProfileResponse {
     private String firstname;
     private String lastname;
