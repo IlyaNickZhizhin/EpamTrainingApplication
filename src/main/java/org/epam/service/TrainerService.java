@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class TrainerService {
-    private final TrainerMapper trainerMapper = TrainerMapper.INSTANCE;
+    private final TrainerMapper trainerMapper;
     private final TrainerDaoImpl gymDao;
     private final UserDao userDao;
 

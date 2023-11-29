@@ -11,11 +11,13 @@ import org.epam.dto.traineeDto.TraineeProfileResponse;
 import org.epam.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
 import org.epam.mapper.TraineeMapper;
+import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -36,7 +38,10 @@ class TraineeServiceTest {
     @Mock
     private UserDao mockUserDao = mock(UserDao.class);
     @Spy
-    private TraineeMapper traineeMapper = TraineeMapper.INSTANCE;
+    TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+    @Spy
+    @InjectMocks
+    TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
     @InjectMocks
     private TraineeService traineeService;
 

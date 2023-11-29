@@ -16,10 +16,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring", uses = {TrainerMapper.class})
 public interface TrainingMapper {
-
-    TrainingMapper INSTANCE = Mappers.getMapper(TrainingMapper.class);
 
     @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingName")
     @Mapping(source = "trainer.user.firstName", target = "opponentName")
@@ -51,17 +49,15 @@ public interface TrainingMapper {
         return TrainingType.of(type);
     }
 
-    @Named("trainingTypeToTrainingName")
-    default TrainingType.TrainingName trainingTypeToString(TrainingType trainingType) {
-        return trainingType.getTrainingName();
-    }
     @Named("trainersToSortTrainersDto")
     default List<TrainerDto> trainingsToShortTrainersDto(List<Trainer> trainers) {
-        return TrainerMapper.INSTANCE.trainersToShortTrainersDto(trainers);
+        TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+        return trainerMapper.trainersToShortTrainersDto(trainers);
     }
 
     @Named("trainersToShortTrainersDto")
     default List<TrainerDto> trainersToShortTrainersDto(List<Trainer> trainers) {
-        return TrainerMapper.INSTANCE.trainersToShortTrainersDto(trainers);
+        TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+        return trainerMapper.trainersToShortTrainersDto(trainers);
     }
 }

@@ -13,9 +13,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring", uses = {TrainerMapper.class})
 public interface TraineeMapper {
-    TraineeMapper INSTANCE = Mappers.getMapper(TraineeMapper.class);
 
     @Mapping(source = "user.username", target = "username")
     @Mapping(source = "user.password", target = "password")
@@ -36,7 +35,8 @@ public interface TraineeMapper {
 
     @Named("trainersToTrainersDto")
     default List<TrainerDto> trainersToTrainersDto(List<Trainer> trainers) {
-        return TrainerMapper.INSTANCE.trainersToShortTrainersDto(
+        TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+        return trainerMapper.trainersToShortTrainersDto(
                 trainers);
     }
 }

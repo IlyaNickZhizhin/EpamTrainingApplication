@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class TrainingService {
     private final UserDao userDao;
     private final TrainingDaoImpl trainingDao;
-    private final TrainingMapper trainingMapper = TrainingMapper.INSTANCE;
+    private final TrainingMapper trainingMapper;
 
 
 
@@ -58,7 +58,8 @@ public class TrainingService {
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
-        return trainingMapper.trainingToAddTrainingRequest(trainingDao.create(training));
+        AddTrainingRequest response = trainingMapper.trainingToAddTrainingRequest(trainingDao.create(training));
+        return response;
     }
 
     @Transactional

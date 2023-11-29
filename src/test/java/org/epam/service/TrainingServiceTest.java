@@ -11,6 +11,7 @@ import org.epam.dto.trainingDto.GetTrainersResponse;
 import org.epam.dto.trainingDto.GetTrainingTypesResponse;
 import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
+import org.epam.mapper.TrainerMapper;
 import org.epam.mapper.TrainingMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
@@ -20,8 +21,10 @@ import org.epam.model.gymModel.TrainingType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -38,16 +41,17 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TrainingServiceTest {
-
     @Mock
     private TrainingDaoImpl mockTrainingDaoImpl = mock(TrainingDaoImpl.class);
-
     @Mock
     private UserDao mockUserDao = mock(UserDao.class);
-
+    @Spy
+    TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+    @Spy
+    @InjectMocks
+    TrainingMapper trainingMapper = Mappers.getMapper(TrainingMapper.class);
     @InjectMocks
     private TrainingService trainingService;
-
     private final static Reader reader = new Reader();
     TestMapper testMapper = TestMapper.INSTANCE;
     User user1; User user2; User user3; User user4; User user5; User user6;
@@ -119,7 +123,7 @@ class TrainingServiceTest {
         UpdateTraineeTrainerListRequest request
                 = reader.readDto("trainees/trainee3", Trainee.class, testMapper::traineeToUpdateTrainerListRequest);
         request.setTrainerUsernames(trainerList.stream().map(testMapper::trainerToUsername).collect(Collectors.toList()));
-        GetTrainersResponse response = TrainingMapper.INSTANCE.traineeToTrainersResponse(trainee);
+        GetTrainersResponse response = trainingMapper.traineeToTrainersResponse(trainee);
         when(mockUserDao.getByUsername(request.getTraineeUsername())).thenReturn(user3);
         when(mockUserDao.getByUsername(request.getTrainerUsernames().get(0))).thenReturn(user1);
         when(mockUserDao.getByUsername(request.getTrainerUsernames().get(1))).thenReturn(user2);
@@ -136,7 +140,7 @@ class TrainingServiceTest {
         trainerList.add(trainer1);
         trainerList.add(trainer2);
         trainee.setTrainers(trainerList);
-        GetTrainersResponse response = TrainingMapper.INSTANCE.traineeToTrainersResponse(trainee);
+        GetTrainersResponse response = trainingMapper.traineeToTrainersResponse(trainee);
         when(mockUserDao.getByUsername(user.getUsername())).thenReturn(user);
         assertEquals(response, trainingService.getTrainersList(user.getUsername()));
     }
@@ -148,7 +152,7 @@ class TrainingServiceTest {
         trainerList.add(trainer1);
         trainerList.add(trainer2);
         trainee.setTrainers(trainerList);
-        GetTrainersResponse response = TrainingMapper.INSTANCE.traineeToTrainersResponse(trainee);
+        GetTrainersResponse response = trainingMapper.traineeToTrainersResponse(trainee);
         when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user3);
         when(mockTrainingDaoImpl.getAllTrainersAvalibleForTrainee(any(Trainee.class), anyList())).thenReturn(trainerList);
         assertEquals(response, trainingService.getNotAssignedOnTraineeActiveTrainers(user3.getUsername()));
@@ -169,7 +173,7 @@ class TrainingServiceTest {
         request.setPeriodTo(null);
         request.setTrainingType(null);
         GetTrainingsResponse response = new GetTrainingsResponse();
-        response.setTrainings(TrainingMapper.INSTANCE.traineeTrainingsToShortDtos(trainings));
+        response.setTrainings(trainingMapper.traineeTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user);
         assertEquals(response, trainingService.getTraineeTrainingsList(request));
     }
@@ -188,7 +192,7 @@ class TrainingServiceTest {
         request.setPeriodFrom(LocalDate.MIN);
         request.setPeriodTo(LocalDate.MAX);
         GetTrainingsResponse response = new GetTrainingsResponse();
-        response.setTrainings(TrainingMapper.INSTANCE.trainerTrainingsToShortDtos(trainings));
+        response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(user);
         assertEquals(response, trainingService.getTrainerTrainingsList(request));
     }

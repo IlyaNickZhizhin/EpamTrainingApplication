@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TraineeService {
 
-    private final TraineeMapper traineeMapper = TraineeMapper.INSTANCE;
+    private final TraineeMapper traineeMapper;
     private final TraineeDaoImpl gymDao;
     private final UserDao userDao;
 

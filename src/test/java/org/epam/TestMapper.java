@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 @Mapper
 public interface TestMapper {
 
-    TestMapper INSTANCE = Mappers.getMapper(TestMapper.class);
-
     LoginRequest userToLoginRequest(User user);
 
     RegistrationResponse userToRegistrationResponce(User user);

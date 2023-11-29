@@ -11,14 +11,17 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
+import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,11 +40,17 @@ class TrainerServiceTest {
     @Mock
     private UserDao mockUserDao = mock(UserDao.class);
 
+    @Spy
+    TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
+
+    @Spy
+    @InjectMocks
+    TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+
     @InjectMocks
     private TrainerService trainerService;
 
     TestMapper testMapper = TestMapper.INSTANCE;
-    TrainerMapper trainerMapper = TrainerMapper.INSTANCE;
 
     Reader reader = new Reader();
     User user1; User user2;
