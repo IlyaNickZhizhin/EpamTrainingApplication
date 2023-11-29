@@ -1,24 +1,12 @@
 package org.epam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.epam.model.User;
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.Training;
-import org.epam.model.gymModel.TrainingType;
-import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class Reader {
 
