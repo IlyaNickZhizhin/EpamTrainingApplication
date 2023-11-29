@@ -79,6 +79,9 @@ public class TraineeService {
     @Transactional
     public boolean delete(String username) throws VerificationException {
         User user = userDao.getByUsername(username);
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        gymDao.delete(trainee.getId());
         return userDao.delete(user.getId()).equals(user);
     }
 

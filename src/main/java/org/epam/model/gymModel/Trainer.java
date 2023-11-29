@@ -41,8 +41,7 @@ public class Trainer extends Role{
             inverseJoinColumns = @JoinColumn(name = "trainee_id"))
     private List<Trainee> trainees;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainer",
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainer", orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     private List<Training> trainings;
 
