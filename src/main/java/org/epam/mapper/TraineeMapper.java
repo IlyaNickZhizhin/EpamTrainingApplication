@@ -24,8 +24,6 @@ public interface TraineeMapper {
     @Mapping(source = "user.firstName", target = "firstname")
     @Mapping(source = "user.lastName", target = "lastname")
     @Mapping(source = "user.active", target = "active")
-    @Mapping(source = "dateOfBirth", target = "dateOfBirth")
-    @Mapping(source = "address", target = "address")
     @Mapping(source = "trainers", target = "trainers", qualifiedByName = "trainersToTrainersDto")
     TraineeProfileResponse traineeToProfileResponse(Trainee trainee);
 

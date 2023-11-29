@@ -20,27 +20,20 @@ import java.util.List;
 public interface TrainingMapper {
 
     TrainingMapper INSTANCE = Mappers.getMapper(TrainingMapper.class);
-    @Mapping(source = "trainingName", target = "trainingName")
+
     @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingName")
-    @Mapping(source = "trainingDate", target = "trainingDate")
-    @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainer.user.firstName", target = "opponentName")
     @Named("trainingForTrainee")
     TrainingDto traineeTrainingToShortDto(Training training);
 
-    @Named("trainingsForTrainee")
     @IterableMapping(qualifiedByName = "trainingForTrainee")
     List<TrainingDto> traineeTrainingsToShortDtos(List<Training> trainings);
 
-    @Mapping(source = "trainingName", target = "trainingName")
     @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingName")
-    @Mapping(source = "trainingDate", target = "trainingDate")
-    @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainee.user.firstName", target = "opponentName")
     @Named("trainingForTrainer")
     TrainingDto trainerTrainingToShortDto(Training training);
 
-    @Named("trainingsForTrainer")
     @IterableMapping(qualifiedByName = "trainingForTrainer")
     List<TrainingDto> trainerTrainingsToShortDtos(List<Training> trainings);
 
@@ -50,8 +43,6 @@ public interface TrainingMapper {
     @Mapping(target = "traineeUsername", source = "trainee.user.username")
     @Mapping(target = "trainerUsername", source = "trainer.user.username")
     @Mapping(target = "trainingType", source = "trainingType.trainingName")
-    @Mapping(target = "trainingName", source = "trainingName")
-    @Mapping(target = "trainingDate", source = "trainingDate")
     @Mapping(target = "trainingDuration", source = "duration")
     AddTrainingRequest trainingToAddTrainingRequest(Training training);
 
