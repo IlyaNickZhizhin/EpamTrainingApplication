@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class TestingReader {
+public class ReaderTest {
     @Test
     public void testReadEntity() {
         Reader reader = new Reader();
