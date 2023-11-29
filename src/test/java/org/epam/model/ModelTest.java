@@ -39,19 +39,10 @@ public class ModelTest {
 
     @Test
     public void testTrainerEqualsAndHashCode() {
-        Trainer trainer1 = new Trainer();
-        trainer1.setId(1);
-        trainer1.setSpecialization(new TrainingType());
-        trainer1.setUser(new User(1, "T", "U", "TU", "p", true, null));
-
-        Trainer trainer2 = new Trainer();
-        trainer2.setId(1);
-        trainer2.setSpecialization(new TrainingType());
-        trainer2.setUser(new User(1, "T", "U", "TU", "p", true, null));
-
+        Trainer trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
+        Trainer trainer2 = reader.readEntity("trainers/trainer1", Trainer.class);
         assertEquals(trainer1, trainer2);
         assertEquals(trainer1.hashCode(), trainer2.hashCode());
-
         trainer2.setId(2);
         assertNotEquals(trainer1, trainer2);
         assertNotEquals(trainer1.hashCode(), trainer2.hashCode());
@@ -59,16 +50,8 @@ public class ModelTest {
 
     @Test
     public void testTraineeEqualsAndHashCode() {
-        Trainee trainee1 = new Trainee();
-        trainee1.setId(1);
-        trainee1.setAddress("a");
-        trainee1.setDateOfBirth(LocalDate.of(2000,1,1));
-        trainee1.setUser(user1);
-        Trainee trainee2 = trainee3;
-        trainee2.setId(1);
-        trainee2.setAddress("a");
-        trainee2.setDateOfBirth(LocalDate.of(2000,1,1));
-        trainee2.setUser(user1);
+        Trainee trainee1 = reader.readEntity("trainees/trainee3", Trainee.class);
+        Trainee trainee2 = reader.readEntity("trainees/trainee3", Trainee.class);
         assertEquals(trainee1, trainee2);
         assertEquals(trainee1.hashCode(), trainee2.hashCode());
         trainee2 = trainee4;
