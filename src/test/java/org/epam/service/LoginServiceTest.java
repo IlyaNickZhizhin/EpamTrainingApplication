@@ -44,6 +44,5 @@ class LoginServiceTest {
         LoginRequest request = TestMapper.INSTANCE.userToLoginRequest(user1);
         when(userDao.getByUsername(request.getUsername())).thenReturn(user1);
         assertTrue(loginService.login(request) instanceof Trainer);
-        User user = userDao.getByUsername(request.getUsername());
     }
 }

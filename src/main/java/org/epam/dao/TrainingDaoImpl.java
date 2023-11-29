@@ -77,7 +77,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
 
 
     public List<Training> getAllByUsernameAndTrainingTypes(List<TrainingType> types, Trainer trainer) {
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             return session.createQuery("from Training where trainer = :trainer", Training.class)
                         .setParameter("trainer", trainer)
                         .getResultStream().filter(training -> types.contains(training.getTrainingType()))
@@ -89,7 +89,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
     }
 
     public List<Training> getAllByUsernameAndTrainingTypes(List<TrainingType> types, Trainee trainee) {
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
         return session.createQuery("from Training where trainee = :trainee", Training.class)
                 .setParameter("trainee", trainee)
                 .getResultStream().filter(training -> types.contains(training.getTrainingType()))

@@ -12,8 +12,10 @@ import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,9 +30,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-
+@ExtendWith(MockitoExtension.class)
 public class TrainingDaoImplImplTest {
 
     @Mock
@@ -76,9 +77,7 @@ public class TrainingDaoImplImplTest {
 
     @BeforeEach
     public void setup() {
-        initMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(sessionFactory.openSession()).thenReturn(session);
     }
 
     @Test
@@ -139,39 +138,19 @@ public class TrainingDaoImplImplTest {
 
     @Test
     public void testGetAllByTRAINERUsernameAndTrainingTypes() {
-        when(userDao.getByUsername(trainer1_Username)).thenReturn(user1);
         Query<Training> query = mock(Query.class);
-        Query<Trainee> query1 = mock(Query.class);
-        Query<Trainer> query2 = mock(Query.class);
-        when(userDao.getByUsername(trainer1_Username)).thenReturn(user1);
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training1));
-        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query1);
-        when(query1.setParameter(anyString(), any())).thenReturn(query1);
-        when(query1.getSingleResultOrNull()).thenReturn(null);
-        when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
-        when(query2.setParameter(anyString(), any())).thenReturn(query2);
-        when(query2.getSingleResultOrNull()).thenReturn(trainer1);
         assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainer1));
     }
 
     @Test
     public void testGetAllByTRAINEEUsernameAndTrainingTypes() {
-        when(userDao.getByUsername(trainee3_Username)).thenReturn(user3);
         Query<Training> query = mock(Query.class);
-        Query<Trainee> query1 = mock(Query.class);
-        Query<Trainer> query2 = mock(Query.class);
-        when(userDao.getByUsername(trainee3_Username)).thenReturn(user3);
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training1));
-        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query1);
-        when(query1.setParameter(anyString(), any())).thenReturn(query1);
-        when(query1.getSingleResultOrNull()).thenReturn(trainee3);
-        when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query2);
-        when(query2.setParameter(anyString(), any())).thenReturn(query2);
-        when(query2.getSingleResultOrNull()).thenReturn(null);
         assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainee3));
     }
 

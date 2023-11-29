@@ -21,7 +21,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper
@@ -61,6 +60,7 @@ public interface TestMapper {
 
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "oldPassword", source = "user.password")
+    @Mapping(target = "newPassword", ignore = true)
     ChangeLoginRequest roleToChangeLoginRequest(Role role);
 
     @Mapping(target = "username", source = "user.username")
@@ -90,9 +90,5 @@ public interface TestMapper {
     default String trainerToUsername(Trainer trainer){
         return trainer.getUser().getUsername();
     }
-    @Named("trainersToUsernames")
-    default List<String> trainersToUsernames(List<Trainer> trainers){
-        return trainers.stream().map(this::trainerToUsername)
-                .collect(Collectors.toList());
-    }
+
 }

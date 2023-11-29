@@ -14,20 +14,20 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "trainees")
 public class Trainee extends Role{
@@ -56,11 +56,11 @@ public class Trainee extends Role{
 
 
     public List<Training> getTrainings() {
-        return CollectionUtils.emptyIfNull(trainings).stream().collect(Collectors.toList());
+        return new ArrayList<>(CollectionUtils.emptyIfNull(trainings));
     }
 
     public List<Trainer> getTrainers() {
-        return CollectionUtils.emptyIfNull(trainers).stream().collect(Collectors.toList());
+        return new ArrayList<>(CollectionUtils.emptyIfNull(trainers));
     }
 
     @Override

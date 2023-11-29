@@ -43,9 +43,9 @@ class TraineeServiceTest {
     TestMapper testMapper = TestMapper.INSTANCE;
 
     Reader reader = new Reader();
-    User user3; User user4; User user5; User user6;
+    User user3; User user4; User user5;
     Trainee trainee3; Trainee trainee4;
-    Trainee trainee5; Trainee trainee6;
+    Trainee trainee5;
 
 
     @BeforeEach

@@ -19,8 +19,10 @@ import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,11 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+@ExtendWith(MockitoExtension.class)
 class TrainingServiceTest {
 
     @Mock
@@ -57,7 +58,6 @@ class TrainingServiceTest {
 
     @BeforeEach
     void setUp() {
-        initMocks(this);
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
@@ -108,7 +108,7 @@ class TrainingServiceTest {
     }
 
     @Test
-    void testUpdateTrainersList() throws InstantiationException, IllegalAccessException {
+    void testUpdateTrainersList() {
         User user = reader.readEntity("users/user3", User.class);
         Trainee trainee = reader.readEntity("trainees/trainee3", Trainee.class);
         user.setRole(trainee);
@@ -171,7 +171,6 @@ class TrainingServiceTest {
         GetTrainingsResponse response = new GetTrainingsResponse();
         response.setTrainings(TrainingMapper.INSTANCE.traineeTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user);
-        when(mockTrainingDaoImpl.getAllByUsernameAndTrainingTypes(anyList(), eq(trainee))).thenReturn(trainings);
         assertEquals(response, trainingService.getTraineeTrainingsList(request));
     }
 
@@ -191,7 +190,6 @@ class TrainingServiceTest {
         GetTrainingsResponse response = new GetTrainingsResponse();
         response.setTrainings(TrainingMapper.INSTANCE.trainerTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(user);
-        when(mockTrainingDaoImpl.getAllByUsernameAndTrainingTypes(anyList(), eq(trainer))).thenReturn(trainings);
         assertEquals(response, trainingService.getTrainerTrainingsList(request));
     }
 }

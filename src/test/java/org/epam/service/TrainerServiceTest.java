@@ -16,8 +16,10 @@ import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+@ExtendWith(MockitoExtension.class)
 class TrainerServiceTest {
 
     @Mock
@@ -47,7 +49,6 @@ class TrainerServiceTest {
 
     @BeforeEach
     public void setUp() {
-        initMocks(this);
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
@@ -56,10 +57,6 @@ class TrainerServiceTest {
         user1.setRole(trainer1);
         user2 = reader.readEntity("users/user2", User.class);
         user2.setRole(trainer2);
-        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(trainer1);
-        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(trainer2);
-        when(mockUserDao.getByUsername("user1")).thenReturn(user1);
-        when(mockUserDao.getByUsername("user2")).thenReturn(user2);
     }
 
     @Test
