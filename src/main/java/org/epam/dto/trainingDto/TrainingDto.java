@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Setter
 @EqualsAndHashCode
-public class ShortTrainingDto {
+public class TrainingDto {
     private int id;
     private String trainingName;
     private TrainingType.TrainingName trainingType;

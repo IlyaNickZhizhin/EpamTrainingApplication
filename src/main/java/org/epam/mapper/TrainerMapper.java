@@ -1,8 +1,8 @@
 package org.epam.mapper;
 
 import org.epam.dto.RegistrationResponse;
-import org.epam.dto.traineeDto.ShortTraineeDto;
-import org.epam.dto.trainerDto.ShortTrainerDto;
+import org.epam.dto.traineeDto.TraineeDto;
+import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
@@ -33,12 +33,12 @@ public interface TrainerMapper {
     @Mapping(source = "user.lastName", target = "lastname")
     @Mapping(source = "user.username", target = "username")
     @Mapping(source = "specialization", target = "specialization", qualifiedByName = "trainingTypeToTrainingName")
-    ShortTrainerDto trainerToShortTrainerDto(Trainer trainer);
+    TrainerDto trainerToShortTrainerDto(Trainer trainer);
 
-    List<ShortTrainerDto> trainersToShortTrainersDto(List<Trainer> trainers);
+    List<TrainerDto> trainersToShortTrainersDto(List<Trainer> trainers);
 
     @Named("traineesToShortTraineesDto")
-    default List<ShortTraineeDto> traineesToShortTraineesDto(List<Trainee> trainees) {
+    default List<TraineeDto> traineesToShortTraineesDto(List<Trainee> trainees) {
         return TraineeMapper.INSTANCE.traineesToShortTraineesDto(
                 trainees);
     }

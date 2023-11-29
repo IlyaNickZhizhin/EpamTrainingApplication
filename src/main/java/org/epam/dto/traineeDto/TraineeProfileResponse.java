@@ -2,7 +2,7 @@ package org.epam.dto.traineeDto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
-import org.epam.dto.trainerDto.ShortTrainerDto;
+import org.epam.dto.trainerDto.TrainerDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +15,6 @@ public class TraineeProfileResponse {
     private LocalDate dateOfBirth;
     private String address;
     private boolean isActive;
-    private List<ShortTrainerDto> trainers;
+    private List<TrainerDto> trainers;
 }
 

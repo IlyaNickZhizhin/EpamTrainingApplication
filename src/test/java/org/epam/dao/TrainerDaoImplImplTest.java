@@ -9,8 +9,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +25,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class TrainerDaoImplImplTest {
 
     @Mock
@@ -36,14 +38,11 @@ public class TrainerDaoImplImplTest {
     @InjectMocks
     private TrainerDaoImpl trainerDaoImpl;
 
-    private static Trainer trainer1;
-    private static Trainer trainer2;
-    private static TrainingType trainingType1;
-    private static Reader reader;
+    private Trainer trainer1;
+    private Reader reader;
 
     @BeforeEach
     public void setup() {
-        initMocks(this);
         reader = new Reader();
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
@@ -53,7 +52,7 @@ public class TrainerDaoImplImplTest {
     @Test
     public void testUpdate() {
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
-        trainingType1 = reader.readEntity("trainingTypes/trainingType1", TrainingType.class);
+        TrainingType trainingType1 = reader.readEntity("trainingTypes/trainingType1", TrainingType.class);
         Trainer trainer = trainer1;
         Trainer updatedTrainer = new Trainer();
         updatedTrainer.setId(trainer.getId());
@@ -104,7 +103,7 @@ public class TrainerDaoImplImplTest {
     @Test
     public void testGetAll() {
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
-        trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
+        Trainer trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer1);
         trainers.add(trainer2);

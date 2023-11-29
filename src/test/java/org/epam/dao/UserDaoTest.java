@@ -102,7 +102,7 @@ public class UserDaoTest {
 
     @Test
     public void testSetNewUser() {
-        User user2 = reader.readEntity("users/user2", User.class);;
+        User user2 = reader.readEntity("users/user2", User.class);
         String trainer2_FirstName = user2.getFirstName();
         String trainer2_LastName = user2.getLastName();
         String trainer2_Username = user2.getUsername();

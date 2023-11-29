@@ -7,5 +7,5 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 public class GetTrainingsResponse {
-    private List<ShortTrainingDto> trainings;
+    private List<TrainingDto> trainings;
 }

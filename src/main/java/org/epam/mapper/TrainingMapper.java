@@ -1,9 +1,9 @@
 package org.epam.mapper;
 
-import org.epam.dto.trainerDto.ShortTrainerDto;
+import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTrainersResponse;
-import org.epam.dto.trainingDto.ShortTrainingDto;
+import org.epam.dto.trainingDto.TrainingDto;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -26,11 +26,11 @@ public interface TrainingMapper {
     @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainer.user.firstName", target = "opponentName")
     @Named("trainingForTrainee")
-    ShortTrainingDto traineeTrainingToShortDto(Training training);
+    TrainingDto traineeTrainingToShortDto(Training training);
 
     @Named("trainingsForTrainee")
     @IterableMapping(qualifiedByName = "trainingForTrainee")
-    List<ShortTrainingDto> traineeTrainingsToShortDtos(List<Training> trainings);
+    List<TrainingDto> traineeTrainingsToShortDtos(List<Training> trainings);
 
     @Mapping(source = "trainingName", target = "trainingName")
     @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingName")
@@ -38,11 +38,11 @@ public interface TrainingMapper {
     @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainee.user.firstName", target = "opponentName")
     @Named("trainingForTrainer")
-    ShortTrainingDto trainerTrainingToShortDto(Training training);
+    TrainingDto trainerTrainingToShortDto(Training training);
 
     @Named("trainingsForTrainer")
     @IterableMapping(qualifiedByName = "trainingForTrainer")
-    List<ShortTrainingDto> trainerTrainingsToShortDtos(List<Training> trainings);
+    List<TrainingDto> trainerTrainingsToShortDtos(List<Training> trainings);
 
     @Mapping(target = "trainers", source = "trainers", qualifiedByName = "trainersToSortTrainersDto")
     GetTrainersResponse traineeToTrainersResponse(Trainee trainee);
@@ -65,12 +65,12 @@ public interface TrainingMapper {
         return trainingType.getTrainingName();
     }
     @Named("trainersToSortTrainersDto")
-    default List<ShortTrainerDto> trainingsToShortTrainersDto(List<Trainer> trainers) {
+    default List<TrainerDto> trainingsToShortTrainersDto(List<Trainer> trainers) {
         return TrainerMapper.INSTANCE.trainersToShortTrainersDto(trainers);
     }
 
     @Named("trainersToShortTrainersDto")
-    default List<ShortTrainerDto> trainersToShortTrainersDto(List<Trainer> trainers) {
+    default List<TrainerDto> trainersToShortTrainersDto(List<Trainer> trainers) {
         return TrainerMapper.INSTANCE.trainersToShortTrainersDto(trainers);
     }
 }

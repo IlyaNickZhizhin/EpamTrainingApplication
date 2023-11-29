@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @EqualsAndHashCode
-public class ShortTraineeDto {
+public class TraineeDto {
     private String firstname;
     private String lastname;
     private String username;
