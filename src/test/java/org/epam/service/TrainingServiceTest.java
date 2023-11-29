@@ -1,7 +1,6 @@
 package org.epam.service;
 
 import org.epam.Reader;
-import org.epam.TestMapper;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.dao.UserDao;
 import org.epam.dto.trainingDto.AddTrainingRequest;
@@ -53,7 +52,6 @@ class TrainingServiceTest {
     @InjectMocks
     private TrainingService trainingService;
     private final static Reader reader = new Reader();
-    TestMapper testMapper = Mappers.getMapper(TestMapper.class);
     User user1; User user2; User user3; User user4; User user5; User user6;
     Trainer trainer1; Trainer trainer2;
     Trainee trainee3; Trainee trainee4; Trainee trainee5; Trainee trainee6;
@@ -104,7 +102,7 @@ class TrainingServiceTest {
     void testCreate() {
         Training training = reader.readEntity("trainings/training1", Training.class);
         training.setId(0);
-        AddTrainingRequest request = reader.readDto("trainings/training1", Training.class, testMapper::trainingToAddTrainingRequest);
+        AddTrainingRequest request = reader.readDto("trainings/training1", Training.class, trainingMapper::trainingToAddTrainingRequest);
         when(mockUserDao.getByUsername(request.getTraineeUsername())).thenReturn(user3);
         when(mockUserDao.getByUsername(request.getTrainerUsername())).thenReturn(user1);
         when(mockTrainingDaoImpl.create(training)).thenReturn(training1);
@@ -121,8 +119,8 @@ class TrainingServiceTest {
         trainerList.add(trainer2);
         trainee.setTrainers(trainerList);
         UpdateTraineeTrainerListRequest request
-                = reader.readDto("trainees/trainee3", Trainee.class, testMapper::traineeToUpdateTrainerListRequest);
-        request.setTrainerUsernames(trainerList.stream().map(testMapper::trainerToUsername).collect(Collectors.toList()));
+                = reader.readDto("trainees/trainee3", Trainee.class, trainingMapper::traineeToUpdateTrainerListRequest);
+        request.setTrainerUsernames(trainerList.stream().map(trainerMapper::trainerToUsername).collect(Collectors.toList()));
         GetTrainersResponse response = trainingMapper.traineeToTrainersResponse(trainee);
         when(mockUserDao.getByUsername(request.getTraineeUsername())).thenReturn(user3);
         when(mockUserDao.getByUsername(request.getTrainerUsernames().get(0))).thenReturn(user1);

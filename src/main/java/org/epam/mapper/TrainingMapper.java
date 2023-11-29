@@ -4,6 +4,7 @@ import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTrainersResponse;
 import org.epam.dto.trainingDto.TrainingDto;
+import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
@@ -15,6 +16,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {TrainerMapper.class})
 public interface TrainingMapper {
@@ -59,5 +61,16 @@ public interface TrainingMapper {
     default List<TrainerDto> trainersToShortTrainersDto(List<Trainer> trainers) {
         TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
         return trainerMapper.trainersToShortTrainersDto(trainers);
+    }
+
+    @Mapping(target = "traineeUsername", source = "trainee.user.username")
+    @Mapping(target = "trainerUsernames", source = "trainee.trainers", qualifiedByName = "trainersToUsernames")
+    default UpdateTraineeTrainerListRequest traineeToUpdateTrainerListRequest(Trainee trainee) {
+        UpdateTraineeTrainerListRequest request = new UpdateTraineeTrainerListRequest();
+        request.setTraineeUsername(trainee.getUser().getUsername());
+        request.setTrainerUsernames(trainee.getTrainers().stream()
+                .map(trainer -> trainer.getUser().getUsername())
+                .collect(Collectors.toList()));
+        return request;
     }
 }

@@ -2,7 +2,6 @@ package org.epam.service;
 
 
 import org.epam.Reader;
-import org.epam.TestMapper;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDao;
 import org.epam.dto.ActivateDeactivateRequest;
@@ -50,8 +49,6 @@ class TrainerServiceTest {
     @InjectMocks
     private TrainerService trainerService;
 
-    TestMapper testMapper = Mappers.getMapper(TestMapper.class);
-
     Reader reader = new Reader();
     User user1; User user2;
     Trainer trainer1; Trainer trainer2;
@@ -71,9 +68,9 @@ class TrainerServiceTest {
     @Test
     void testCreate() {
         TrainerRegistrationRequest request =
-                reader.readDto("trainers/trainer1", Trainer.class,testMapper::trainerToRegistrationRequest);
+                reader.readDto("trainers/trainer1", Trainer.class,trainerMapper::trainerToRegistrationRequest);
         RegistrationResponse response
-                = reader.readDto("users/user1", User.class, testMapper::userToRegistrationResponce);
+                = reader.readDto("users/user1", User.class, traineeMapper::userToRegistrationResponce);
         Trainer trainer = trainer1;
         trainer.setId(0);
         when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName())).thenReturn(user1);
@@ -86,7 +83,7 @@ class TrainerServiceTest {
         Trainer trainer = reader.readEntity("trainers/trainer1", Trainer.class);
         trainer.getUser().setFirstName("user1");
         UpdateTrainerProfileRequest request
-                = testMapper.trainerToUpdateRequest(trainer1);
+                = trainerMapper.trainerToUpdateRequest(trainer1);
         request.setFirstname("user1");
         TrainerProfileResponse response
                 = trainerMapper.trainerToProfileResponse(trainer1);
@@ -106,7 +103,7 @@ class TrainerServiceTest {
     @Test
     void changePassword() {
         ChangeLoginRequest request
-                = reader.readDto("trainers/trainer2", Trainer.class, testMapper::roleToChangeLoginRequest);
+                = reader.readDto("trainers/trainer2", Trainer.class, traineeMapper::roleToChangeLoginRequest);
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user2", User.class);
         userNew.setPassword("newPassword");
@@ -118,7 +115,7 @@ class TrainerServiceTest {
     @Test
     void setActive() {
         ActivateDeactivateRequest request =
-                reader.readDto("trainers/trainer2", Trainer.class, testMapper::roleToActivateDeactivateRequest);
+                reader.readDto("trainers/trainer2", Trainer.class, traineeMapper::roleToActivateDeactivateRequest);
         request.setActive(false);
         user2.setActive(false);
         when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user2);

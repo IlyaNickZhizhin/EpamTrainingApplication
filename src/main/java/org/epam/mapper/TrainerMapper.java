@@ -4,6 +4,8 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.traineeDto.TraineeDto;
 import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
+import org.epam.dto.trainerDto.TrainerRegistrationRequest;
+import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.TrainingType;
@@ -36,6 +38,18 @@ public interface TrainerMapper {
 
     List<TrainerDto> trainersToShortTrainersDto(List<Trainer> trainers);
 
+    @Mapping(target = "firstName", source = "user.firstName")
+    @Mapping(target = "lastName", source = "user.lastName")
+    @Mapping(target = "specialization", source = "specialization", qualifiedByName = "trainingTypeToTrainingName")
+    TrainerRegistrationRequest trainerToRegistrationRequest(Trainer trainer);
+
+    @Mapping(target = "firstname", source = "user.firstName")
+    @Mapping(target = "lastname", source = "user.lastName")
+    @Mapping(target = "username", source = "user.username")
+    @Mapping(target = "active", source = "user.active")
+    @Mapping(target = "specialization", source = "specialization", qualifiedByName = "trainingTypeToTrainingName")
+    UpdateTrainerProfileRequest trainerToUpdateRequest(Trainer trainer);
+
     @Named("traineesToShortTraineesDto")
     default List<TraineeDto> traineesToShortTraineesDto(List<Trainee> trainees) {
         TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
@@ -51,5 +65,10 @@ public interface TrainerMapper {
     @Named("trainingTypeToTrainingName")
     default TrainingType.TrainingName trainingTypeToString(TrainingType trainingType) {
         return trainingType.getTrainingName();
+    }
+
+    @Named("trainerToUsername")
+    default String trainerToUsername(Trainer trainer){
+        return trainer.getUser().getUsername();
     }
 }

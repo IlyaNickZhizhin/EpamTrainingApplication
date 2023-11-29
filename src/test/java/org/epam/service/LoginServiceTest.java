@@ -1,10 +1,10 @@
 package org.epam.service;
 
 import org.epam.Reader;
-import org.epam.TestMapper;
 import org.epam.config.security.PasswordChecker;
 import org.epam.dao.UserDao;
 import org.epam.dto.LoginRequest;
+import org.epam.mapper.TraineeMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ class LoginServiceTest {
 
     @Test
     void testLogin() {
-        LoginRequest request = Mappers.getMapper(TestMapper.class).userToLoginRequest(user1);
+        LoginRequest request = Mappers.getMapper(TraineeMapper.class).userToLoginRequest(user1);
         when(userDao.getByUsername(request.getUsername())).thenReturn(user1);
         assertTrue(loginService.login(request) instanceof Trainer);
     }
