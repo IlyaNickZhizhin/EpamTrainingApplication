@@ -50,7 +50,7 @@ class TrainerServiceTest {
     @InjectMocks
     private TrainerService trainerService;
 
-    TestMapper testMapper = TestMapper.INSTANCE;
+    TestMapper testMapper = Mappers.getMapper(TestMapper.class);
 
     Reader reader = new Reader();
     User user1; User user2;

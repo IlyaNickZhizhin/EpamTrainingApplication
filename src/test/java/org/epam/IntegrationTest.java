@@ -17,6 +17,7 @@ import org.epam.testBeans.TestConfig;
 import org.epam.testBeans.TestInitDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,7 +39,7 @@ public class IntegrationTest {
     private TrainingService trainingService;
     @Autowired
     private LoginService loginService;
-    private final TestMapper testMapper = TestMapper.INSTANCE;
+    private final TestMapper testMapper = Mappers.getMapper(TestMapper.class);
 
     private final Reader reader = new Reader();
     {

@@ -45,7 +45,7 @@ class TraineeServiceTest {
     @InjectMocks
     private TraineeService traineeService;
 
-    TestMapper testMapper = TestMapper.INSTANCE;
+    TestMapper testMapper = Mappers.getMapper(TestMapper.class);
 
     Reader reader = new Reader();
     User user3; User user4; User user5;

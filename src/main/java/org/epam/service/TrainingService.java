@@ -58,8 +58,7 @@ public class TrainingService {
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
-        AddTrainingRequest response = trainingMapper.trainingToAddTrainingRequest(trainingDao.create(training));
-        return response;
+        return trainingMapper.trainingToAddTrainingRequest(trainingDao.create(training));
     }
 
     @Transactional

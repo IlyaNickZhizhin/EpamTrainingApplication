@@ -53,7 +53,7 @@ class TrainingServiceTest {
     @InjectMocks
     private TrainingService trainingService;
     private final static Reader reader = new Reader();
-    TestMapper testMapper = TestMapper.INSTANCE;
+    TestMapper testMapper = Mappers.getMapper(TestMapper.class);
     User user1; User user2; User user3; User user4; User user5; User user6;
     Trainer trainer1; Trainer trainer2;
     Trainee trainee3; Trainee trainee4; Trainee trainee5; Trainee trainee6;

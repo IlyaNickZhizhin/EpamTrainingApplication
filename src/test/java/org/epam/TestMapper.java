@@ -19,7 +19,6 @@ import org.epam.model.gymModel.TrainingType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import java.util.stream.Collectors;
 
