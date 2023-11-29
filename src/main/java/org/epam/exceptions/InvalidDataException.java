@@ -1,7 +1,7 @@
 package org.epam.exceptions;
 
 public class InvalidDataException extends RuntimeException {
-    public InvalidDataException(String methodName) {
-        super("Invalid data in method " + methodName);
+    public InvalidDataException(String methodName, String message) {
+        super("Invalid data in method " + methodName + ": " + message);
     }
 }

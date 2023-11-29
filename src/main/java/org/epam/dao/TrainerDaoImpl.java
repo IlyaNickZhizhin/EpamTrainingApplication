@@ -30,7 +30,7 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
             }
         } else {
             log.error("Trainer with id: " + id + " not found");
-            throw new InvalidDataException(Trainer.class.getSimpleName());
+            throw new InvalidDataException(Trainer.class.getSimpleName()+"update", "id" + id + "was incorrect");
         }
     }
 

@@ -9,6 +9,7 @@ import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Role;
+import org.epam.model.gymModel.Training;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,8 @@ public class LoginService {
     @Transactional(readOnly = true)
     public Role login(LoginRequest request) throws VerificationException, InvalidDataException {
         User user = userDao.getByUsername(request.getUsername());
-        if (user==null) throw new InvalidDataException("User with username: " + request.getUsername() + " not found");
+        if (user==null) throw new InvalidDataException(LoginService.class
+                .getSimpleName()+"login", "username" + request.getUsername() + "was incorrect");
         boolean check = passwordChecker.checkPassword(request.getUsername(), request.getPassword(), user);
         if (check) {
             log.info("User with username: " + request.getUsername() + " logged in as " + user.getRole().getClass().getSimpleName());

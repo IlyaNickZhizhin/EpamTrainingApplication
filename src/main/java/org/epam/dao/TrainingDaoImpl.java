@@ -56,7 +56,7 @@ public class TrainingDaoImpl extends GymAbstractDao<Training>{
             }
         } else {
             log.error("Training with id: " + id + " not found");
-            throw new InvalidDataException(Training.class.getSimpleName());
+            throw new InvalidDataException(Training.class.getSimpleName()+"update", "id" + id + "was incorrect");
         }
     }
 
