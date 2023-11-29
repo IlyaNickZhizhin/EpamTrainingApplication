@@ -9,7 +9,6 @@ import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Role;
-import org.epam.model.gymModel.Training;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
