@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @ExtendWith(SpringExtension.class)
@@ -38,9 +38,9 @@ public class IntegrationTest {
     private TrainingService trainingService;
     @Autowired
     private LoginService loginService;
-    private TestMapper testMapper = TestMapper.INSTANCE;
+    private final TestMapper testMapper = TestMapper.INSTANCE;
 
-    private Reader reader = new Reader();
+    private final Reader reader = new Reader();
     {
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
@@ -48,53 +48,65 @@ public class IntegrationTest {
 
     @Test
     public void traineeTrainerTrainingIntegrationTest() {
-        TrainerRegistrationRequest TrRQ1 = reader.readDto("trainers/trainer1", Trainer.class, testMapper::trainerToRegistrationRequest);
-        TrainerRegistrationRequest TrRQ2 = reader.readDto("trainers/trainer2", Trainer.class, testMapper::trainerToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ3 = reader.readDto("trainees/trainee3", Trainee.class, testMapper::traineeToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ4 = reader.readDto("trainees/trainee4", Trainee.class, testMapper::traineeToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ5 = reader.readDto("trainees/trainee5", Trainee.class, testMapper::traineeToRegistrationRequest);
-        TraineeRegistrationRequest TeRQ6 = reader.readDto("trainees/trainee6", Trainee.class, testMapper::traineeToRegistrationRequest);
-        RegistrationResponse TrRR1 = trainerService.create(TrRQ1);
-        RegistrationResponse TrRR2 = trainerService.create(TrRQ2);
-        RegistrationResponse TeRR3 = traineeService.create(TeRQ3);
-        RegistrationResponse TeRR4 = traineeService.create(TeRQ4);
-        RegistrationResponse TeRR5 = traineeService.create(TeRQ5);
-        RegistrationResponse TeRR6 = traineeService.create(TeRQ6);
-        LoginRequest TrLQ1 = reader.readDto("users/user1", User.class, testMapper::userToLoginRequest);
-        TrLQ1.setPassword(TrRR1.getPassword());
-        LoginRequest TrLQ2 = reader.readDto("users/user2", User.class, testMapper::userToLoginRequest);
-        TrLQ2.setPassword(TrRR2.getPassword());
-        LoginRequest TeLQ3 = reader.readDto("users/user3", User.class, testMapper::userToLoginRequest);
-        TeLQ3.setPassword(TeRR3.getPassword());
-        LoginRequest TeLQ4 = reader.readDto("users/user4", User.class, testMapper::userToLoginRequest);
-        TeLQ4.setPassword(TeRR4.getPassword());
-        LoginRequest TeLQ5 = reader.readDto("users/user5", User.class, testMapper::userToLoginRequest);
-        TeLQ5.setPassword(TeRR5.getPassword());
-        LoginRequest TeLQ6 = reader.readDto("users/user6", User.class, testMapper::userToLoginRequest);
-        TeLQ6.setPassword(TeRR6.getPassword());
-        Trainer trainer1 = (Trainer) loginService.login(TrLQ1);
-        Trainer trainer2 = (Trainer) loginService.login(TrLQ2);
-        Trainee trainee3 = (Trainee) loginService.login(TeLQ3);
-        Trainee trainee4 = (Trainee) loginService.login(TeLQ4);
-        Trainee trainee5 = (Trainee) loginService.login(TeLQ5);
-        Trainee trainee6 = (Trainee) loginService.login(TeLQ6);
-        ChangeLoginRequest TrCLQ1 = testMapper.roleToChangeLoginRequest(trainer1);
-        TrCLQ1.setNewPassword("password01");
-        ChangeLoginRequest TrCLQ2 = testMapper.roleToChangeLoginRequest(trainer2);
-        TrCLQ2.setNewPassword("password02");
-        ChangeLoginRequest TeCLQ3 = testMapper.roleToChangeLoginRequest(trainee3);
-        TeCLQ3.setNewPassword("password03");
-        ChangeLoginRequest TeCLQ4 = testMapper.roleToChangeLoginRequest(trainee4);
-        TeCLQ4.setNewPassword("password04");
-        ChangeLoginRequest TeCLQ5 = testMapper.roleToChangeLoginRequest(trainee5);
-        TeCLQ5.setNewPassword("password05");
-        ChangeLoginRequest TeCLQ6 = testMapper.roleToChangeLoginRequest(trainee6);
-        TeCLQ6.setNewPassword("password06");
-        assertEquals(true, trainerService.changePassword(TrCLQ1));
-        assertEquals(true, trainerService.changePassword(TrCLQ2));
-        assertEquals(true, traineeService.changePassword(TeCLQ3));
-        assertEquals(true, traineeService.changePassword(TeCLQ4));
-        assertEquals(true, traineeService.changePassword(TeCLQ5));
-        assertEquals(true, traineeService.changePassword(TeCLQ6));
+        TrainerRegistrationRequest trainerRegistrationRequest1
+                = reader.readDto("trainers/trainer1", Trainer.class, testMapper::trainerToRegistrationRequest);
+        TrainerRegistrationRequest trainerRegistrationRequest2
+                = reader.readDto("trainers/trainer2", Trainer.class, testMapper::trainerToRegistrationRequest);
+        TraineeRegistrationRequest traineeRegistrationRequest3
+                = reader.readDto("trainees/trainee3", Trainee.class, testMapper::traineeToRegistrationRequest);
+        TraineeRegistrationRequest traineeRegistrationRequest4
+                = reader.readDto("trainees/trainee4", Trainee.class, testMapper::traineeToRegistrationRequest);
+        TraineeRegistrationRequest traineeRegistrationRequest5
+                = reader.readDto("trainees/trainee5", Trainee.class, testMapper::traineeToRegistrationRequest);
+        TraineeRegistrationRequest traineeRegistrationRequest6
+                = reader.readDto("trainees/trainee6", Trainee.class, testMapper::traineeToRegistrationRequest);
+        RegistrationResponse trainerRegistrationResponse1 = trainerService.create(trainerRegistrationRequest1);
+        RegistrationResponse trainerRegistrationResponse2 = trainerService.create(trainerRegistrationRequest2);
+        RegistrationResponse traineeRegistrationResponse3 = traineeService.create(traineeRegistrationRequest3);
+        RegistrationResponse traineeRegistrationResponse4 = traineeService.create(traineeRegistrationRequest4);
+        RegistrationResponse traineeRegistrationResponse5 = traineeService.create(traineeRegistrationRequest5);
+        RegistrationResponse traineeRegistrationResponse6 = traineeService.create(traineeRegistrationRequest6);
+        LoginRequest trainerLoginRequest1
+                = reader.readDto("users/user1", User.class, testMapper::userToLoginRequest);
+        trainerLoginRequest1.setPassword(trainerRegistrationResponse1.getPassword());
+        LoginRequest trainerLoginRequest2
+                = reader.readDto("users/user2", User.class, testMapper::userToLoginRequest);
+        trainerLoginRequest2.setPassword(trainerRegistrationResponse2.getPassword());
+        LoginRequest traineeLoginRequest3
+                = reader.readDto("users/user3", User.class, testMapper::userToLoginRequest);
+        traineeLoginRequest3.setPassword(traineeRegistrationResponse3.getPassword());
+        LoginRequest traineeLoginRequest4
+                = reader.readDto("users/user4", User.class, testMapper::userToLoginRequest);
+        traineeLoginRequest4.setPassword(traineeRegistrationResponse4.getPassword());
+        LoginRequest traineeLoginRequest5
+                = reader.readDto("users/user5", User.class, testMapper::userToLoginRequest);
+        traineeLoginRequest5.setPassword(traineeRegistrationResponse5.getPassword());
+        LoginRequest traineeLoginRequest6
+                = reader.readDto("users/user6", User.class, testMapper::userToLoginRequest);
+        traineeLoginRequest6.setPassword(traineeRegistrationResponse6.getPassword());
+        Trainer trainer1 = (Trainer) loginService.login(trainerLoginRequest1);
+        Trainer trainer2 = (Trainer) loginService.login(trainerLoginRequest2);
+        Trainee trainee3 = (Trainee) loginService.login(traineeLoginRequest3);
+        Trainee trainee4 = (Trainee) loginService.login(traineeLoginRequest4);
+        Trainee trainee5 = (Trainee) loginService.login(traineeLoginRequest5);
+        Trainee trainee6 = (Trainee) loginService.login(traineeLoginRequest6);
+        ChangeLoginRequest trainerChangeLoginRequest1 = testMapper.roleToChangeLoginRequest(trainer1);
+        trainerChangeLoginRequest1.setNewPassword("password01");
+        ChangeLoginRequest trainerChangeLoginRequest2 = testMapper.roleToChangeLoginRequest(trainer2);
+        trainerChangeLoginRequest2.setNewPassword("password02");
+        ChangeLoginRequest traineeChangeLoginRequest3 = testMapper.roleToChangeLoginRequest(trainee3);
+        traineeChangeLoginRequest3.setNewPassword("password03");
+        ChangeLoginRequest traineeChangeLoginRequest4 = testMapper.roleToChangeLoginRequest(trainee4);
+        traineeChangeLoginRequest4.setNewPassword("password04");
+        ChangeLoginRequest traineeChangeLoginRequest5 = testMapper.roleToChangeLoginRequest(trainee5);
+        traineeChangeLoginRequest5.setNewPassword("password05");
+        ChangeLoginRequest traineeChangeLoginRequest6 = testMapper.roleToChangeLoginRequest(trainee6);
+        traineeChangeLoginRequest6.setNewPassword("password06");
+        assertTrue(trainerService.changePassword(trainerChangeLoginRequest1));
+        assertTrue(trainerService.changePassword(trainerChangeLoginRequest2));
+        assertTrue(traineeService.changePassword(traineeChangeLoginRequest3));
+        assertTrue(traineeService.changePassword(traineeChangeLoginRequest4));
+        assertTrue(traineeService.changePassword(traineeChangeLoginRequest5));
+        assertTrue(traineeService.changePassword(traineeChangeLoginRequest6));
     }
 }
