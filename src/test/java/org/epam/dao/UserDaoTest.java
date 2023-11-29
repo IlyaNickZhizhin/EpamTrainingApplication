@@ -9,16 +9,19 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class UserDaoTest {
 
     @Mock
@@ -26,10 +29,10 @@ public class UserDaoTest {
     @Mock
     private Session session = mock(Session.class);
 
-    @Mock
+    @Spy
     private UsernameGenerator usernameGenerator = mock(UsernameGenerator.class);
 
-    @Mock
+    @Spy
     private PasswordGenerator passwordGenerator = mock(PasswordGenerator.class);
 
     @InjectMocks
@@ -40,7 +43,6 @@ public class UserDaoTest {
 
     @BeforeEach
     public void setup() {
-        initMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
@@ -65,7 +67,6 @@ public class UserDaoTest {
     public void testUpdate() {
         User user = user1;
         user.setFirstName("New name");
-        when(session.get(User.class, 1)).thenReturn(user);
         when(session.merge(user1)).thenReturn(user);
         userDao.update(1, user);
         verify(session).merge(user);
@@ -112,7 +113,6 @@ public class UserDaoTest {
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", trainer2_Username)).thenReturn(query);
         when(query.getSingleResultOrNull()).thenReturn(null);
-        doNothing().when(session).persist(user);
         User newUser = userDao.setNewUser(trainer2_FirstName, trainer2_LastName);
         assertEquals(user.getFirstName(), newUser.getFirstName());
         assertEquals(user.getLastName(), newUser.getLastName());
