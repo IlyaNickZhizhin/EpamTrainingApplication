@@ -3,7 +3,7 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 import org.epam.dto.LoginRequest;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final UserDaoImpl userDao;
+    private final UserDao userDao;
     private final PasswordChecker passwordChecker;
 
     @Transactional(readOnly = true)

@@ -3,7 +3,7 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TraineeDaoImpl;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -25,7 +25,7 @@ public class TraineeService {
 
     private final TraineeMapper traineeMapper = TraineeMapper.INSTANCE;
     private final TraineeDaoImpl gymDao;
-    private final UserDaoImpl userDao;
+    private final UserDao userDao;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class UserDaoImplTest {
+public class UserDaoTest {
 
     @Mock
     private SessionFactory sessionFactory = mock(SessionFactory.class);
@@ -33,7 +33,7 @@ public class UserDaoImplTest {
     private PasswordGenerator passwordGenerator = mock(PasswordGenerator.class);
 
     @InjectMocks
-    private UserDaoImpl userDao;
+    private UserDao userDao;
 
     Reader reader = new Reader();
     User user1;

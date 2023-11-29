@@ -1,7 +1,7 @@
 package org.epam.config;
 
 import org.epam.Reader;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 import org.epam.model.User;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 class UsernameGeneratorTest {
 
-    UserDaoImpl mock = mock(UserDaoImpl.class);
+    UserDao mock = mock(UserDao.class);
 
     UsernameGenerator usernameGenerator = new UsernameGenerator(mock);
 

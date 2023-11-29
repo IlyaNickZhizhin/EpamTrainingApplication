@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 public class TraineeDaoImpl extends GymAbstractDao<Trainee> {
 
-    public TraineeDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+    public TraineeDaoImpl(SessionFactory sessionFactory, UserDao userDao) {
         super(sessionFactory, userDao);
     }
 

@@ -3,7 +3,7 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.dao.TrainerDaoImpl;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TrainerService {
     private final TrainerMapper trainerMapper = TrainerMapper.INSTANCE;
     private final TrainerDaoImpl gymDao;
-    private final UserDaoImpl userDao;
+    private final UserDao userDao;
 
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {

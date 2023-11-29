@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class UserDaoImpl {
+public class UserDao {
 
     private final SessionFactory factory;
     private final PasswordGenerator passwordGenerator;

@@ -16,9 +16,9 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     @Autowired
     protected final SessionFactory sessionFactory;
     @Autowired
-    protected final UserDaoImpl userDao;
+    protected final UserDao userDao;
 
-    public GymAbstractDao(SessionFactory sessionFactory, UserDaoImpl userDao) {
+    public GymAbstractDao(SessionFactory sessionFactory, UserDao userDao) {
         this.sessionFactory = sessionFactory;
         this.userDao = userDao;
     }

@@ -3,7 +3,7 @@ package org.epam.service;
 import org.epam.Reader;
 import org.epam.TestMapper;
 import org.epam.config.security.PasswordChecker;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 import org.epam.dto.LoginRequest;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
     @Mock
-    private final UserDaoImpl userDao = mock(UserDaoImpl.class);
+    private final UserDao userDao = mock(UserDao.class);
     @Spy
     PasswordChecker passwordChecker;
     @InjectMocks

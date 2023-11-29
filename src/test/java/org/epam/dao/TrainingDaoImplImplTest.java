@@ -39,7 +39,7 @@ public class TrainingDaoImplImplTest {
     @Mock
     private Session session = mock(Session.class);
     @Mock
-    private UserDaoImpl userDao = mock(UserDaoImpl.class);
+    private UserDao userDao = mock(UserDao.class);
     @InjectMocks
     private TrainingDaoImpl trainingDaoImpl;
 

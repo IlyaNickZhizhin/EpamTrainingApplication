@@ -4,7 +4,7 @@ package org.epam.service;
 import org.epam.Reader;
 import org.epam.TestMapper;
 import org.epam.dao.TrainerDaoImpl;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -35,7 +35,7 @@ class TrainerServiceTest {
     private TrainerDaoImpl mockTrainerDaoImpl = mock(TrainerDaoImpl.class);
 
     @Mock
-    private UserDaoImpl mockUserDao = mock(UserDaoImpl.class);
+    private UserDao mockUserDao = mock(UserDao.class);
 
     @InjectMocks
     private TrainerService trainerService;

@@ -2,13 +2,13 @@ package org.epam.config;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 
 @AllArgsConstructor
 @Slf4j
 public class UsernameGenerator {
 
-    private UserDaoImpl userDao;
+    private UserDao userDao;
 
     public String getDefaultUsername(String firstName, String lastName) {
         log.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);

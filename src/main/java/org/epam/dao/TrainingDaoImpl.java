@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TrainingDaoImpl extends GymAbstractDao<Training>{
 
-    public TrainingDaoImpl(SessionFactory sessionFactory, UserDaoImpl userDao) {
+    public TrainingDaoImpl(SessionFactory sessionFactory, UserDao userDao) {
         super(sessionFactory, userDao);
     }
 

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.epam.dao.TrainingDaoImpl;
-import org.epam.dao.UserDaoImpl;
+import org.epam.dao.UserDao;
 import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTraineeTrainingsListRequest;
 import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TrainingService {
-    private final UserDaoImpl userDao;
+    private final UserDao userDao;
     private final TrainingDaoImpl trainingDao;
     private final TrainingMapper trainingMapper = TrainingMapper.INSTANCE;
 
