@@ -39,7 +39,7 @@ public class TraineeController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/select/{username}")
+    @GetMapping("/{username}")
     public ResponseEntity<TraineeProfileResponse> selectByUsername(@PathVariable String username) {
         TraineeProfileResponse response = traineeService.selectByUsername(username);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -51,7 +51,7 @@ public class TraineeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{username}")
+    @DeleteMapping("/{username}")
     public ResponseEntity<Boolean> delete(@PathVariable String username) {
         boolean result = traineeService.delete(username);
         return new ResponseEntity<>(result, HttpStatus.OK);
