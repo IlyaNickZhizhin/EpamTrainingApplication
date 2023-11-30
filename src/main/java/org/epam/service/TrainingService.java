@@ -2,7 +2,6 @@ package org.epam.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.TrainingDaoImpl;
