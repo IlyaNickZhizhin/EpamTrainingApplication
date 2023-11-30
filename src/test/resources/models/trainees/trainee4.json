@@ -1,0 +1,4 @@
+{"id": 4,
+  "dateOfBirth": "2000-02-02",
+  "address": "Samarkand",
+  "user": {"id": 4, "firstName": "Vasiliy", "lastName": "Vasiliev", "username": "Vasiliy.Vasiliev", "password": "password04", "active": true}}

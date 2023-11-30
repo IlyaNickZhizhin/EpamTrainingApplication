@@ -1,10 +1,18 @@
 package org.epam.dao;
 
+/**
+ * This interface is used to implement the DAO pattern.
+ * @param <M>
+ * @see GymAbstractDao
+ * @see TraineeDaoImpl
+ * @see TrainerDaoImpl
+ * @see TrainingDaoImpl
+ */
 public interface Dao<M> {
 
-    void create(M m);
+    M create(M m);
     void save(M m);
-    void update(int id, M m);
-    void delete(int id);
+    M update(int id, M m);
+    M delete(int id);
     M get(int id);
 }
