@@ -113,7 +113,6 @@ class TrainingServiceTest {
 
     @Test
     void testUpdateTrainersList() {
-        User user = reader.readEntity("users/user3", User.class);
         Trainee trainee = reader.readEntity("trainees/trainee3", Trainee.class);
         List<Trainer> trainerList = new ArrayList<>();
         trainerList.add(trainer1);
