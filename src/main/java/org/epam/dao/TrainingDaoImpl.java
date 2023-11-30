@@ -1,7 +1,6 @@
 package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.model.gymModel.Trainee;
@@ -11,7 +10,6 @@ import org.epam.model.gymModel.TrainingType;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.engine.jdbc.StreamUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
