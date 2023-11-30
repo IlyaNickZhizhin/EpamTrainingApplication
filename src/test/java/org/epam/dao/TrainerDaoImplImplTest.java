@@ -55,9 +55,11 @@ public class TrainerDaoImplImplTest {
         TrainingType trainingType1 = reader.readEntity("trainingTypes/trainingType1", TrainingType.class);
         Trainer trainer = trainer1;
         Trainer updatedTrainer = new Trainer();
-        updatedTrainer.setId(trainer.getId());
-        updatedTrainer.setSpecialization(trainingType1);
+        updatedTrainer.setId(trainer1.getId());
+        updatedTrainer.setSpecialization(trainer1.getSpecialization());
+        updatedTrainer.setUser(trainer1.getUser());
         when(session.get(Trainer.class, 1)).thenReturn(trainer);
+        when(session.merge(trainer)).thenReturn(trainer);
         trainerDaoImpl.update(1, updatedTrainer);
         assertEquals(trainer.getSpecialization(), updatedTrainer.getSpecialization());
         verify(session).merge(trainer);

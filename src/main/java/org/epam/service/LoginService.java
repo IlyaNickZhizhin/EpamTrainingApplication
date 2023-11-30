@@ -32,11 +32,21 @@ public class LoginService {
                 .getSimpleName()+"login", "username" + request.getUsername() + "was incorrect");
         boolean check = passwordChecker.checkPassword(request.getUsername(), request.getPassword(), user);
         if (check) {
-            Trainee trainee = traineeDao.getModelByUserId(user.getId());
-            Trainer trainer = trainerDao.getModelByUserId(user.getId());
-            log.info("User with username: " + request.getUsername() + " logged in as " +
-                    (trainee != null ? "TRAINEE" : "TRAINER"));
-            return trainee != null ? trainee : trainer;
+            Trainee trainee;
+            Trainer trainer;
+            try{
+                trainee = traineeDao.getModelByUserId(user.getId());
+                log.info("User with username: " + request.getUsername() + " logged in as TRAINEE");
+                return trainee;
+            } catch (InvalidDataException e1) {}
+            try{
+                trainer = trainerDao.getModelByUserId(user.getId());
+                log.info("User with username: " + request.getUsername() + " logged in as TRAINER");
+                return trainer;
+            } catch (InvalidDataException e2) {
+               throw new InvalidDataException("getModelByUser(" +request.getUsername() + ")",
+                        "No trainer or trainee with username: " + request.getUsername() + " found ");
+            }
         } else {
             throw new VerificationException("Wrong password");
         }

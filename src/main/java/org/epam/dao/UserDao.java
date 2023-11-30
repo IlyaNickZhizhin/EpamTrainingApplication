@@ -55,7 +55,7 @@ public class UserDao {
         log.info("Getting user with id: " + id);
         Session session = factory.getCurrentSession();
         Optional<User> userOptional = Optional.ofNullable(session.get(User.class, id));
-        return userOptional.orElseThrow(() -> new InvalidDataException("get(" + id + ")", "No user with id: " + id)));
+        return userOptional.orElseThrow(() -> new InvalidDataException("get(" + id + ")", "No user with id: " + id));
     }
 
     public User getByUsername(String username) throws VerificationException{
