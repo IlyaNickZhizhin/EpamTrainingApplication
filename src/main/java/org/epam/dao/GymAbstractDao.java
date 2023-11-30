@@ -1,12 +1,14 @@
 package org.epam.dao;
 
 import lombok.extern.slf4j.Slf4j;
+import org.epam.exceptions.InvalidDataException;
 import org.epam.model.User;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -68,7 +70,8 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     public M get(int id) {
         try {
             log.info("Getting " + getModelName() + " with id " + id);
-            return sessionFactory.getCurrentSession().get(getModelClass(), id);
+            Optional<M> modelOptional = Optional.ofNullable(sessionFactory.getCurrentSession().get(getModelClass(), id));
+            return modelOptional.orElseThrow(() -> new InvalidDataException("get(" + id + ")", "No " + getModelName() + " with id: " + id));
         } catch (Exception e) {
             log.error("Error getting " + getModelName() + " with id " + id, e);
             throw e;
@@ -78,8 +81,9 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     public List<M> getAll(){
         try {
             log.info("Getting all " + getModelName() + "s");
-            return sessionFactory.getCurrentSession()
-                    .createQuery("from " + getModelName(), getModelClass()).list();
+            Optional<List<M>> modelOptional = Optional.ofNullable(sessionFactory.getCurrentSession()
+                    .createQuery("from " + getModelName(), getModelClass()).list());
+            return modelOptional.orElseThrow(()-> new InvalidDataException("getAll()", "No " + getModelName() + "s"));
         } catch (Exception e) {
             log.error("Error getting all " + getModelName() + "s", e);
             throw e;
@@ -90,10 +94,13 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
 
     public M getModelByUser(User user) {
         log.info("Getting " + getModelName() + " with user №" + user.getId() + " " + user.getUsername());
-        return sessionFactory.getCurrentSession()
+        Optional<M> modelOptional = Optional.ofNullable(sessionFactory.getCurrentSession()
                 .createQuery("from " + getModelName() + " where user = :user", getModelClass())
                 .setParameter("user", user)
-                .getSingleResultOrNull();
+                .getSingleResultOrNull());
+        return modelOptional.orElseThrow(() -> new InvalidDataException("getModelByUser(" + user.getUsername() +
+                " ang other fields)", "No " + getModelName()
+                + " with user №" + user.getId() + " " + user.getUsername()));
     }
 
     protected abstract String getModelName();

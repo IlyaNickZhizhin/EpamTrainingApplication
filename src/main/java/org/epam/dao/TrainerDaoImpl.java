@@ -7,6 +7,8 @@ import org.epam.model.gymModel.Trainer;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @Slf4j
 public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
@@ -23,7 +25,10 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
             trainer.setUser(updatedTrainer.getUser());
             trainer.setSpecialization(updatedTrainer.getSpecialization());
             try {
-                return sessionFactory.getCurrentSession().merge(trainer);
+                Optional<Trainer> optionalTrainer = Optional.ofNullable(sessionFactory.getCurrentSession().merge(trainer));
+                return optionalTrainer.orElseThrow(() -> new InvalidDataException("update(" + id + ", "
+                        + updatedTrainer.getUser().getUsername() + " and other fields)",
+                        "Check trainer with id: " + id));
             } catch (Exception e) {
                 log.error("Error updating trainer with id: " + id, e);
                 throw e;
