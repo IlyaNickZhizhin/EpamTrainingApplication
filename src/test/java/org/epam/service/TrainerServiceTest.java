@@ -60,9 +60,7 @@ class TrainerServiceTest {
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
         trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
         user1 = reader.readEntity("users/user1", User.class);
-        user1.setRole(trainer1);
         user2 = reader.readEntity("users/user2", User.class);
-        user2.setRole(trainer2);
     }
 
     @Test
@@ -81,6 +79,8 @@ class TrainerServiceTest {
     @Test
     void testUpdate() {
         Trainer trainer = reader.readEntity("trainers/trainer1", Trainer.class);
+        User user = reader.readEntity("users/user1", User.class);
+        user.setFirstName("user1");
         trainer.getUser().setFirstName("user1");
         UpdateTrainerProfileRequest request
                 = trainerMapper.trainerToUpdateRequest(trainer1);
@@ -90,6 +90,7 @@ class TrainerServiceTest {
         response.setFirstName("user1");
         when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user1);
         when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(trainer1);
+        when(mockUserDao.update(1, user)).thenReturn(user);
         when(mockTrainerDaoImpl.update(1, trainer)).thenReturn(trainer);
         assertEquals(response, trainerService.update(request));
     }
@@ -103,7 +104,7 @@ class TrainerServiceTest {
     @Test
     void changePassword() {
         ChangeLoginRequest request
-                = reader.readDto("trainers/trainer2", Trainer.class, traineeMapper::roleToChangeLoginRequest);
+                = reader.readDto("trainers/trainer2", Trainer.class, trainerMapper::trainerToChangeLoginRequest);
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user2", User.class);
         userNew.setPassword("newPassword");
@@ -115,7 +116,7 @@ class TrainerServiceTest {
     @Test
     void setActive() {
         ActivateDeactivateRequest request =
-                reader.readDto("trainers/trainer2", Trainer.class, traineeMapper::roleToActivateDeactivateRequest);
+                reader.readDto("trainers/trainer2", Trainer.class, trainerMapper::trainerToActivateDeactivateRequest);
         request.setActive(false);
         user2.setActive(false);
         when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user2);

@@ -1,6 +1,5 @@
 package org.epam.model.gymModel;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +13,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.collections4.CollectionUtils;
+import org.epam.model.User;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -25,11 +25,15 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "trainers")
-public class Trainer extends Role{
+public class Trainer {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private int id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User user;
 
     @OneToOne
     @JoinColumn(name = "specialization")

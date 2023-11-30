@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.epam.model.gymModel.Role;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 
@@ -40,18 +39,6 @@ public class User {
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private Role role;
-
-    public Trainee getTrainee() {
-        return role instanceof Trainee ? (Trainee) role : null;
-    }
-
-    public Trainer getTrainer() {
-        return role instanceof Trainer ? (Trainer) role : null;
-    }
 
     @Override
     public String toString() {

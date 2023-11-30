@@ -42,7 +42,7 @@ public class TraineeService {
         user.setFirstName(request.getFirstname());
         user.setLastName(request.getLastname());
         user.setActive(request.isActive());
-        Trainee trainee = gymDao.getModelByUser(user);
+        Trainee trainee = gymDao.getModelByUser(userDao.update(user.getId(), user));
         if (request.getDateOfBirth() != null) trainee.setDateOfBirth(request.getDateOfBirth());
         if (request.getAddress() != null) trainee.setAddress(request.getAddress());
         trainee.setUser(user);

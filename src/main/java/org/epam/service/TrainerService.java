@@ -42,15 +42,16 @@ public class TrainerService {
     @Transactional
     public TrainerProfileResponse update(UpdateTrainerProfileRequest request) throws VerificationException {
         User user = userDao.getByUsername(request.getUsername());
+        Trainer trainer = gymDao.getModelByUser(user);
         user.setUsername(request.getUsername());
         user.setFirstName(request.getFirstname());
         user.setLastName(request.getLastname());
         user.setActive(request.isActive());
-        Trainer trainer = gymDao.getModelByUser(user);
         if (trainer == null)
             throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
         if (request.getSpecialization() != null)
             trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
+        trainer.setUser(userDao.update(user.getId(), user));
         trainer = gymDao.update(trainer.getId(), trainer);
         return trainerMapper.trainerToProfileResponse(trainer);
     }

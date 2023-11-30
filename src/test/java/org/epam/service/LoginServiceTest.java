@@ -2,6 +2,8 @@ package org.epam.service;
 
 import org.epam.Reader;
 import org.epam.config.security.PasswordChecker;
+import org.epam.dao.TraineeDaoImpl;
+import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDao;
 import org.epam.dto.LoginRequest;
 import org.epam.mapper.TraineeMapper;
@@ -24,6 +26,10 @@ import static org.mockito.Mockito.when;
 class LoginServiceTest {
     @Mock
     private final UserDao userDao = mock(UserDao.class);
+    @Mock
+    private final TrainerDaoImpl trainerDao = mock(TrainerDaoImpl.class);
+    @Mock
+    private final TraineeDaoImpl traineeDao = mock(TraineeDaoImpl.class);
     @Spy
     PasswordChecker passwordChecker;
     @InjectMocks
@@ -37,13 +43,14 @@ class LoginServiceTest {
         reader.setEndPath(".json");
         user1 = reader.readEntity("users/user1", User.class);
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
-        user1.setRole(trainer1);
     }
 
     @Test
     void testLogin() {
         LoginRequest request = Mappers.getMapper(TraineeMapper.class).userToLoginRequest(user1);
         when(userDao.getByUsername(request.getUsername())).thenReturn(user1);
+        when(traineeDao.getModelByUserId(user1.getId())).thenReturn(null);
+        when(trainerDao.getModelByUserId(user1.getId())).thenReturn(trainer1);
         assertTrue(loginService.login(request) instanceof Trainer);
     }
 }

@@ -58,11 +58,8 @@ class TraineeServiceTest {
         trainee4 = reader.readEntity("trainees/trainee4", Trainee.class);
         trainee5 = reader.readEntity("trainees/trainee5", Trainee.class);
         user3 = reader.readEntity("users/user3", User.class);
-        user3.setRole(trainee3);
         user4 = reader.readEntity("users/user4", User.class);
-        user4.setRole(trainee4);
         user5 = reader.readEntity("users/user5", User.class);
-        user5.setRole(trainee5);
     }
 
     @Test
@@ -81,6 +78,8 @@ class TraineeServiceTest {
     @Test
     void testUpdate() {
         Trainee trainee = reader.readEntity("trainees/trainee3", Trainee.class);
+        User user = reader.readEntity("users/user3", User.class);
+        user.setFirstName("user5");
         trainee.getUser().setFirstName("user5");
         UpdateTraineeProfileRequest request
                 = traineeMapper.traineeToUpdateRequest(trainee3);
@@ -89,7 +88,8 @@ class TraineeServiceTest {
                 = traineeMapper.traineeToProfileResponse(trainee3);
         response.setFirstname("user5");
         when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user5);
-        when(mockTraineeDaoImpl.getModelByUser(user5)).thenReturn(trainee3);
+        when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(user);
+        when(mockTraineeDaoImpl.getModelByUser(user)).thenReturn(trainee);
         when(mockTraineeDaoImpl.update(3, trainee)).thenReturn(trainee);
         assertEquals(response, traineeService.update(request));
     }
@@ -103,7 +103,7 @@ class TraineeServiceTest {
     @Test
     void changePassword() {
         ChangeLoginRequest request
-                = reader.readDto("trainees/trainee4", Trainee.class, traineeMapper::roleToChangeLoginRequest);
+                = reader.readDto("trainees/trainee4", Trainee.class, traineeMapper::traineeToChangeLoginRequest);
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user5", User.class);
         userNew.setPassword("newPassword");
@@ -116,7 +116,7 @@ class TraineeServiceTest {
     @Test
     void setActive() {
         ActivateDeactivateRequest request =
-                reader.readDto("trainees/trainee4", Trainee.class, traineeMapper::roleToActivateDeactivateRequest);
+                reader.readDto("trainees/trainee4", Trainee.class, traineeMapper::traineeToActivateDeactivateRequest);
         request.setActive(false);
         user4.setActive(false);
         when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user4);
@@ -128,6 +128,8 @@ class TraineeServiceTest {
     void delete() {
         when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user3);
         when(mockUserDao.delete(user3.getId())).thenReturn(user3);
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(trainee3);
+        when(mockTraineeDaoImpl.delete(trainee3.getId())).thenReturn(trainee3);
         assertTrue(traineeService.delete(user3.getUsername()));
         verify(mockUserDao).delete(user3.getId());
     }

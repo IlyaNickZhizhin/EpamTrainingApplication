@@ -3,6 +3,8 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.epam.dao.TraineeDaoImpl;
+import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.dao.UserDao;
 import org.epam.dto.trainingDto.AddTrainingRequest;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TrainingService {
     private final UserDao userDao;
+    private final TraineeDaoImpl traineeDao;
+    private final TrainerDaoImpl trainerDao;
     private final TrainingDaoImpl trainingDao;
     private final TrainingMapper trainingMapper;
 
@@ -48,8 +52,8 @@ public class TrainingService {
     public AddTrainingRequest create(AddTrainingRequest request) {
         User userEE = userDao.getByUsername(request.getTraineeUsername());
         User userER = userDao.getByUsername(request.getTrainerUsername());
-        Trainee trainee = userEE.getTrainee();
-        Trainer trainer = userER.getTrainer();
+        Trainee trainee = traineeDao.getModelByUser(userEE);
+        Trainer trainer = trainerDao.getModelByUser(userER);
         List<Object> eeEr = checkTraineeTrainerConnection(trainee, trainer);
         Training training = new Training();
         training.setTrainee((Trainee) eeEr.get(0));
@@ -64,28 +68,26 @@ public class TrainingService {
     @Transactional
     public GetTrainersResponse updateTrainersList(UpdateTraineeTrainerListRequest request) {
         User user = userDao.getByUsername(request.getTraineeUsername());
-        Trainee trainee = user.getTrainee();
+        Trainee trainee = traineeDao.getModelByUser(user);
         if (trainee == null)
             throw new ProhibitedActionException("Only Trainee could update trainers list");
-        List<String> exist = CollectionUtils.emptyIfNull(trainee.getTrainers()).stream()
+        List<String> exist = trainee.getTrainers().stream()
                 .map(trainer -> trainer.getUser().getUsername())
                 .collect(Collectors.toList());
         List<String> newTrainers = request.getTrainerUsernames();
         newTrainers.removeAll(exist);
         List<Trainer> trainers = newTrainers.stream()
                 .map(userDao::getByUsername)
-                .map(User::getTrainer)
+                .map(trainerDao::getModelByUser)
                 .collect(Collectors.toList());
         trainee.getTrainers().addAll(trainers);
-        user.setRole(trainee);
-        user = userDao.update(user.getId(), user);
-        return trainingMapper.traineeToTrainersResponse(user.getTrainee());
+        return trainingMapper.traineeToTrainersResponse(traineeDao.update(trainee.getId(), trainee));
     }
 
     @Transactional(readOnly = true)
     public GetTrainersResponse getTrainersList(String traineeUsername) {
         User user = userDao.getByUsername(traineeUsername);
-        Trainee trainee = user.getTrainee();
+        Trainee trainee = traineeDao.getModelByUser(user);
         if (trainee == null)
             throw new ProhibitedActionException("Only Trainee could get trainers list");
         return trainingMapper.traineeToTrainersResponse(trainee);
@@ -94,7 +96,7 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public GetTrainersResponse getNotAssignedOnTraineeActiveTrainers(String traineeUsername) {
         User user = userDao.getByUsername(traineeUsername);
-        Trainee trainee = user.getTrainee();
+        Trainee trainee = traineeDao.getModelByUser(user);
         if (trainee == null)
             throw new ProhibitedActionException("Only Trainee could get trainers list");
         List<Trainer> existingTrainers = trainee.getTrainers();
@@ -108,7 +110,7 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public GetTrainingsResponse getTraineeTrainingsList(GetTraineeTrainingsListRequest request) {
         User user = userDao.getByUsername(request.getUsername());
-        Trainee trainee = user.getTrainee();
+        Trainee trainee = traineeDao.getModelByUser(user);
         if (trainee == null)
             throw new ProhibitedActionException("Only Trainee could get trainers list");
         List<Training> trainings = trainingFilterByDate(trainee.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
@@ -130,7 +132,7 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public GetTrainingsResponse getTrainerTrainingsList(GetTrainerTrainingsListRequest request) {
         User user = userDao.getByUsername(request.getUsername());
-        Trainer trainer = user.getTrainer();
+        Trainer trainer = trainerDao.getModelByUser(user);
         if (trainer == null)
             throw new ProhibitedActionException("only Trainer could get training list");
         List<Training> trainings = trainingFilterByDate(trainer.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());

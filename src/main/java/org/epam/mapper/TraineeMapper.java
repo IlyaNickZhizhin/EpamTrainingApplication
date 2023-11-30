@@ -10,7 +10,6 @@ import org.epam.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
 import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.model.User;
-import org.epam.model.gymModel.Role;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.mapstruct.Mapper;
@@ -63,9 +62,9 @@ public interface TraineeMapper {
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "oldPassword", source = "user.password")
     @Mapping(target = "newPassword", ignore = true)
-    ChangeLoginRequest roleToChangeLoginRequest(Role role);
+    ChangeLoginRequest traineeToChangeLoginRequest(Trainee trainee);
 
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "active", source = "user.active")
-    ActivateDeactivateRequest roleToActivateDeactivateRequest(Role role);
+    ActivateDeactivateRequest traineeToActivateDeactivateRequest(Trainee trainee);
 }

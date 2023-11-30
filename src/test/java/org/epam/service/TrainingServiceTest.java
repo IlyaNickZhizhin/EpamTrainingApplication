@@ -1,6 +1,8 @@
 package org.epam.service;
 
 import org.epam.Reader;
+import org.epam.dao.TraineeDaoImpl;
+import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.dao.UserDao;
 import org.epam.dto.trainingDto.AddTrainingRequest;
@@ -43,6 +45,10 @@ class TrainingServiceTest {
     @Mock
     private TrainingDaoImpl mockTrainingDaoImpl = mock(TrainingDaoImpl.class);
     @Mock
+    private TraineeDaoImpl mockTraineeDaoImpl = mock(TraineeDaoImpl.class);
+    @Mock
+    private TrainerDaoImpl mockTrainerDaoImpl = mock(TrainerDaoImpl.class);
+    @Mock
     private UserDao mockUserDao = mock(UserDao.class);
     @Spy
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
@@ -74,12 +80,6 @@ class TrainingServiceTest {
         user4 = reader.readEntity("users/user4", User.class);
         user5 = reader.readEntity("users/user5", User.class);
         user6 = reader.readEntity("users/user6", User.class);
-        user1.setRole(trainer1);
-        user2.setRole(trainer2);
-        user3.setRole(trainee3);
-        user4.setRole(trainee4);
-        user5.setRole(trainee5);
-        user6.setRole(trainee6);
         training1 = reader.readEntity("trainings/training1", Training.class);
         training2 = reader.readEntity("trainings/training2", Training.class);
         training3 = reader.readEntity("trainings/training3", Training.class);
@@ -105,6 +105,8 @@ class TrainingServiceTest {
         AddTrainingRequest request = reader.readDto("trainings/training1", Training.class, trainingMapper::trainingToAddTrainingRequest);
         when(mockUserDao.getByUsername(request.getTraineeUsername())).thenReturn(user3);
         when(mockUserDao.getByUsername(request.getTrainerUsername())).thenReturn(user1);
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(trainee3);
+        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(trainer1);
         when(mockTrainingDaoImpl.create(training)).thenReturn(training1);
         assertEquals(request, trainingService.create(request));
     }
@@ -113,34 +115,35 @@ class TrainingServiceTest {
     void testUpdateTrainersList() {
         User user = reader.readEntity("users/user3", User.class);
         Trainee trainee = reader.readEntity("trainees/trainee3", Trainee.class);
-        user.setRole(trainee);
         List<Trainer> trainerList = new ArrayList<>();
         trainerList.add(trainer1);
         trainerList.add(trainer2);
         trainee.setTrainers(trainerList);
         UpdateTraineeTrainerListRequest request
-                = reader.readDto("trainees/trainee3", Trainee.class, trainingMapper::traineeToUpdateTrainerListRequest);
+                = trainingMapper.traineeToUpdateTrainerListRequest(trainee);
         request.setTrainerUsernames(trainerList.stream().map(trainerMapper::trainerToUsername).collect(Collectors.toList()));
         GetTrainersResponse response = trainingMapper.traineeToTrainersResponse(trainee);
         when(mockUserDao.getByUsername(request.getTraineeUsername())).thenReturn(user3);
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(trainee3);
         when(mockUserDao.getByUsername(request.getTrainerUsernames().get(0))).thenReturn(user1);
         when(mockUserDao.getByUsername(request.getTrainerUsernames().get(1))).thenReturn(user2);
-        when(mockUserDao.update(anyInt(), any(User.class))).thenReturn(user);
+        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(trainer1);
+        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(trainer2);
+        when(mockTraineeDaoImpl.update(anyInt(), any(Trainee.class))).thenReturn(trainee);
         assertEquals(response, trainingService.updateTrainersList(request));
     }
 
     @Test
     void testGetTrainersList() {
-        User user = reader.readEntity("users/user3", User.class);
         Trainee trainee = reader.readEntity("trainees/trainee3", Trainee.class);
-        user.setRole(trainee);
         List<Trainer> trainerList = new ArrayList<>();
         trainerList.add(trainer1);
         trainerList.add(trainer2);
         trainee.setTrainers(trainerList);
         GetTrainersResponse response = trainingMapper.traineeToTrainersResponse(trainee);
-        when(mockUserDao.getByUsername(user.getUsername())).thenReturn(user);
-        assertEquals(response, trainingService.getTrainersList(user.getUsername()));
+        when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user3);
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(trainee);
+        assertEquals(response, trainingService.getTrainersList(user3.getUsername()));
     }
 
     @Test
@@ -152,6 +155,7 @@ class TrainingServiceTest {
         trainee.setTrainers(trainerList);
         GetTrainersResponse response = trainingMapper.traineeToTrainersResponse(trainee);
         when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user3);
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(trainee3);
         when(mockTrainingDaoImpl.getAllTrainersAvalibleForTrainee(any(Trainee.class), anyList())).thenReturn(trainerList);
         assertEquals(response, trainingService.getNotAssignedOnTraineeActiveTrainers(user3.getUsername()));
     }
@@ -164,7 +168,6 @@ class TrainingServiceTest {
         trainings.add(training2);
         trainee.setTrainings(trainings);
         User user = reader.readEntity("users/user3", User.class);
-        user.setRole(trainee);
         GetTraineeTrainingsListRequest request = new GetTraineeTrainingsListRequest();
         request.setUsername(user3.getUsername());
         request.setPeriodFrom(null);
@@ -173,6 +176,7 @@ class TrainingServiceTest {
         GetTrainingsResponse response = new GetTrainingsResponse();
         response.setTrainings(trainingMapper.traineeTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user);
+        when(mockTraineeDaoImpl.getModelByUser(user)).thenReturn(trainee);
         assertEquals(response, trainingService.getTraineeTrainingsList(request));
     }
 
@@ -184,7 +188,6 @@ class TrainingServiceTest {
         trainings.add(training2);
         trainer.setTrainings(trainings);
         User user = reader.readEntity("users/user1", User.class);
-        user.setRole(trainer);
         GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
         request.setUsername(user1.getUsername());
         request.setPeriodFrom(LocalDate.MIN);
@@ -192,6 +195,7 @@ class TrainingServiceTest {
         GetTrainingsResponse response = new GetTrainingsResponse();
         response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(user);
+        when(mockTrainerDaoImpl.getModelByUser(user)).thenReturn(trainer);
         assertEquals(response, trainingService.getTrainerTrainingsList(request));
     }
 }

@@ -51,16 +51,18 @@ public abstract class GymAbstractDao<M> implements Dao<M>{
     public abstract M update(int id, M model);
 
     @Override
-    public void delete(int id) {
+    public M delete(int id) {
+        M model;
         try {
             log.info("Deleting " + getModelName() + " with id " + id);
-            M model = get(id);
+            model = get(id);
             sessionFactory.getCurrentSession().remove(model);
         } catch (Exception e) {
             log.error("Error deleting " + getModelName() + " with id " + id, e);
             throw e;
         }
         log.info("Deleted " + getModelName() + " with id " + id);
+        return model;
     }
 
     public M get(int id) {
