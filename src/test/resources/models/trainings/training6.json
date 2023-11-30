@@ -1,0 +1,6 @@
+{"id": 6,
+  "trainee":
+  {"id": 6,
+    "address": "Bukhara",
+    "user": {"id": 6, "firstName": "Pavel", "lastName": "Pavlov", "username": "Pavel.Pavlov", "password": "password06", "active": true}},
+  "trainer": {"id": 2, "specialization": {"id": 2, "training_name": "CARDIO"}, "user": {"id": 2, "firstName": "Ivan", "lastName": "Ivanov", "username": "Ivan.Ivanov", "password": "password02", "active": true}}, "trainingName": "CARDIO 6", "trainingType": {"id": 2, "training_name": "CARDIO"}, "trainingDate": "2023-11-17", "duration": 3.5}

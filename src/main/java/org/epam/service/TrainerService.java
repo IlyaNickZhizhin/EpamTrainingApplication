@@ -1,52 +1,90 @@
 package org.epam.service;
 
-import org.epam.dao.gymDao.TrainerDao;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDao;
-import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.TrainingType;
+import org.epam.dto.ActivateDeactivateRequest;
+import org.epam.dto.ChangeLoginRequest;
+import org.epam.dto.RegistrationResponse;
+import org.epam.dto.trainerDto.TrainerProfileResponse;
+import org.epam.dto.trainerDto.TrainerRegistrationRequest;
+import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
+import org.epam.exceptions.ProhibitedActionException;
+import org.epam.exceptions.VerificationException;
+import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.epam.model.gymModel.Trainer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class TrainerService {
+    private final TrainerMapper trainerMapper;
+    private final TrainerDaoImpl gymDao;
+    private final UserDao userDao;
 
-    TrainerDao trainerDao;
-    UserDao userDao;
-
-   /* TODO - - в сервисах используй аннотацию @RequiredArgsConstructor (вроде такая)
-             чтобы не писать руками конструктор каждый раз
-   * не стал делать, потому что есть требование "DAO with storage bean should be inserted into services beans
-   * using auto wiring. Services beans should be injected into the facade using
-   * constructor-based injections. The rest of the injections should be done in a setter-based way."
-   * */
-
-    @Autowired
-    public void setTrainerDao(TrainerDao trainerDao) {
-        this.trainerDao = trainerDao;
-    }
-
-    @Autowired
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public Trainer create (TrainingType trainingType, String firstName, String lastName) {
-        User user = userDao.setNewUser(firstName, lastName);
+    @Transactional
+    public RegistrationResponse create(TrainerRegistrationRequest request) {
+        log.info("Creating " + getModelName());
+        User user = userDao.setNewUser(request.getFirstname(), request.getLastname());
+        log.info("Creating " + getModelName() + " with user " + request.getFirstname() + " " + request.getLastname());
         Trainer trainer = new Trainer();
-        trainer.setSpecialization(trainingType.getName());
-        trainer.setUserId(userDao.create(user));
-        trainerDao.create(trainer);
-        return trainer;
+        trainer.setUser(user);
+        trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
+        trainer = gymDao.create(trainer);
+        log.info("Created " + getModelName() + " with id " + trainer.getId());
+        return trainerMapper.trainerToRegistrationResponse(trainer);
+
+    }
+    @Transactional
+    public TrainerProfileResponse update(UpdateTrainerProfileRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainer trainer = gymDao.getModelByUser(user);
+        user.setUsername(request.getUsername());
+        user.setFirstName(request.getFirstname());
+        user.setLastName(request.getLastname());
+        user.setActive(request.isActive());
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        if (request.getSpecialization() != null)
+            trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
+        trainer.setUser(userDao.update(user.getId(), user));
+        trainer = gymDao.update(trainer.getId(), trainer);
+        return trainerMapper.trainerToProfileResponse(trainer);
+    }
+    @Transactional(readOnly = true)
+    public TrainerProfileResponse selectByUsername(String username) throws VerificationException {
+        User user = userDao.getByUsername(username);
+        Trainer trainer = gymDao.getModelByUser(user);
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        return trainerMapper.trainerToProfileResponse(trainer);
     }
 
-    public Trainer update (int id, Trainer trainer){
-        trainerDao.update(id, trainer);
-        return trainer;
+    @Transactional
+    public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainer trainer = gymDao.getModelByUser(user);
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        if (user.getPassword().equals(request.getNewPassword())) throw new ProhibitedActionException("New password is the same as old");
+        user.setPassword(request.getNewPassword());
+        return userDao.update(user.getId(), user).getPassword().equals(request.getNewPassword());
+    }
+    @Transactional
+    public boolean setActive(ActivateDeactivateRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainer trainer = gymDao.getModelByUser(user);
+        if (trainer == null)
+            throw new ProhibitedActionException("No one except Trainer could not use TrainerService");
+        if (user.isActive() != request.isActive()) userDao.update(user.getId(), user);
+        return user.isActive();
     }
 
-    public Trainer select(int id){
-        return trainerDao.get(id);
+    protected String getModelName() {
+        return "Trainer";
     }
-
 }

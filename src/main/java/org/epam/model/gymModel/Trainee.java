@@ -1,73 +1,79 @@
 package org.epam.model.gymModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
+import org.epam.model.User;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import java.util.Date;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-@EqualsAndHashCode
-@Getter
-public class Trainee implements Model {
+import static jakarta.persistence.GenerationType.IDENTITY;
 
-    private static final Date DEFAULT_BIRTH_DATE = new Date(0);
-    private static final String DEFAULT_ADDRESS = "not defined yet";
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Entity
+@Table(name = "trainees")
+public class Trainee {
 
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private int id;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User user;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Optional<Date> dateOfBirth;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
-    private Optional<String> address;
+    @Column(name = "address")
+    private String address;
 
-    private int userId;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "trainees_trainers",
+            joinColumns = @JoinColumn(name = "trainee_id"),
+            inverseJoinColumns = @JoinColumn(name = "trainer_id"))
+    private List<Trainer> trainers;
 
-    public Trainee() {}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainee",
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SELECT)
+    private List<Training> trainings;
 
-    public Trainee(int userId) {
-        this.userId = userId;
+
+    public List<Training> getTrainings() {
+        return new ArrayList<>(CollectionUtils.emptyIfNull(trainings));
     }
 
-    public Trainee(Date dateOfBirth, int userId) {
-        this (userId);
-        this.dateOfBirth = Optional.ofNullable(dateOfBirth);
-    }
-
-    public Trainee(String address, int userId) {
-        this (userId);
-        this.address = Optional.ofNullable(address);
-    }
-
-    public Trainee(Date dateOfBirth, String address, int userId) {
-        this (dateOfBirth, userId);
-        this.address = Optional.ofNullable(address);
+    public List<Trainer> getTrainers() {
+        return new ArrayList<>(CollectionUtils.emptyIfNull(trainers));
     }
 
     @Override
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Date getDateOfBirth() {
-        if (dateOfBirth == null) dateOfBirth = Optional.ofNullable(DEFAULT_BIRTH_DATE);
-        return dateOfBirth.isPresent() ? dateOfBirth.get() : DEFAULT_BIRTH_DATE;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = Optional.ofNullable(dateOfBirth);
-    }
-
-    public String getAddress() {
-        if (address == null) address = Optional.ofNullable(DEFAULT_ADDRESS);
-        return address.isPresent() ? address.get() : DEFAULT_ADDRESS;
-    }
-
-    public void setAddress(String address) {
-        this.address = Optional.ofNullable(address);
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public String toString() {
+        return "Trainee{" +
+                "id=" + id +
+                ", dateOfBirth=" + dateOfBirth +
+                ", address='" + address + '\'' +
+                ", trainings =" + trainings +
+                '}';
     }
 }

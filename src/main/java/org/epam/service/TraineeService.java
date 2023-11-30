@@ -1,52 +1,103 @@
 package org.epam.service;
 
-import org.epam.dao.gymDao.TraineeDao;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.UserDao;
-import org.epam.model.gymModel.Trainee;
+import org.epam.dto.ActivateDeactivateRequest;
+import org.epam.dto.ChangeLoginRequest;
+import org.epam.dto.RegistrationResponse;
+import org.epam.dto.traineeDto.TraineeProfileResponse;
+import org.epam.dto.traineeDto.TraineeRegistrationRequest;
+import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
+import org.epam.exceptions.ProhibitedActionException;
+import org.epam.exceptions.VerificationException;
+import org.epam.mapper.TraineeMapper;
 import org.epam.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.epam.model.gymModel.Trainee;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class TraineeService {
-    TraineeDao traineeDao;
-    UserDao userDao;
 
-   /* TODO - - в сервисах используй аннотацию @RequiredArgsConstructor (вроде такая)
-        чтобы не писать руками конструктор каждый раз
-   * не стал делать, потому что есть требование "DAO with storage bean should be inserted into services beans
-   * using auto wiring. Services beans should be injected into the facade using
-   * constructor-based injections. The rest of the injections should be done in a setter-based way."
-   * */
+    private final TraineeMapper traineeMapper;
+    private final TraineeDaoImpl gymDao;
+    private final UserDao userDao;
 
-    @Autowired
-    public void setTraineeDao(TraineeDao traineeDao) {
-        this.traineeDao = traineeDao;
+    @Transactional
+    public RegistrationResponse create(TraineeRegistrationRequest request) {
+        log.info("Creating " + getModelName());
+        Trainee trainee = gymDao.create(prepare(request));
+        log.info("Created " + getModelName() + " with id " + trainee.getId());
+        return traineeMapper.traineeToRegistrationResponse(trainee);
     }
 
-    @Autowired
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
+    @Transactional
+    public TraineeProfileResponse update(UpdateTraineeProfileRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        user.setUsername(request.getUsername());
+        user.setFirstName(request.getFirstname());
+        user.setLastName(request.getLastname());
+        user.setActive(request.isActive());
+        Trainee trainee = gymDao.getModelByUser(userDao.update(user.getId(), user));
+        if (request.getDateOfBirth() != null) trainee.setDateOfBirth(request.getDateOfBirth());
+        if (request.getAddress() != null) trainee.setAddress(request.getAddress());
+        trainee.setUser(user);
+        trainee = gymDao.update(trainee.getId(), trainee);
+        return traineeMapper.traineeToProfileResponse(trainee);
+    }
+    @Transactional(readOnly = true)
+    public TraineeProfileResponse selectByUsername(String username) throws VerificationException {
+        User user = userDao.getByUsername(username);
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        return traineeMapper.traineeToProfileResponse(trainee);
+    }
+    @Transactional
+    public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null)
+            throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        if (user.getPassword().equals(request.getNewPassword())) throw new ProhibitedActionException("New password is the same as old");
+        user.setPassword(request.getNewPassword());
+        return userDao.update(user.getId(), user).getPassword().equals(request.getNewPassword());
     }
 
-    public Trainee create (String firstName, String lastName) {
-        User user = userDao.setNewUser(firstName, lastName);
+    @Transactional
+    public boolean setActive(ActivateDeactivateRequest request) throws VerificationException {
+        User user = userDao.getByUsername(request.getUsername());
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        if (user.isActive() != request.isActive()) userDao.update(user.getId(), user);
+        return user.isActive();
+    }
+
+    @Transactional
+    public boolean delete(String username) throws VerificationException {
+        User user = userDao.getByUsername(username);
+        Trainee trainee = gymDao.getModelByUser(user);
+        if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
+        gymDao.delete(trainee.getId());
+        return userDao.delete(user.getId()).equals(user);
+    }
+
+    private Trainee prepare(TraineeRegistrationRequest request) {
+        log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
-        trainee.setUserId(userDao.create(user));
-        traineeDao.save(trainee);
+        User user = userDao.setNewUser(request.getFirstname(), request.getLastname());
+        log.info("Creating " + getModelName() + " with user " + request.getFirstname() + " " + request.getLastname());
+        trainee.setUser(user);
+        trainee.setAddress(request.getAddress());
+        trainee.setDateOfBirth(request.getDateOfBirth());
+        log.info("Created " + getModelName() + "and parametrized");
         return trainee;
     }
 
-    public Trainee update (int id, Trainee trainee){
-        traineeDao.update(id, trainee);
-        return trainee;
-    }
-
-    public void delete (int id){
-        traineeDao.delete(id);
-    }
-
-    public Trainee select(int id){
-        return traineeDao.get(id);
+    protected String getModelName() {
+        return "Trainee";
     }
 }

@@ -1,0 +1,12 @@
+{"id": 1,
+  "trainee": {"id": 3,
+    "dateOfBirth": "2000-01-01",
+    "address": "Tashkent",
+    "user": {"id": 3, "firstName": "Sidor", "lastName": "Sidorov", "username": "Sidor.Sidorov", "password": "password03", "active": true}},
+  "trainer": {"id": 1,
+    "specialization": {"id": 1, "training_name": "BASIC"},
+    "user": {"id": 1, "firstName": "Petr", "lastName": "Petrov", "username": "Petr.Petrov", "password": "password01", "active": true}},
+  "trainingName": "BASIC 1",
+  "trainingType": {"id": 1, "training_name": "BASIC"},
+  "trainingDate": "2023-11-15",
+  "duration": 1.0}

@@ -1,0 +1,12 @@
+{"id": 2,
+  "trainee": {"id": 3,
+    "dateOfBirth": "2000-01-01",
+    "address": "Tashkent",
+    "user": {"id": 3, "firstName": "Sidor", "lastName": "Sidorov", "username": "Sidor.Sidorov", "password": "password03", "active": true}},
+  "trainer": {"id": 2,
+    "specialization": {"id": 2, "training_name": "CARDIO"},
+    "user": {"id": 2, "firstName": "Ivan", "lastName": "Ivanov", "username": "Ivan.Ivanov", "password": "password02", "active": true}},
+  "trainingName": "CARDIO 2",
+  "trainingType": {"id": 2, "training_name": "CARDIO"},
+  "trainingDate": "2023-11-15",
+  "duration": 1.5}
