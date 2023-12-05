@@ -44,7 +44,6 @@ public class SwaggerConfiguration {
 
     @Bean
     public SwaggerUiOAuthProperties swaggerUiOAuthProperties() {
-        SwaggerUiOAuthProperties properties = new SwaggerUiOAuthProperties();
-        return properties;
+        return new SwaggerUiOAuthProperties();
     }
 }

@@ -1,11 +1,10 @@
 package org.epam.config;
 
-import lombok.RequiredArgsConstructor;
-import org.springdoc.webmvc.ui.SwaggerConfig;
-import org.springdoc.core.properties.SwaggerUiOAuthProperties;
-import org.springdoc.core.properties.SwaggerUiConfigProperties;
 import org.springdoc.core.configuration.SpringDocConfiguration;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
+import org.springdoc.core.properties.SwaggerUiOAuthProperties;
 import org.springdoc.webmvc.core.configuration.SpringDocWebMvcConfiguration;
+import org.springdoc.webmvc.ui.SwaggerConfig;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
