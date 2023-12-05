@@ -39,8 +39,7 @@ public class UserDao {
         log.info("Updating user with id: " + id);
         Session session = factory.getCurrentSession();
         Optional<User> optionalUser = Optional.ofNullable(session.merge(user));
-        return optionalUser.orElseThrow(() -> new InvalidDataException("update(" + id + ", " + user.getUsername() + " and other fields)",
-                "No user with id: " + id));
+        return optionalUser.orElse(new User());
     }
 
     public User delete(int id) {

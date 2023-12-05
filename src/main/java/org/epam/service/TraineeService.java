@@ -10,6 +10,7 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.traineeDto.TraineeProfileResponse;
 import org.epam.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
+import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.exceptions.VerificationException;
 import org.epam.mapper.TraineeMapper;
@@ -58,7 +59,12 @@ public class TraineeService {
     }
     @Transactional
     public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
-        User user = userDao.getByUsername(request.getUsername());
+        User user;
+        try {
+            user = userDao.getByUsername(request.getUsername());
+        } catch (InvalidDataException e) {
+            return false;
+        }
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee == null)
             throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
@@ -73,7 +79,7 @@ public class TraineeService {
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
         if (user.isActive() != request.isActive()) userDao.update(user.getId(), user);
-        return user.isActive();
+        return true;
     }
 
     @Transactional
