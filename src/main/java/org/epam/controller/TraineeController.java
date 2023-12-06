@@ -47,8 +47,15 @@ public class TraineeController {
                             content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
             })
     public ResponseEntity<RegistrationResponse> register(@RequestBody TraineeRegistrationRequest request) {
-        RegistrationResponse response = traineeService.create(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        log.info("Registering trainee with name" + request.getFirstname() + " " + request.getLastname());
+        try {
+            RegistrationResponse response = traineeService.create(request);
+            log.info("Trainee registered successfully");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch(Exception e){
+            log.error("Error while registering trainee", e);
+            return new ResponseEntity<>(new RegistrationResponse(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PatchMapping("/password")
@@ -61,8 +68,15 @@ public class TraineeController {
                     @ApiResponse(responseCode = "400", description = "Invalid username or password")
             })
     public ResponseEntity<Boolean> changePassword(@RequestBody ChangeLoginRequest request) {
-        boolean result = traineeService.changePassword(request);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        log.info("request for change password of trainee: " + request.getUsername());
+        try {
+            boolean result = traineeService.changePassword(request);
+            log.info("Password of trainee: " + request.getUsername() + " changed successfully");
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (InvalidDataException e) {
+            log.error("Error changing password of trainee: " + request.getUsername() + " " + e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PatchMapping("/active")
@@ -78,6 +92,7 @@ public class TraineeController {
         log.info("request for change active status of trainee: " + request.getUsername());
         try {
             boolean result = traineeService.setActive(request);
+            log.info("Trainee: " + request.getUsername() + " active status changed successfully");
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidDataException e) {
             log.error("Error changing active status of trainee: " + request.getUsername() + " " + e.getMessage());
@@ -96,8 +111,15 @@ public class TraineeController {
                             content = @Content(schema = @Schema(implementation = TraineeProfileResponse.class)))
             })
     public ResponseEntity<TraineeProfileResponse> update(@RequestBody UpdateTraineeProfileRequest request) {
-        TraineeProfileResponse response = traineeService.update(request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        log.info("request for update trainee profile: " + request.getUsername());
+        try {
+            TraineeProfileResponse response = traineeService.update(request);
+            log.info("Trainee profile: " + request.getUsername() + " updated successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch(InvalidDataException e){
+            log.error("Error updating trainee profile: " + request.getUsername() + " " + e.getMessage());
+            return new ResponseEntity<>(new TraineeProfileResponse(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{username}")
@@ -110,8 +132,15 @@ public class TraineeController {
                             content = @Content(schema = @Schema(implementation = TraineeProfileResponse.class)))
             })
     public ResponseEntity<TraineeProfileResponse> selectByUsername(@PathVariable String username) {
-        TraineeProfileResponse response = traineeService.selectByUsername(username);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        log.info("request for select trainee profile: " + username);
+        try {
+            TraineeProfileResponse response = traineeService.selectByUsername(username);
+            log.info("Trainee profile: " + username + " retrieved successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (InvalidDataException e) {
+            log.error("Error retrieving trainee profile: " + username + " " + e.getMessage());
+            return new ResponseEntity<>(new TraineeProfileResponse(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{username}")
@@ -124,8 +153,15 @@ public class TraineeController {
                             content = @Content(schema = @Schema(implementation = Boolean.class)))
             })
     public ResponseEntity<Boolean> delete(@PathVariable String username) {
-        boolean result = traineeService.delete(username);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        log.info("request for delete trainee profile: " + username);
+        try {
+            boolean result = traineeService.delete(username);
+            log.info("Trainee profile: " + username + " deleted successfully");
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (InvalidDataException e) {
+            log.error("Error deleting trainee profile: " + username + " " + e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

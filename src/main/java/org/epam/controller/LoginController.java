@@ -25,7 +25,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping("/login")
-    @Operation(summary = "check username and password")
+    @Operation(summary = "checks username and password")
     public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
         try {
             return new ResponseEntity<>(loginService.login(request), HttpStatus.OK);

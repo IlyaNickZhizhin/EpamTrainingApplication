@@ -12,7 +12,6 @@ import org.epam.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ProhibitedActionException;
-import org.epam.exceptions.VerificationException;
 import org.epam.mapper.TraineeMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
@@ -37,7 +36,7 @@ public class TraineeService {
     }
 
     @Transactional
-    public TraineeProfileResponse update(UpdateTraineeProfileRequest request) throws VerificationException {
+    public TraineeProfileResponse update(UpdateTraineeProfileRequest request) {
         User user = userDao.getByUsername(request.getUsername());
         user.setUsername(request.getUsername());
         user.setFirstName(request.getFirstname());
@@ -51,14 +50,14 @@ public class TraineeService {
         return traineeMapper.traineeToProfileResponse(trainee);
     }
     @Transactional(readOnly = true)
-    public TraineeProfileResponse selectByUsername(String username) throws VerificationException {
+    public TraineeProfileResponse selectByUsername(String username) {
         User user = userDao.getByUsername(username);
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
         return traineeMapper.traineeToProfileResponse(trainee);
     }
     @Transactional
-    public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
+    public boolean changePassword(ChangeLoginRequest request) {
         User user;
         try {
             user = userDao.getByUsername(request.getUsername());
@@ -74,7 +73,7 @@ public class TraineeService {
     }
 
     @Transactional
-    public boolean setActive(ActivateDeactivateRequest request) throws VerificationException {
+    public boolean setActive(ActivateDeactivateRequest request) {
         User user = userDao.getByUsername(request.getUsername());
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");
@@ -83,7 +82,7 @@ public class TraineeService {
     }
 
     @Transactional
-    public boolean delete(String username) throws VerificationException {
+    public boolean delete(String username) {
         User user = userDao.getByUsername(username);
         Trainee trainee = gymDao.getModelByUser(user);
         if (trainee == null) throw new ProhibitedActionException("No one except Trainee could not use TraineeService");

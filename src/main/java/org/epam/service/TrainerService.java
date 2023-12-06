@@ -11,7 +11,6 @@ import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
 import org.epam.exceptions.ProhibitedActionException;
-import org.epam.exceptions.VerificationException;
 import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
@@ -40,7 +39,7 @@ public class TrainerService {
 
     }
     @Transactional
-    public TrainerProfileResponse update(UpdateTrainerProfileRequest request) throws VerificationException {
+    public TrainerProfileResponse update(UpdateTrainerProfileRequest request) {
         User user = userDao.getByUsername(request.getUsername());
         Trainer trainer = gymDao.getModelByUser(user);
         user.setUsername(request.getUsername());
@@ -56,7 +55,7 @@ public class TrainerService {
         return trainerMapper.trainerToProfileResponse(trainer);
     }
     @Transactional(readOnly = true)
-    public TrainerProfileResponse selectByUsername(String username) throws VerificationException {
+    public TrainerProfileResponse selectByUsername(String username) {
         User user = userDao.getByUsername(username);
         Trainer trainer = gymDao.getModelByUser(user);
         if (trainer == null)
@@ -65,7 +64,7 @@ public class TrainerService {
     }
 
     @Transactional
-    public boolean changePassword(ChangeLoginRequest request) throws VerificationException {
+    public boolean changePassword(ChangeLoginRequest request) {
         User user = userDao.getByUsername(request.getUsername());
         Trainer trainer = gymDao.getModelByUser(user);
         if (trainer == null)
@@ -75,7 +74,7 @@ public class TrainerService {
         return userDao.update(user.getId(), user).getPassword().equals(request.getNewPassword());
     }
     @Transactional
-    public boolean setActive(ActivateDeactivateRequest request) throws VerificationException {
+    public boolean setActive(ActivateDeactivateRequest request) {
         User user = userDao.getByUsername(request.getUsername());
         Trainer trainer = gymDao.getModelByUser(user);
         if (trainer == null)
