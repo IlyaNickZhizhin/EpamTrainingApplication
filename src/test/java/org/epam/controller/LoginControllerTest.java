@@ -27,7 +27,7 @@ public class LoginControllerTest {
     private LoginController loginController;
 
     @Test
-    public void testLogin() throws {
+    public void testLogin() {
         Reader reader = new Reader();
         reader.setStartPath("");
         reader.setEndPath("");
