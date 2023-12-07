@@ -25,5 +25,4 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         SwaggerUiOAuthProperties.class,
         JacksonAutoConfiguration.class
 })
-public class Config implements WebMvcConfigurer {
-}
+public class Config implements WebMvcConfigurer {}

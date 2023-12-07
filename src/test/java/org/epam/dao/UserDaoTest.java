@@ -85,7 +85,7 @@ public class UserDaoTest {
     @Test
     public void testGet() {
         when(session.get(User.class, user1.getId())).thenReturn(user1);
-        assertEquals(user1, userDao.get(user1.getId()));
+        assertEquals(user1, userDao.get(user1.getId()).orElse(null));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class UserDaoTest {
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", username)).thenReturn(query);
         when(query.getSingleResultOrNull()).thenReturn(user);
-        assertEquals(user1, userDao.getByUsername(username));
+        assertEquals(user1, userDao.getByUsername(username).orElse(null));
     }
 
 
@@ -113,7 +113,7 @@ public class UserDaoTest {
         when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", trainer2_Username)).thenReturn(query);
         when(query.getSingleResultOrNull()).thenReturn(null);
-        User newUser = userDao.setNewUser(trainer2_FirstName, trainer2_LastName);
+        User newUser = userDao.setNewUser(trainer2_FirstName, trainer2_LastName).orElse(null);
         assertEquals(user.getFirstName(), newUser.getFirstName());
         assertEquals(user.getLastName(), newUser.getLastName());
     }

@@ -107,7 +107,7 @@ public class TrainingDaoImplImplTest {
     @Test
     public void testGet() {
         when(session.get(Training.class, training1.getId())).thenReturn(training1);
-        assertEquals(training1, trainingDaoImpl.get(training1.getId()));
+        assertEquals(training1, trainingDaoImpl.get(training1.getId()).orElse(null));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class TrainingDaoImplImplTest {
         Query<Training> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.list()).thenReturn(trainings);
-        assertEquals(trainings, trainingDaoImpl.getAll());
+        assertEquals(trainings, trainingDaoImpl.getAll().orElse(null));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class TrainingDaoImplImplTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training2));
         assertEquals(List.of(trainer1),
-                trainingDaoImpl.getAllTrainersAvalibleForTrainee(trainee4, ts));
+                trainingDaoImpl.getAllTrainersAvalibleForTrainee(trainee4, ts).orElse(null));
     }
 
     @Test
@@ -140,7 +140,8 @@ public class TrainingDaoImplImplTest {
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training1));
-        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainer1));
+        assertEquals(List.of(training1),
+                trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainer1).orElse(null));
     }
 
     @Test
@@ -149,7 +150,8 @@ public class TrainingDaoImplImplTest {
         when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training1));
-        assertEquals(List.of(training1), trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainee3));
+        assertEquals(List.of(training1),
+                trainingDaoImpl.getAllByUsernameAndTrainingTypes(List.of(trainingType1), trainee3).orElse(null));
     }
 
 }

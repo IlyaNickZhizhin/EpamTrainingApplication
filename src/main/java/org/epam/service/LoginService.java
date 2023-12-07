@@ -15,6 +15,8 @@ import org.epam.model.gymModel.Trainer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -27,24 +29,20 @@ public class LoginService {
 
     @Transactional(readOnly = true)
     public Object login(LoginRequest request) throws VerificationException, InvalidDataException {
-        User user = userDao.getByUsername(request.getUsername());
-        if (user==null) throw new InvalidDataException(LoginService.class
-                .getSimpleName()+"login", "username" + request.getUsername() + "was incorrect");
+        User user = userDao.getByUsername(request.getUsername()).orElseThrow(() -> new InvalidDataException(LoginService.class
+                .getSimpleName()+"login", "username" + request.getUsername() + "was incorrect"));
         boolean check = passwordChecker.checkPassword(request.getUsername(), request.getPassword(), user);
         if (check) {
-            Trainee trainee;
-            Trainer trainer;
-            try{
-                trainee = traineeDao.getModelByUserId(user.getId());
+            Optional<Trainee> trainee = traineeDao.getModelByUserId(user.getId());
+            Optional<Trainer> trainer = trainerDao.getModelByUserId(user.getId());
+            if (trainee.isPresent()) {
                 log.info("User with username: " + request.getUsername() + " logged in as TRAINEE");
-                return trainee;
-            } catch (InvalidDataException e1) {}
-            try{
-                trainer = trainerDao.getModelByUserId(user.getId());
+                return trainee.get();
+            } else if (trainer.isPresent()) {
                 log.info("User with username: " + request.getUsername() + " logged in as TRAINER");
-                return trainer;
-            } catch (InvalidDataException e2) {
-               throw new InvalidDataException("getModelByUser(" +request.getUsername() + ")",
+                return trainer.get();
+            } else {
+                throw new InvalidDataException("getModelByUser(" +request.getUsername() + ")",
                         "No trainer or trainee with username: " + request.getUsername() + " found ");
             }
         } else {

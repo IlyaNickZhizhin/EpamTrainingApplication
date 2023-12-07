@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,7 +59,7 @@ public class TraineeDaoImplImplTest {
         Trainee updatedTrainee = reader.readEntity("trainees/trainee3", Trainee.class);
         updatedTrainee.setAddress("new address");
         when(session.merge(updatedTrainee)).thenReturn(updatedTrainee);
-        Trainee nt = traineeDaoImpl.update(1, updatedTrainee);
+        Trainee nt = traineeDaoImpl.update(1, updatedTrainee).orElse(new Trainee());
         assertEquals(nt.getAddress(), updatedTrainee.getAddress());
         verify(session).merge(updatedTrainee);
     }
@@ -83,21 +84,21 @@ public class TraineeDaoImplImplTest {
     public void testGet() {
         Trainee trainee = trainee3;
         when(session.get(Trainee.class, trainee3.getId())).thenReturn(trainee);
-        assertEquals(trainee, traineeDaoImpl.get(trainee3.getId()));
+        assertEquals(trainee, traineeDaoImpl.get(trainee3.getId()).orElse(null));
     }
 
     @Test
     public void testGetByUserId() {
         int userId = user3.getId();
         User user = user3;
-        when(userDao.get(userId)).thenReturn(user);
+        when(userDao.get(userId)).thenReturn(Optional.of(user));
         Trainee trainee = trainee3;
         Query<Trainee> query = mock(Query.class);
         when(factory.getCurrentSession()).thenReturn(session);
         when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getSingleResultOrNull()).thenReturn(trainee);
-        assertEquals(trainee, traineeDaoImpl.getModelByUserId(userId));
+        assertEquals(trainee, traineeDaoImpl.getModelByUserId(userId).orElse(null));
     }
 
     @Test
@@ -108,7 +109,7 @@ public class TraineeDaoImplImplTest {
         Query<Trainee> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.list()).thenReturn(models);
-        assertEquals(models, traineeDaoImpl.getAll());
+        assertEquals(models, traineeDaoImpl.getAll().orElse(null));
     }
 
     @Test

@@ -22,6 +22,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,8 +71,8 @@ class TraineeServiceTest {
                 = reader.readDto("users/user3", User.class, traineeMapper::userToRegistrationResponce);
         Trainee trainee = trainee3;
         trainee.setId(0);
-        when(mockUserDao.setNewUser(user3.getFirstName(),user3.getLastName())).thenReturn(user3);
-        when(mockTraineeDaoImpl.create(trainee)).thenReturn(trainee3);
+        when(mockUserDao.setNewUser(user3.getFirstName(),user3.getLastName())).thenReturn(Optional.ofNullable(user3));
+        when(mockTraineeDaoImpl.create(trainee)).thenReturn(Optional.ofNullable(trainee3));
         assertEquals(response, traineeService.create(request));
     }
 
@@ -86,17 +88,17 @@ class TraineeServiceTest {
         TraineeProfileResponse response
                 = traineeMapper.traineeToProfileResponse(trainee3);
         response.setFirstname("user5");
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user5);
-        when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(user);
-        when(mockTraineeDaoImpl.getModelByUser(user)).thenReturn(trainee);
-        when(mockTraineeDaoImpl.update(3, trainee)).thenReturn(trainee);
+        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user3));
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
+        when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(user));
+        when(mockTraineeDaoImpl.update(3, trainee)).thenReturn(Optional.of(trainee));
         assertEquals(response, traineeService.update(request));
     }
     @Test
     void selectByUsername() {
         TraineeProfileResponse response = traineeMapper.traineeToProfileResponse(trainee3);
-        when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user3);
-        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(trainee3);
+        when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(Optional.ofNullable(user3));
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
         assertEquals(response, traineeService.selectByUsername(user3.getUsername()));
     }
     @Test
@@ -106,9 +108,9 @@ class TraineeServiceTest {
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user5", User.class);
         userNew.setPassword("newPassword");
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user5);
-        when(mockTraineeDaoImpl.getModelByUser(user5)).thenReturn(trainee5);
-        when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(userNew);
+        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user5));
+        when(mockTraineeDaoImpl.getModelByUser(user5)).thenReturn(Optional.ofNullable(trainee5));
+        when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(userNew));
         assertTrue(traineeService.changePassword(request));
     }
 
@@ -118,17 +120,17 @@ class TraineeServiceTest {
                 reader.readDto("trainees/trainee4", Trainee.class, traineeMapper::traineeToActivateDeactivateRequest);
         request.setActive(false);
         user4.setActive(false);
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user4);
-        when(mockTraineeDaoImpl.getModelByUser(user4)).thenReturn(trainee4);
+        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user4));
+        when(mockTraineeDaoImpl.getModelByUser(user4)).thenReturn(Optional.ofNullable(trainee4));
         assertTrue(traineeService.setActive(request));
     }
 
     @Test
     void delete() {
-        when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(user3);
-        when(mockUserDao.delete(user3.getId())).thenReturn(user3);
-        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(trainee3);
-        when(mockTraineeDaoImpl.delete(trainee3.getId())).thenReturn(trainee3);
+        when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(Optional.ofNullable(user3));
+        when(mockUserDao.delete(user3.getId())).thenReturn(Optional.ofNullable(user3));
+        when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
+        when(mockTraineeDaoImpl.delete(trainee3.getId())).thenReturn(Optional.ofNullable(trainee3));
         assertTrue(traineeService.delete(user3.getUsername()));
         verify(mockUserDao).delete(user3.getId());
     }

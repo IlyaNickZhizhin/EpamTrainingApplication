@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +53,6 @@ public class TrainerDaoImplImplTest {
     @Test
     public void testUpdate() {
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
-        TrainingType trainingType1 = reader.readEntity("trainingTypes/trainingType1", TrainingType.class);
         Trainer trainer = trainer1;
         Trainer updatedTrainer = new Trainer();
         updatedTrainer.setId(trainer1.getId());
@@ -86,20 +86,20 @@ public class TrainerDaoImplImplTest {
         int id = 1;
         Trainer trainer = new Trainer();
         when(session.get(Trainer.class, id)).thenReturn(trainer);
-        assertEquals(trainer, trainerDaoImpl.get(id));
+        assertEquals(trainer, trainerDaoImpl.get(id).orElse(null));
     }
 
     @Test
     public void testGetByUserId() {
         User user = reader.readEntity("users/user1", User.class);
         int userId = user.getId();
-        when(userDao.get(userId)).thenReturn(user);
+        when(userDao.get(userId)).thenReturn(Optional.of(user));
         Query<Trainer> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         Trainer trainer = reader.readEntity("trainers/trainer1", Trainer.class);
         when(query.getSingleResultOrNull()).thenReturn(trainer);
-        assertEquals(trainer, trainerDaoImpl.getModelByUserId(userId));
+        assertEquals(trainer, trainerDaoImpl.getModelByUserId(userId).orElse(null));
     }
 
     @Test
@@ -112,6 +112,6 @@ public class TrainerDaoImplImplTest {
         Query<Trainer> query = mock(Query.class);
         when(session.createQuery(anyString(), eq(Trainer.class))).thenReturn(query);
         when(query.list()).thenReturn(trainers);
-        assertEquals(trainers, trainerDaoImpl.getAll());
+        assertEquals(trainers, trainerDaoImpl.getAll().orElse(null));
     }
 }

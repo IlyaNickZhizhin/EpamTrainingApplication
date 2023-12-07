@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
-import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
 import org.hibernate.Session;
@@ -24,10 +23,10 @@ public class UserDao {
     UsernameGenerator usernameGenerator = new UsernameGenerator(this);
 
 
-    public User create(User user) {
+    public Optional<User> create(User user) {
         log.info("Creating new user with first name: " + user.getFirstName() + " and last name: " + user.getLastName());
         save(user);
-        return user;
+        return Optional.ofNullable(user);
     }
 
     public void save(User user) {
@@ -35,38 +34,35 @@ public class UserDao {
         factory.getCurrentSession().persist(user);
     }
 
-    public User update(int id, User user) {
+    public Optional<User> update(int id, User user) {
         log.info("Updating user with id: " + id);
         Session session = factory.getCurrentSession();
-        Optional<User> optionalUser = Optional.ofNullable(session.merge(user));
-        return optionalUser.orElse(new User());
+        return Optional.ofNullable(session.merge(user));
     }
 
-    public User delete(int id) {
+    public Optional<User> delete(int id) {
         log.info("Deleting user with id: " + id);
         Session session = factory.getCurrentSession();
         User user = session.get(User.class, id);
         session.remove(user);
-        return user;
+        return Optional.ofNullable(user);
     }
 
-    public User get(int id) {
+    public Optional<User> get(int id) {
         log.info("Getting user with id: " + id);
         Session session = factory.getCurrentSession();
-        Optional<User> userOptional = Optional.ofNullable(session.get(User.class, id));
-        return userOptional.orElseThrow(() -> new InvalidDataException("get(" + id + ")", "No user with id: " + id));
+        return Optional.ofNullable(session.get(User.class, id));
     }
 
-    public User getByUsername(String username) throws VerificationException{
+    public Optional<User> getByUsername(String username) throws VerificationException{
         Session session = factory.getCurrentSession();
         log.info("Getting user with username: " + username);
-        Optional<User> optionalUser = Optional.ofNullable(session.createQuery("from User where username = :username", User.class)
+        return Optional.ofNullable(session.createQuery("from User where username = :username", User.class)
                 .setParameter("username", username)
                 .getSingleResultOrNull());
-        return optionalUser.orElseThrow(() -> new InvalidDataException("getByUsername(" + username + ")", "No user with username: " + username));
     }
 
-    public User setNewUser(String firstName, String lastName) {
+    public Optional<User> setNewUser(String firstName, String lastName) {
         log.info("Setting new user with first name: " + firstName + " and last name: " + lastName);
         User user = new User();
         user.setFirstName(firstName);
@@ -85,10 +81,9 @@ public class UserDao {
                 .getSingleResultOrNull();
     }
 
-    public List<User> getAll(){
+    public Optional<List<User>> getAll(){
         log.info("Getting all users");
-        Optional<List<User>> optionalUsers = Optional.ofNullable(factory.getCurrentSession()
+        return Optional.ofNullable(factory.getCurrentSession()
                 .createQuery("from User", User.class).list());
-        return optionalUsers.orElseThrow(() -> new InvalidDataException("getAll()", "No users in database"));
     }
 }

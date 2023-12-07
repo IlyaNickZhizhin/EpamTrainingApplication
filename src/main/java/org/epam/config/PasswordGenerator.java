@@ -13,7 +13,7 @@ public class PasswordGenerator {
         for (int i = 0; i < 10; i++) {
             pass.append((char) (Math.random() * 26 + 97));
         }
-        log.info("Default password for user created as " + pass);
+        log.info("Default password for user created as *********");
         return pass.toString();
     }
 

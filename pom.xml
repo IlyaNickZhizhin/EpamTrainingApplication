@@ -71,16 +71,10 @@
       <version>${springdoc}</version>
     </dependency>
 
-<!--    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-      <version>${springdoc}</version>
-    </dependency>-->
-
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
-      <version>${jakarte.servlet-api}</version>
+      <version>${jakarta.servlet-api}</version>
     </dependency>
 
     <dependency>

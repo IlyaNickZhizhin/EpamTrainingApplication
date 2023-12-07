@@ -24,7 +24,7 @@ public class UsernameGenerator {
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created as " + username. toString() );
+        log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created with username: " + username. toString() );
         return username.toString();
     }
 
