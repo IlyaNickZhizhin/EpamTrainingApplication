@@ -3,7 +3,6 @@ package org.epam.dao;
 import org.epam.Reader;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
-import org.epam.model.gymModel.TrainingType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
