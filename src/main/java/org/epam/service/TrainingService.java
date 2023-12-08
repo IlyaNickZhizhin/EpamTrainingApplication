@@ -13,6 +13,7 @@ import org.epam.dto.trainingDto.GetTrainersResponse;
 import org.epam.dto.trainingDto.GetTrainingTypesResponse;
 import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
+import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.mapper.TrainingMapper;
 import org.epam.model.User;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -49,11 +51,9 @@ public class TrainingService {
 
     @Transactional
     public AddTrainingRequest create(AddTrainingRequest request) {
-        User userEE = userDao.getByUsername(request.getTraineeUsername());
-        User userER = userDao.getByUsername(request.getTrainerUsername());
-        Trainee trainee = traineeDao.getModelByUser(userEE);
-        Trainer trainer = trainerDao.getModelByUser(userER);
-        List<Object> eeEr = checkTraineeTrainerConnection(trainee, trainer);
+        Trainee EE = getTrainee(request.getTraineeUsername());
+        Trainer ER = getTrainer(request.getTrainerUsername());
+        List<Object> eeEr = checkTraineeTrainerConnection(EE, ER);
         Training training = new Training();
         training.setTrainee((Trainee) eeEr.get(0));
         training.setTrainer((Trainer) eeEr.get(1));
@@ -61,15 +61,17 @@ public class TrainingService {
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
-        return trainingMapper.trainingToAddTrainingRequest(trainingDao.create(training));
+        Training createdTraining = trainingDao.create(training).orElseThrow(() -> {
+            log.error("Troubles with creating training " + request.getTrainingName());
+            return new InvalidDataException("trainingDao.create(" + training + ")",
+                    "Troubles with creating training " + request.getTrainingName());
+        });
+        return trainingMapper.trainingToAddTrainingRequest(createdTraining);
     }
 
     @Transactional
     public GetTrainersResponse updateTrainersList(UpdateTraineeTrainerListRequest request) {
-        User user = userDao.getByUsername(request.getTraineeUsername());
-        Trainee trainee = traineeDao.getModelByUser(user);
-        if (trainee == null)
-            throw new ProhibitedActionException("Only Trainee could update trainers list");
+        Trainee trainee = getTrainee(request.getTraineeUsername());
         List<String> exist = trainee.getTrainers().stream()
                 .map(trainer -> trainer.getUser().getUsername())
                 .collect(Collectors.toList());
@@ -77,30 +79,37 @@ public class TrainingService {
         newTrainers.removeAll(exist);
         List<Trainer> trainers = newTrainers.stream()
                 .map(userDao::getByUsername)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(trainerDao::getModelByUser)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
         trainee.getTrainers().addAll(trainers);
-        return trainingMapper.traineeToTrainersResponse(traineeDao.update(trainee.getId(), trainee));
+        Trainee updatedTrainee = traineeDao.update(trainee.getId(), trainee).orElseThrow(() -> {
+            log.error("Troubles with updating trainee: " + request.getTraineeUsername());
+            return new InvalidDataException("traineeDao.update(" + trainee.getId() + ", " + trainee + ")",
+                    "Troubles with updating trainee: " + request.getTraineeUsername());
+        });
+        return trainingMapper.traineeToTrainersResponse(updatedTrainee);
     }
 
     @Transactional(readOnly = true)
     public GetTrainersResponse getTrainersList(String traineeUsername) {
-        User user = userDao.getByUsername(traineeUsername);
-        Trainee trainee = traineeDao.getModelByUser(user);
-        if (trainee == null)
-            throw new ProhibitedActionException("Only Trainee could get trainers list");
+        Trainee trainee = getTrainee(traineeUsername);
         return trainingMapper.traineeToTrainersResponse(trainee);
     }
 
     @Transactional(readOnly = true)
     public GetTrainersResponse getNotAssignedOnTraineeActiveTrainers(String traineeUsername) {
-        User user = userDao.getByUsername(traineeUsername);
-        Trainee trainee = traineeDao.getModelByUser(user);
-        if (trainee == null)
-            throw new ProhibitedActionException("Only Trainee could get trainers list");
+        Trainee trainee = getTrainee(traineeUsername);
         List<Trainer> existingTrainers = trainee.getTrainers();
         List<Trainer> availableTrainers = trainingDao.getAllTrainersAvalibleForTrainee(
-                trainee, existingTrainers);
+                trainee, existingTrainers).orElseThrow(() -> {
+            log.error("Troubles with getting available trainers for trainee: " + traineeUsername);
+            return new InvalidDataException("trainingDao.getAllTrainersAvalibleForTrainee(" + trainee + ", " + existingTrainers + ")",
+                    "Troubles with getting available trainers for trainee " + traineeUsername);
+        });
         GetTrainersResponse response = new GetTrainersResponse();
         response.setTrainers(trainingMapper.trainersToShortTrainersDto(availableTrainers));
         return response;
@@ -108,10 +117,7 @@ public class TrainingService {
 
     @Transactional(readOnly = true)
     public GetTrainingsResponse getTraineeTrainingsList(GetTraineeTrainingsListRequest request) {
-        User user = userDao.getByUsername(request.getUsername());
-        Trainee trainee = traineeDao.getModelByUser(user);
-        if (trainee == null)
-            throw new ProhibitedActionException("Only Trainee could get trainers list");
+        Trainee trainee = getTrainee(request.getUsername());
         List<Training> trainings = trainingFilterByDate(trainee.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
         if (request.getTrainingType() != null) {
             trainings = trainings.stream()
@@ -130,10 +136,7 @@ public class TrainingService {
 
     @Transactional(readOnly = true)
     public GetTrainingsResponse getTrainerTrainingsList(GetTrainerTrainingsListRequest request) {
-        User user = userDao.getByUsername(request.getUsername());
-        Trainer trainer = trainerDao.getModelByUser(user);
-        if (trainer == null)
-            throw new ProhibitedActionException("only Trainer could get training list");
+        Trainer trainer = getTrainer(request.getUsername());
         List<Training> trainings = trainingFilterByDate(trainer.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
         if (request.getTraineeName() != null) {
             trainings = trainings.stream()
@@ -169,6 +172,31 @@ public class TrainingService {
         userDao.update(trainee.getUser().getId(), trainee.getUser());
         userDao.update(trainer.getUser().getId(), trainer.getUser());
         return List.of(trainee, trainer);
+    }
+
+    private Trainee getTrainee(String username) {
+        User user = userDao.getByUsername(username).orElseThrow(() -> {
+            log.error("No user with username: " + username);
+            return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
+        });
+        return traineeDao.getModelByUser(user).orElseThrow(() -> {
+            log.error("No trainee with username " + username);
+            throw new ProhibitedActionException("No one except trainee could use this method in trainingService, " +
+                    "but there are no trainee with username: " + username);
+        });
+    }
+
+    private Trainer getTrainer(String username) {
+        User user = userDao.getByUsername(username).orElseThrow(() -> {
+            log.error("No user with username " + username);
+            return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
+        });
+        Trainer trainer = trainerDao.getModelByUser(user).orElseThrow(() -> {
+            log.error("No trainee with username: " + username);
+            return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
+                    "but there are no trainer with username: " + username);
+        });
+        return trainer;
     }
 
 }

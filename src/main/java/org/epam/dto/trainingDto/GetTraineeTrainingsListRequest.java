@@ -16,5 +16,4 @@ public class GetTraineeTrainingsListRequest {
     private LocalDate periodTo;
     private String trainerName;
     private TrainingType.TrainingName trainingType;
-
 }
