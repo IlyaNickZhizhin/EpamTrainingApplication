@@ -2,6 +2,9 @@ package org.epam.testBeans;
 
 import jakarta.persistence.EntityManager;
 import org.epam.model.gymModel.TrainingType;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,24 +20,26 @@ import java.util.List;
 public class TestInitDB {
 
     @Autowired
-    EntityManager entityManager;
+    SessionFactory sessionFactory;
 
     @Value("${spring.liquibase.enabled}")
     private boolean enabled;
+
 
     @Bean
     @Profile("test")
     void initDatabase() {
         if (!enabled) {
             List<TrainingType.TrainingName> list =  TrainingType.TrainingName.getTrainingNames();
-            try {
-                entityManager.getTransaction().begin();
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = null;
+                transaction = session.beginTransaction();
                 for (TrainingType.TrainingName trainingName : list) {
                     TrainingType trainingType = new TrainingType();
                     trainingType.setTrainingName(trainingName);
-                    entityManager.persist(trainingType);
+                    session.persist(trainingType);
                 }
-                entityManager.getTransaction().commit();
+                transaction.commit();
             } catch (Exception e) {
                 System.out.println("Error while loading data");
                 e.printStackTrace();
