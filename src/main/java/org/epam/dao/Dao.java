@@ -1,5 +1,7 @@
 package org.epam.dao;
 
+import java.util.Optional;
+
 /**
  * This interface is used to implement the DAO pattern.
  * @param <M>
@@ -10,9 +12,9 @@ package org.epam.dao;
  */
 public interface Dao<M> {
 
-    M create(M m);
+    Optional<M> create(M m);
     void save(M m);
-    M update(int id, M m);
-    M delete(int id);
-    M get(int id);
+    Optional<M> update(int id, M m);
+    Optional<M> delete(int id);
+    Optional<M> get(int id);
 }

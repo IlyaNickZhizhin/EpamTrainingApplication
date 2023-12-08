@@ -23,8 +23,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -71,8 +72,8 @@ class TrainerServiceTest {
                 = reader.readDto("users/user1", User.class, traineeMapper::userToRegistrationResponce);
         Trainer trainer = trainer1;
         trainer.setId(0);
-        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName())).thenReturn(user1);
-        when(mockTrainerDaoImpl.create(trainer)).thenReturn(trainer1);
+        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName())).thenReturn(Optional.ofNullable(user1));
+        when(mockTrainerDaoImpl.create(trainer)).thenReturn(Optional.ofNullable(trainer1));
         assertEquals(response, trainerService.create(request));
     }
 
@@ -88,17 +89,17 @@ class TrainerServiceTest {
         TrainerProfileResponse response
                 = trainerMapper.trainerToProfileResponse(trainer1);
         response.setFirstName("user1");
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user1);
-        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(trainer1);
-        when(mockUserDao.update(1, user)).thenReturn(user);
-        when(mockTrainerDaoImpl.update(1, trainer)).thenReturn(trainer);
+        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user1));
+        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
+        when(mockUserDao.update(1, user)).thenReturn(Optional.of(user));
+        when(mockTrainerDaoImpl.update(1, trainer)).thenReturn(Optional.of(trainer));
         assertEquals(response, trainerService.update(request));
     }
     @Test
     void selectByUsername() {
         TrainerProfileResponse response = trainerMapper.trainerToProfileResponse(trainer1);
-        when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(user1);
-        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(trainer1);
+        when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(Optional.ofNullable(user1));
+        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
         assertEquals(response, trainerService.selectByUsername(user1.getUsername()));
     }
     @Test
@@ -108,9 +109,9 @@ class TrainerServiceTest {
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user2", User.class);
         userNew.setPassword("newPassword");
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user2);
-        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(trainer2);
-        when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(userNew);
+        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
+        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
+        when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(userNew));
         assertTrue(trainerService.changePassword(request));
     }
     @Test
@@ -119,8 +120,8 @@ class TrainerServiceTest {
                 reader.readDto("trainers/trainer2", Trainer.class, trainerMapper::trainerToActivateDeactivateRequest);
         request.setActive(false);
         user2.setActive(false);
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(user2);
-        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(trainer2);
-        assertFalse(trainerService.setActive(request));
+        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
+        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
+        assertTrue(trainerService.setActive(request));
     }
 }

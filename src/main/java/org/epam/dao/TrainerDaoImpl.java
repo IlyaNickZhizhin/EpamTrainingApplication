@@ -18,17 +18,15 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
     }
 
     @Override
-    public Trainer update(int id, Trainer updatedTrainer) {
+    public Optional<Trainer> update(int id, Trainer updatedTrainer) {
         log.info("Updating trainer with id: " + id);
-        Trainer trainer = get(id);
-        if (trainer != null) {
+        Optional<Trainer> optTrainer = get(id);
+        if (optTrainer.isPresent()) {
+            Trainer trainer = optTrainer.get();
             trainer.setUser(updatedTrainer.getUser());
             trainer.setSpecialization(updatedTrainer.getSpecialization());
             try {
-                Optional<Trainer> optionalTrainer = Optional.ofNullable(sessionFactory.getCurrentSession().merge(trainer));
-                return optionalTrainer.orElseThrow(() -> new InvalidDataException("update(" + id + ", "
-                        + updatedTrainer.getUser().getUsername() + " and other fields)",
-                        "Check trainer with id: " + id));
+                return Optional.ofNullable(sessionFactory.getCurrentSession().merge(trainer));
             } catch (Exception e) {
                 log.error("Error updating trainer with id: " + id, e);
                 throw e;
@@ -40,10 +38,10 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
     }
 
     @Override
-    public Trainer getModelByUserId(int userId) {
+    public Optional<Trainer>  getModelByUserId(int userId) {
         log.info("Getting Trainer with user №" + userId);
-        User user = userDao.get(userId);
-        return getModelByUser(user);
+        Optional<User> optionalUser = userDao.get(userId);
+        return optionalUser.isPresent() ? getModelByUser(optionalUser.get()) : Optional.empty();
     }
 
     @Override

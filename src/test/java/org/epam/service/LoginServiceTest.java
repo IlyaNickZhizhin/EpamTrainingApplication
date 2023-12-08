@@ -6,7 +6,6 @@ import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.UserDao;
 import org.epam.dto.LoginRequest;
-import org.epam.exceptions.InvalidDataException;
 import org.epam.mapper.TraineeMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
@@ -18,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -49,9 +50,9 @@ class LoginServiceTest {
     @Test
     void testLogin() {
         LoginRequest request = Mappers.getMapper(TraineeMapper.class).userToLoginRequest(user1);
-        when(userDao.getByUsername(request.getUsername())).thenReturn(user1);
-        when(traineeDao.getModelByUserId(user1.getId())).thenThrow(InvalidDataException.class);
-        when(trainerDao.getModelByUserId(user1.getId())).thenReturn(trainer1);
+        when(userDao.getByUsername(request.getUsername())).thenReturn(Optional.of(user1));
+        when(traineeDao.getModelByUserId(user1.getId())).thenReturn(Optional.empty());
+        when(trainerDao.getModelByUserId(user1.getId())).thenReturn(Optional.of(trainer1));
         assertTrue(loginService.login(request) instanceof Trainer);
     }
 }
