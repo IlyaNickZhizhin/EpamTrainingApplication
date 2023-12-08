@@ -1,10 +1,9 @@
 package org.epam.dao;
 
+import jakarta.persistence.EntityManager;
 import org.epam.Reader;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,9 +29,7 @@ import static org.mockito.Mockito.when;
 public class TraineeDaoImplImplTest {
 
     @Mock
-    private SessionFactory factory = mock(SessionFactory.class);
-    @Mock
-    private Session session = mock(Session.class);
+    private EntityManager entityManager = mock(EntityManager.class);
     @Mock
     private UserDao userDao = mock(UserDao.class);
     @InjectMocks
@@ -46,7 +43,6 @@ public class TraineeDaoImplImplTest {
 
     @BeforeEach
     public void setup() {
-        when(factory.getCurrentSession()).thenReturn(session);
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         user3 = reader.readEntity("users/user3", User.class);
@@ -58,32 +54,32 @@ public class TraineeDaoImplImplTest {
     public void testUpdate() {
         Trainee updatedTrainee = reader.readEntity("trainees/trainee3", Trainee.class);
         updatedTrainee.setAddress("new address");
-        when(session.merge(updatedTrainee)).thenReturn(updatedTrainee);
+        when(entityManager.merge(updatedTrainee)).thenReturn(updatedTrainee);
         Trainee nt = traineeDaoImpl.update(1, updatedTrainee).orElse(new Trainee());
         assertEquals(nt.getAddress(), updatedTrainee.getAddress());
-        verify(session).merge(updatedTrainee);
+        verify(entityManager).merge(updatedTrainee);
     }
 
     @Test
     public void testCreate() {
         Trainee trainee = new Trainee();
-        doNothing().when(session).persist(trainee);
+        doNothing().when(entityManager).persist(trainee);
         traineeDaoImpl.create(trainee);
-        verify(session).persist(trainee);
+        verify(entityManager).persist(trainee);
     }
 
     @Test
     public void testSave() {
         Trainee trainee = new Trainee();
-        doNothing().when(session).persist(trainee);
+        doNothing().when(entityManager).persist(trainee);
         traineeDaoImpl.save(trainee);
-        verify(session).persist(trainee);
+        verify(entityManager).persist(trainee);
     }
 
     @Test
     public void testGet() {
         Trainee trainee = trainee3;
-        when(session.get(Trainee.class, trainee3.getId())).thenReturn(trainee);
+        when(entityManager.find(Trainee.class, trainee3.getId())).thenReturn(trainee);
         assertEquals(trainee, traineeDaoImpl.get(trainee3.getId()).orElse(null));
     }
 
@@ -94,10 +90,9 @@ public class TraineeDaoImplImplTest {
         when(userDao.get(userId)).thenReturn(Optional.of(user));
         Trainee trainee = trainee3;
         Query<Trainee> query = mock(Query.class);
-        when(factory.getCurrentSession()).thenReturn(session);
-        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
+        when(entityManager.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
-        when(query.getSingleResultOrNull()).thenReturn(trainee);
+        when(query.getSingleResult()).thenReturn(trainee);
         assertEquals(trainee, traineeDaoImpl.getModelByUserId(userId).orElse(null));
     }
 
@@ -107,8 +102,8 @@ public class TraineeDaoImplImplTest {
         models.add(trainee3);
         models.add(trainee4);
         Query<Trainee> query = mock(Query.class);
-        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
-        when(query.list()).thenReturn(models);
+        when(entityManager.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
+        when(query.getResultList()).thenReturn(models);
         assertEquals(models, traineeDaoImpl.getAll().orElse(null));
     }
 
@@ -116,10 +111,10 @@ public class TraineeDaoImplImplTest {
     public void testDelete() {
         int id = trainee3.getId();
         Trainee trainee = trainee3;
-        when(session.get(Trainee.class, id)).thenReturn(trainee);
-        doNothing().when(session).remove(trainee);
+        when(entityManager.find(Trainee.class, id)).thenReturn(trainee);
+        doNothing().when(entityManager).remove(trainee);
         traineeDaoImpl.delete(id);
-        verify(session).remove(trainee);
+        verify(entityManager).remove(trainee);
     }
 
 

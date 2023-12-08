@@ -1,7 +1,7 @@
 package org.epam.dto.trainerDto;
 
-import com.sun.istack.NotNull;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.epam.model.gymModel.TrainingType;

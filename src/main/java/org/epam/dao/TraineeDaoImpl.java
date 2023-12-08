@@ -1,9 +1,9 @@
 package org.epam.dao;
 
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,15 +12,15 @@ import java.util.Optional;
 @Slf4j
 public class TraineeDaoImpl extends GymAbstractDao<Trainee> {
 
-    public TraineeDaoImpl(SessionFactory sessionFactory, UserDao userDao) {
-        super(sessionFactory, userDao);
+    public TraineeDaoImpl(EntityManager entityManager, UserDao userDao) {
+        super(entityManager, userDao);
     }
 
     @Override
     public Optional<Trainee> update(int id, Trainee updatedTrainee) {
         log.info("Updating trainee with id: " + id);
         try {
-            return Optional.ofNullable(sessionFactory.getCurrentSession().merge(updatedTrainee));
+            return Optional.ofNullable(entityManager.merge(updatedTrainee));
         } catch (Exception e) {
             log.error("Error updating trainee with id: " + id, e);
             throw e;

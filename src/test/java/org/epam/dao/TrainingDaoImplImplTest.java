@@ -1,16 +1,14 @@
 package org.epam.dao;
 
+import jakarta.persistence.EntityManager;
 import org.epam.Reader;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,11 +31,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainingDaoImplImplTest {
-
     @Mock
-    private SessionFactory sessionFactory = mock(SessionFactory.class);
-    @Mock
-    private Session session = mock(Session.class);
+    private EntityManager entityManager = mock(EntityManager.class);
     @InjectMocks
     private TrainingDaoImpl trainingDaoImpl;
 
@@ -72,41 +67,35 @@ public class TrainingDaoImplImplTest {
         trainer1_Username = user1.getUsername();
     }
 
-
-    @BeforeEach
-    public void setup() {
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-    }
-
     @Test
     public void testUpdate() {
         Training training = training1;
         Training updatedTraining = new Training();
         updatedTraining.setId(training.getId());
         updatedTraining.setTrainingDate(LocalDate.now());
-        when(session.get(Training.class, 1)).thenReturn(training);
+        when(entityManager.find(Training.class, 1)).thenReturn(training);
         trainingDaoImpl.update(1, updatedTraining);
         assertEquals(training.getTrainingDate(), updatedTraining.getTrainingDate());
-        verify(session).merge(training);
+        verify(entityManager).merge(training);
     }
 
     @Test
     public void testCreate() {
-        doNothing().when(session).persist(training1);
+        doNothing().when(entityManager).persist(training1);
         trainingDaoImpl.create(training1);
-        verify(session).persist(training1);
+        verify(entityManager).persist(training1);
     }
 
     @Test
     public void testSave() {
-        doNothing().when(session).persist(training1);
+        doNothing().when(entityManager).persist(training1);
         trainingDaoImpl.save(training1);
-        verify(session).persist(training1);
+        verify(entityManager).persist(training1);
     }
 
     @Test
     public void testGet() {
-        when(session.get(Training.class, training1.getId())).thenReturn(training1);
+        when(entityManager.find(Training.class, training1.getId())).thenReturn(training1);
         assertEquals(training1, trainingDaoImpl.get(training1.getId()).orElse(null));
     }
 
@@ -116,8 +105,8 @@ public class TrainingDaoImplImplTest {
         trainings.add(new Training());
         trainings.add(new Training());
         Query<Training> query = mock(Query.class);
-        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
-        when(query.list()).thenReturn(trainings);
+        when(entityManager.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(query.getResultList()).thenReturn(trainings);
         assertEquals(trainings, trainingDaoImpl.getAll().orElse(null));
     }
 
@@ -127,7 +116,7 @@ public class TrainingDaoImplImplTest {
         List<Trainer> ts =  new ArrayList<>();
         ts.add(trainer2);
         ts.add(trainer1);
-        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(entityManager.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training2));
         assertEquals(List.of(trainer1),
@@ -137,7 +126,7 @@ public class TrainingDaoImplImplTest {
     @Test
     public void testGetAllByTRAINERUsernameAndTrainingTypes() {
         Query<Training> query = mock(Query.class);
-        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(entityManager.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training1));
         assertEquals(List.of(training1),
@@ -147,7 +136,7 @@ public class TrainingDaoImplImplTest {
     @Test
     public void testGetAllByTRAINEEUsernameAndTrainingTypes() {
         Query<Training> query = mock(Query.class);
-        when(session.createQuery(anyString(), eq(Training.class))).thenReturn(query);
+        when(entityManager.createQuery(anyString(), eq(Training.class))).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultStream()).thenReturn(Stream.of(training1));
         assertEquals(List.of(training1),

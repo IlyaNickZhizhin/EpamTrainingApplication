@@ -1,13 +1,13 @@
 package org.epam.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 public class UserDao {
 
-    private final SessionFactory factory;
+    private final EntityManager entityManager;
     private final PasswordGenerator passwordGenerator;
     UsernameGenerator usernameGenerator = new UsernameGenerator(this);
 
@@ -31,35 +31,36 @@ public class UserDao {
 
     public void save(User user) {
         log.info("Saving user with first name: " + user.getFirstName() + " and last name: " + user.getLastName());
-        factory.getCurrentSession().persist(user);
+        entityManager.persist(user);
     }
 
     public Optional<User> update(int id, User user) {
         log.info("Updating user with id: " + id);
-        Session session = factory.getCurrentSession();
-        return Optional.ofNullable(session.merge(user));
+        return Optional.ofNullable(entityManager.merge(user));
     }
 
     public Optional<User> delete(int id) {
         log.info("Deleting user with id: " + id);
-        Session session = factory.getCurrentSession();
-        User user = session.get(User.class, id);
-        session.remove(user);
+        User user = entityManager.find(User.class, id);
+        entityManager.remove(user);
         return Optional.ofNullable(user);
     }
 
     public Optional<User> get(int id) {
         log.info("Getting user with id: " + id);
-        Session session = factory.getCurrentSession();
-        return Optional.ofNullable(session.get(User.class, id));
+        return Optional.ofNullable(entityManager.find(User.class, id));
     }
 
     public Optional<User> getByUsername(String username) throws VerificationException{
-        Session session = factory.getCurrentSession();
         log.info("Getting user with username: " + username);
-        return Optional.ofNullable(session.createQuery("from User where username = :username", User.class)
-                .setParameter("username", username)
-                .getSingleResultOrNull());
+        try {
+            return Optional.ofNullable(entityManager.createQuery("from User where username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            log.error("User with username: " + username + " not found");
+            return Optional.empty();
+        }
     }
 
     public Optional<User> setNewUser(String firstName, String lastName) {
@@ -74,16 +75,19 @@ public class UserDao {
     }
 
     public User getByUsernameForUsernameGenerator(String username) {
-        Session session = factory.getCurrentSession();
-        log.info("Getting user with username: " + username);
-        return session.createQuery("from User where username = :username", User.class)
-                .setParameter("username", username)
-                .getSingleResultOrNull();
+        try {
+            return entityManager.createQuery("from User where username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            log.error("User with username: " + username + " not found");
+            return null;
+        }
     }
 
     public Optional<List<User>> getAll(){
         log.info("Getting all users");
-        return Optional.ofNullable(factory.getCurrentSession()
-                .createQuery("from User", User.class).list());
+        return Optional.ofNullable(entityManager
+                .createQuery("from User", User.class).getResultList());
     }
 }

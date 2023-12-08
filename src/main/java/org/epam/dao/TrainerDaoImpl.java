@@ -1,10 +1,10 @@
 package org.epam.dao;
 
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -13,8 +13,8 @@ import java.util.Optional;
 @Slf4j
 public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
 
-    public TrainerDaoImpl(SessionFactory sessionFactory, UserDao userDao) {
-        super(sessionFactory, userDao);
+    public TrainerDaoImpl(EntityManager entityManager, UserDao userDao) {
+        super(entityManager, userDao);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
             trainer.setUser(updatedTrainer.getUser());
             trainer.setSpecialization(updatedTrainer.getSpecialization());
             try {
-                return Optional.ofNullable(sessionFactory.getCurrentSession().merge(trainer));
+                return Optional.ofNullable(entityManager.merge(trainer));
             } catch (Exception e) {
                 log.error("Error updating trainer with id: " + id, e);
                 throw e;

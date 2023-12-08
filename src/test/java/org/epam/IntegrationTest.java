@@ -18,20 +18,14 @@ import org.epam.service.TrainingService;
 import org.epam.testBeans.TestConfig;
 import org.epam.testBeans.TestInitDB;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInitDB.class, Config.class})
-@WebAppConfiguration
+@SpringBootTest(classes = {TestConfig.class, TestInitDB.class, Config.class})
 @ActiveProfiles("test")
 public class IntegrationTest {
 

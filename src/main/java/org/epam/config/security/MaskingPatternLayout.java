@@ -46,7 +46,7 @@ public class MaskingPatternLayout extends PatternLayout {
         }
         return  s.charAt(0) +
                 s.substring(2, s.length() - 1)
-                        .replaceAll("\\.", "*") +
+                        .replaceAll(".", "*") +
                 s.charAt(s.length() - 1);
     }
 }

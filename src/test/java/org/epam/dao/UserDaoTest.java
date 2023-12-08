@@ -1,11 +1,10 @@
 package org.epam.dao;
 
+import jakarta.persistence.EntityManager;
 import org.epam.Reader;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.model.User;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,9 +24,7 @@ import static org.mockito.Mockito.when;
 public class UserDaoTest {
 
     @Mock
-    private SessionFactory sessionFactory = mock(SessionFactory.class);
-    @Mock
-    private Session session = mock(Session.class);
+    private EntityManager entityManager = mock(EntityManager.class);
 
     @Spy
     private UsernameGenerator usernameGenerator = mock(UsernameGenerator.class);
@@ -43,7 +40,6 @@ public class UserDaoTest {
 
     @BeforeEach
     public void setup() {
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
         user1 = reader.readEntity("users/user1", User.class);
@@ -51,40 +47,40 @@ public class UserDaoTest {
 
     @Test
     public void testCreate() {
-        doNothing().when(session).persist(user1);
+        doNothing().when(entityManager).persist(user1);
         userDao.create(user1);
-        verify(session).persist(user1);
+        verify(entityManager).persist(user1);
     }
 
     @Test
     public void testSave() {
-        doNothing().when(session).persist(user1);
+        doNothing().when(entityManager).persist(user1);
         userDao.save(user1);
-        verify(session).persist(user1);
+        verify(entityManager).persist(user1);
     }
 
     @Test
     public void testUpdate() {
         User user = user1;
         user.setFirstName("New name");
-        when(session.merge(user1)).thenReturn(user);
+        when(entityManager.merge(user1)).thenReturn(user);
         userDao.update(1, user);
-        verify(session).merge(user);
+        verify(entityManager).merge(user);
     }
 
     @Test
     public void testDelete() {
         User user = user1;
         user.setId(user1.getId());
-        when(session.get(User.class, user1.getId())).thenReturn(user);
-        doNothing().when(session).remove(user);
+        when(entityManager.find(User.class, user1.getId())).thenReturn(user);
+        doNothing().when(entityManager).remove(user);
         userDao.delete(user1.getId());
-        verify(session).remove(user);
+        verify(entityManager).remove(user);
     }
 
     @Test
     public void testGet() {
-        when(session.get(User.class, user1.getId())).thenReturn(user1);
+        when(entityManager.find(User.class, user1.getId())).thenReturn(user1);
         assertEquals(user1, userDao.get(user1.getId()).orElse(null));
     }
 
@@ -93,9 +89,9 @@ public class UserDaoTest {
         User user = reader.readEntity("users/user1", User.class);
         String username = reader.readEntity("users/user1", User.class).getUsername();
         Query<User> query = mock(Query.class);
-        when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
+        when(entityManager.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", username)).thenReturn(query);
-        when(query.getSingleResultOrNull()).thenReturn(user);
+        when(query.getSingleResult()).thenReturn(user);
         assertEquals(user1, userDao.getByUsername(username).orElse(null));
     }
 
@@ -110,9 +106,9 @@ public class UserDaoTest {
         user.setFirstName(trainer2_FirstName);
         user.setLastName(trainer2_LastName);
         Query<User> query = mock(Query.class);
-        when(session.createQuery("from User where username = :username", User.class)).thenReturn(query);
+        when(entityManager.createQuery("from User where username = :username", User.class)).thenReturn(query);
         when(query.setParameter("username", trainer2_Username)).thenReturn(query);
-        when(query.getSingleResultOrNull()).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         User newUser = userDao.setNewUser(trainer2_FirstName, trainer2_LastName).orElse(null);
         assertEquals(user.getFirstName(), newUser.getFirstName());
         assertEquals(user.getLastName(), newUser.getLastName());

@@ -15,14 +15,15 @@ import java.util.List;
 
 @Configuration
 @Profile("test")
-@PropertySource("classpath:test.properties")
+@PropertySource("classpath:application-test.properties")
 public class TestInitDB {
-
-    @Value("${spring.liquibase.enabled.test}")
-    private boolean enabled;
 
     @Autowired
     SessionFactory sessionFactory;
+
+    @Value("${spring.liquibase.enabled}")
+    private boolean enabled;
+
 
     @Bean
     @Profile("test")
