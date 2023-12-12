@@ -7,5 +7,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @ComponentScan("org.epam")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yaml")
 public class Config implements WebMvcConfigurer {}

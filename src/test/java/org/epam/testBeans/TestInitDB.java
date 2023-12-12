@@ -1,6 +1,5 @@
 package org.epam.testBeans;
 
-import jakarta.persistence.EntityManager;
 import org.epam.model.gymModel.TrainingType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @Configuration
 @Profile("test")
-@PropertySource("classpath:application-test.properties")
 public class TestInitDB {
 
     @Autowired
