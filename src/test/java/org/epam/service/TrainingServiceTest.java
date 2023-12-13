@@ -5,13 +5,7 @@ import org.epam.dao.TraineeDaoImpl;
 import org.epam.dao.TrainerDaoImpl;
 import org.epam.dao.TrainingDaoImpl;
 import org.epam.dao.UserDao;
-import org.epam.dto.trainingDto.AddTrainingRequest;
-import org.epam.dto.trainingDto.GetTraineeTrainingsListRequest;
-import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
-import org.epam.dto.trainingDto.GetTrainersResponse;
-import org.epam.dto.trainingDto.GetTrainingTypesResponse;
-import org.epam.dto.trainingDto.GetTrainingsResponse;
-import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
+import org.epam.dto.trainingDto.*;
 import org.epam.mapper.TrainerMapper;
 import org.epam.mapper.TrainingMapper;
 import org.epam.model.User;
@@ -35,9 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

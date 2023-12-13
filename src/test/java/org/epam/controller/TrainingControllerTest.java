@@ -1,13 +1,7 @@
 package org.epam.controller;
 
 import org.epam.Reader;
-import org.epam.dto.trainingDto.AddTrainingRequest;
-import org.epam.dto.trainingDto.GetTraineeTrainingsListRequest;
-import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
-import org.epam.dto.trainingDto.GetTrainersResponse;
-import org.epam.dto.trainingDto.GetTrainingTypesResponse;
-import org.epam.dto.trainingDto.GetTrainingsResponse;
-import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
+import org.epam.dto.trainingDto.*;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.mapper.TrainerMapper;
 import org.epam.mapper.TrainingMapper;

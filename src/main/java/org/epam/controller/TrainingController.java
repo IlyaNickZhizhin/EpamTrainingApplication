@@ -7,24 +7,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.epam.dto.trainingDto.AddTrainingRequest;
-import org.epam.dto.trainingDto.GetTraineeTrainingsListRequest;
-import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
-import org.epam.dto.trainingDto.GetTrainersResponse;
-import org.epam.dto.trainingDto.GetTrainingTypesResponse;
-import org.epam.dto.trainingDto.GetTrainingsResponse;
-import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
+import org.epam.dto.trainingDto.*;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.service.TrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/api/training")
