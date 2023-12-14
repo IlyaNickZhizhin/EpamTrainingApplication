@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,7 +80,9 @@ public class TrainingService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-        trainee.getTrainers().addAll(trainers);
+        List<Trainer> ERSlist =  trainee.getTrainers();
+        ERSlist.addAll(trainers);
+        trainee.setTrainers(ERSlist);
         Trainee updatedTrainee = traineeDao.update(trainee.getId(), trainee).orElseThrow(() -> {
             log.error("Troubles with updating trainee: " + request.getTraineeUsername());
             return new InvalidDataException("traineeDao.update(" + trainee.getId() + ", " + trainee + ")",
@@ -97,7 +100,7 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public GetTrainersResponse getNotAssignedOnTraineeActiveTrainers(String traineeUsername) {
         Trainee trainee = getTrainee(traineeUsername);
-        List<Trainer> existingTrainers = trainee.getTrainers();
+        List<Trainer> existingTrainers = trainerDao.getAll().orElse(Collections.emptyList());
         List<Trainer> availableTrainers = trainingDao.getAllTrainersAvalibleForTrainee(
                 trainee, existingTrainers).orElseThrow(() -> {
             log.error("Troubles with getting available trainers for trainee: " + traineeUsername);
@@ -157,14 +160,17 @@ public class TrainingService {
     }
 
     private List<Object> checkTraineeTrainerConnection(Trainee trainee, Trainer trainer){
+        List<Trainer> ERSlist = trainee.getTrainers();
+        List<Trainee> EESlist = trainer.getTrainees();
         if(!trainee.getTrainers().contains(trainer)) {
-            trainee.getTrainers().add(trainer);
+            ERSlist.add(trainer);
+            trainee.setTrainers(ERSlist);
+        } else {
+            if(!trainer.getTrainees().contains(trainee)) {
+                EESlist.add(trainee);
+                trainer.setTrainees(EESlist);
+            }
         }
-        if(!trainer.getTrainees().contains(trainee)) {
-            trainer.getTrainees().add(trainee);
-        }
-        userDao.update(trainee.getUser().getId(), trainee.getUser());
-        userDao.update(trainer.getUser().getId(), trainer.getUser());
         return List.of(trainee, trainer);
     }
 

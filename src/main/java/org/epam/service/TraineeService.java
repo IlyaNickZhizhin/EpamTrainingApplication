@@ -41,8 +41,8 @@ public class TraineeService {
     }
 
     @Transactional
-    public TraineeProfileResponse update(UpdateTraineeProfileRequest request) {
-        ImmutablePair<User, Trainee> pair = getUserTrainee(request.getUsername());
+    public TraineeProfileResponse update(String username, UpdateTraineeProfileRequest request) {
+        ImmutablePair<User, Trainee> pair = getUserTrainee(username);
         pair.left.setUsername(request.getUsername());
         pair.left.setFirstName(request.getFirstname());
         pair.left.setLastName(request.getLastname());
@@ -85,11 +85,14 @@ public class TraineeService {
     @Transactional
     public boolean setActive(ActivateDeactivateRequest request) {
         User user = getUserTrainee(request.getUsername()).left;
-        if (user.isActive() != request.isActive()) userDao.update(user.getId(), user).orElseThrow(() -> {
-            log.error("Troubles with updating user " + request.getUsername());
-            return new InvalidDataException("userDao.update(" + user.getId() + ", " + user + ")",
-                    "Troubles with updating user " + request.getUsername());
-        });
+        if (user.isActive() != request.isActive()) {
+            user.setActive(request.isActive());
+            userDao.update(user.getId(), user).orElseThrow(() -> {
+                log.error("Troubles with updating user " + request.getUsername());
+                return new InvalidDataException("userDao.update(" + user.getId() + ", " + user + ")",
+                        "Troubles with updating user " + request.getUsername());
+            });
+        }
         return true;
     }
 

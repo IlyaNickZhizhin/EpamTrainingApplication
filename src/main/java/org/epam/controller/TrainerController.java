@@ -37,7 +37,7 @@ public class TrainerController {
                             content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
             })
     public ResponseEntity<RegistrationResponse> register(@RequestBody TrainerRegistrationRequest request) {
-        log.info("Registering trainer with name" + request.getFirstname() + " " + request.getLastname());
+        log.info("Registering trainer with name" + request.getFirstName() + " " + request.getLastName());
         try {
             RegistrationResponse response = trainerService.create(request);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -116,10 +116,10 @@ public class TrainerController {
                             content = @Content(schema = @Schema(implementation = TrainerProfileResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid username")
             })
-    public ResponseEntity<TrainerProfileResponse> update(@RequestBody UpdateTrainerProfileRequest request) {
+    public ResponseEntity<TrainerProfileResponse> update(@PathVariable String username, @RequestBody UpdateTrainerProfileRequest request) {
         log.info("Updating trainer profile: " + request.getUsername());
         try {
-            TrainerProfileResponse response = trainerService.update(request);
+            TrainerProfileResponse response = trainerService.update(username, request);
             log.info("Trainer profile: " + request.getUsername() + " updated successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {

@@ -15,13 +15,5 @@ public class TrainerRegistrationRequest {
     private String lastName;
     @NotNull
     private TrainingType.TrainingName specialization;
-
-    public String getFirstname() {
-        return firstName;
-    }
-
-    public String getLastname() {
-        return lastName;
-    }
 }
 

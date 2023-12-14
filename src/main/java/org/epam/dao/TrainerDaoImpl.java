@@ -25,6 +25,10 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
             Trainer trainer = optTrainer.get();
             trainer.setUser(updatedTrainer.getUser());
             trainer.setSpecialization(updatedTrainer.getSpecialization());
+            trainer.getTrainings().clear();
+            trainer.getTrainings().addAll(updatedTrainer.getTrainings());
+            trainer.getTrainees().clear();
+            trainer.getTrainees().addAll(updatedTrainer.getTrainees());
             try {
                 return Optional.ofNullable(entityManager.merge(trainer));
             } catch (Exception e) {
@@ -33,7 +37,7 @@ public class TrainerDaoImpl extends GymAbstractDao<Trainer> {
             }
         } else {
             log.error("Trainer with id: " + id + " not found");
-            throw new InvalidDataException(Trainer.class.getSimpleName()+"update", "id" + id + "was incorrect");
+            throw new InvalidDataException(Trainer.class.getSimpleName()+" update", "id " + id + " was incorrect");
         }
     }
 

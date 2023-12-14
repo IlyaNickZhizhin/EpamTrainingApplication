@@ -102,10 +102,10 @@ public class TraineeController {
                     @ApiResponse(responseCode = "200", description = "Trainee profile updated successfully",
                             content = @Content(schema = @Schema(implementation = TraineeProfileResponse.class)))
             })
-    public ResponseEntity<TraineeProfileResponse> update(@RequestBody UpdateTraineeProfileRequest request) {
+    public ResponseEntity<TraineeProfileResponse> update(@PathVariable String username, @RequestBody UpdateTraineeProfileRequest request) {
         log.info("request for update trainee profile: " + request.getUsername());
         try {
-            TraineeProfileResponse response = traineeService.update(request);
+            TraineeProfileResponse response = traineeService.update(username, request);
             log.info("Trainee profile: " + request.getUsername() + " updated successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(InvalidDataException e){

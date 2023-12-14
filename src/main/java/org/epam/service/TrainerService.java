@@ -30,30 +30,30 @@ public class TrainerService {
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
-        User user = userDao.setNewUser(request.getFirstname(), request.getLastname()).orElseThrow(() -> {
-            log.error("Troubles with creating user: " + request.getFirstname() + "." + request.getLastname());
-            return new InvalidDataException("userDao.setNewUser(" + request.getFirstname() + ", " + request.getLastname() + ")",
-                    "Troubles with creating user: " + request.getFirstname() + " " + request.getLastname());
+        User user = userDao.setNewUser(request.getFirstName(), request.getLastName()).orElseThrow(() -> {
+            log.error("Troubles with creating user: " + request.getFirstName() + "." + request.getLastName());
+            return new InvalidDataException("userDao.setNewUser(" + request.getFirstName() + ", " + request.getLastName() + ")",
+                    "Troubles with creating user: " + request.getFirstName() + " " + request.getLastName());
         });
-        log.info("Creating " + getModelName() + " with user: " + request.getFirstname() + "." + request.getLastname());
+        log.info("Creating " + getModelName() + " with user: " + request.getFirstName() + "." + request.getLastName());
         Trainer trainer = new Trainer();
         trainer.setUser(user);
         trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
         Trainer createdTrainer = gymDao.create(trainer).orElseThrow(() -> {
-            log.error("Troubles with creating " + getModelName() + " with user: " + request.getFirstname() + "." + request.getLastname());
+            log.error("Troubles with creating " + getModelName() + " with user: " + request.getFirstName() + "." + request.getLastName());
             return new InvalidDataException("gymDao.create(" + trainer + ")",
-                    "Troubles with creating " + getModelName() + " with user: " + request.getFirstname() + "." + request.getLastname());
+                    "Troubles with creating " + getModelName() + " with user: " + request.getFirstName() + "." + request.getLastName());
         });
         log.info("Created " + getModelName() + " with id " + trainer.getId());
         return trainerMapper.trainerToRegistrationResponse(createdTrainer);
 
     }
     @Transactional
-    public TrainerProfileResponse update(UpdateTrainerProfileRequest request) {
-        ImmutablePair<User, Trainer> pair = getUserTrainer(request.getUsername());
+    public TrainerProfileResponse update(String username, UpdateTrainerProfileRequest request) {
+        ImmutablePair<User, Trainer> pair = getUserTrainer(username);
         pair.left.setUsername(request.getUsername());
-        pair.left.setFirstName(request.getFirstname());
-        pair.left.setLastName(request.getLastname());
+        pair.left.setFirstName(request.getFirstName());
+        pair.left.setLastName(request.getLastName());
         pair.left.setActive(request.isActive());
         if (request.getSpecialization() != null)
             pair.right.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
@@ -93,12 +93,15 @@ public class TrainerService {
     }
     @Transactional
     public boolean setActive(ActivateDeactivateRequest request) {
-        ImmutablePair<User, Trainer> pair = getUserTrainer(request.getUsername());
-        if (pair.left.isActive() != request.isActive()) userDao.update(pair.left.getId(), pair.left).orElseThrow(() -> {
-            log.error("Troubles with updating user " + request.getUsername());
-            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
-                    "Troubles with updating user " + request.getUsername());
-        });
+        User user = getUserTrainer(request.getUsername()).left;
+        if (user.isActive() != request.isActive()) {
+            user.setActive(request.isActive());
+            userDao.update(user.getId(), user).orElseThrow(() -> {
+                log.error("Troubles with updating user " + request.getUsername());
+                return new InvalidDataException("userDao.update(" + user.getId() + ", " + user + ")",
+                        "Troubles with updating user " + request.getUsername());
+            });
+        }
         return true;
     }
 
