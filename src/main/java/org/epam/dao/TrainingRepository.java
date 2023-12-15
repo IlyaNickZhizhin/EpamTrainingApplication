@@ -16,13 +16,4 @@ public interface TrainingRepository extends JpaRepository<Training, Integer> {
     @Query("SELECT t FROM TrainingType t")
     List<TrainingType> getAllTrainingTypes();
 
-    @Query("SELECT t FROM Training t WHERE t.trainee = :trainee AND t.trainingType IN :types")
-    List<Training> getAllByUsernameAndTrainingTypes(List<TrainingType> types, Trainee trainee);
-
-    @Query("SELECT t FROM Training t WHERE t.trainer = :trainer AND t.trainingType IN :types")
-    List<Training> getAllByUsernameAndTrainingTypes(List<TrainingType> types, Trainer trainer);
-
-    @Query("SELECT t FROM Training t WHERE t.trainee = :trainee AND t.trainer NOT IN :trainers")
-    List<Trainer> getAllTrainersAvailableForTrainee(Trainee trainee, List<Trainer> trainers);
-
 }

@@ -2,11 +2,13 @@ package org.epam.service;
 
 import org.epam.Reader;
 import org.epam.config.security.PasswordChecker;
-import org.epam.dao.TraineeDaoImpl;
-import org.epam.dao.TrainerDaoImpl;
-import org.epam.dao.UserDao;
+import org.epam.dao.TraineeRepository;
+import org.epam.dao.TrainerRepository;
+import org.epam.dao.UserRepository;
 import org.epam.dto.LoginRequest;
+import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.mapper.TraineeMapper;
+import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,13 +29,17 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
     @Mock
-    private final UserDao userDao = mock(UserDao.class);
+    private final UserRepository userDao = mock(UserRepository.class);
     @Mock
-    private final TrainerDaoImpl trainerDao = mock(TrainerDaoImpl.class);
+    private final TrainerRepository trainerDao = mock(TrainerRepository.class);
     @Mock
-    private final TraineeDaoImpl traineeDao = mock(TraineeDaoImpl.class);
+    private final TraineeRepository traineeDao = mock(TraineeRepository.class);
     @Spy
     PasswordChecker passwordChecker;
+    @Spy
+    private final TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
+    @Spy
+    private final TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
     @InjectMocks
     LoginService loginService;
     Reader reader = new Reader();
@@ -50,9 +56,9 @@ class LoginServiceTest {
     @Test
     void testLogin() {
         LoginRequest request = Mappers.getMapper(TraineeMapper.class).userToLoginRequest(user1);
-        when(userDao.getByUsername(request.getUsername())).thenReturn(Optional.of(user1));
-        when(traineeDao.getModelByUserId(user1.getId())).thenReturn(Optional.empty());
-        when(trainerDao.getModelByUserId(user1.getId())).thenReturn(Optional.of(trainer1));
-        assertTrue(loginService.login(request) instanceof Trainer);
+        when(userDao.findByUsername(request.getUsername())).thenReturn(Optional.of(user1));
+        when(traineeDao.findByUser(user1)).thenReturn(Optional.empty());
+        when(trainerDao.findByUser(user1)).thenReturn(Optional.of(trainer1));
+        assertTrue(loginService.login(request) instanceof TrainerDto);
     }
 }

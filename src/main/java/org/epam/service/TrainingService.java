@@ -35,13 +35,12 @@ public class TrainingService {
     private final TrainerRepository trainerDao;
     private final TrainingRepository trainingDao;
     private final TrainingMapper trainingMapper;
-    private final TrainingRepository trainingRepository;
 
 
     @Transactional(readOnly = true)
     public GetTrainingTypesResponse selectAllTrainingTypes(){
         GetTrainingTypesResponse response = new GetTrainingTypesResponse();
-        response.setTrainingTypes(trainingRepository.getAllTrainingTypes());
+        response.setTrainingTypes(trainingDao.getAllTrainingTypes());
         return response;
     }
 
@@ -170,7 +169,7 @@ public class TrainingService {
         });
         return traineeDao.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username " + username);
-            throw new ProhibitedActionException("No one except trainee could use this method in trainingService, " +
+            return new ProhibitedActionException("No one except trainee could use this method in trainingService, " +
                     "but there are no trainee with username: " + username);
         });
     }
@@ -180,12 +179,11 @@ public class TrainingService {
             log.error("No user with username " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
-        Trainer trainer = trainerDao.findByUser(user).orElseThrow(() -> {
+        return trainerDao.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username: " + username);
             return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
                     "but there are no trainer with username: " + username);
         });
-        return trainer;
     }
 
 }
