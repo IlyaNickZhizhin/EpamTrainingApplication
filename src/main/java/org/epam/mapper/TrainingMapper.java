@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {TrainerMapper.class})
 public interface TrainingMapper {
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingName")
     @Mapping(source = "trainer.user.firstName", target = "opponentName")
     @Named("trainingForTrainee")
@@ -29,6 +31,8 @@ public interface TrainingMapper {
     @IterableMapping(qualifiedByName = "trainingForTrainee")
     List<TrainingDto> traineeTrainingsToShortDtos(List<Training> trainings);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingName")
     @Mapping(source = "trainee.user.firstName", target = "opponentName")
     @Named("trainingForTrainer")

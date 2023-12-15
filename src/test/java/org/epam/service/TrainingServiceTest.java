@@ -161,7 +161,6 @@ class TrainingServiceTest {
         trainee.setTrainings(trainings);
         User user = reader.readEntity("users/user3", User.class);
         GetTraineeTrainingsListRequest request = new GetTraineeTrainingsListRequest();
-        request.setUsername(user3.getUsername());
         request.setPeriodFrom(null);
         request.setPeriodTo(null);
         request.setTrainingType(null);
@@ -169,7 +168,7 @@ class TrainingServiceTest {
         response.setTrainings(trainingMapper.traineeTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user3.getUsername())).thenReturn(Optional.ofNullable(user));
         when(mockTraineeDaoImpl.getModelByUser(user)).thenReturn(Optional.of(trainee));
-        assertEquals(response, trainingService.getTraineeTrainingsList(request));
+        assertEquals(response, trainingService.getTraineeTrainingsList(user3.getUsername(), request));
     }
 
     @Test
@@ -181,13 +180,12 @@ class TrainingServiceTest {
         trainer.setTrainings(trainings);
         User user = reader.readEntity("users/user1", User.class);
         GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
-        request.setUsername(user1.getUsername());
         request.setPeriodFrom(LocalDate.MIN);
         request.setPeriodTo(LocalDate.MAX);
         GetTrainingsResponse response = new GetTrainingsResponse();
         response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
         when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(Optional.ofNullable(user));
         when(mockTrainerDaoImpl.getModelByUser(user)).thenReturn(Optional.of(trainer));
-        assertEquals(response, trainingService.getTrainerTrainingsList(request));
+        assertEquals(response, trainingService.getTrainerTrainingsList(user1.getUsername(), request));
     }
 }

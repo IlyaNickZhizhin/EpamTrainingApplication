@@ -10,8 +10,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class GetTraineeTrainingsListRequest {
-    @NotBlank
-    private String username;
     private LocalDate periodFrom;
     private LocalDate periodTo;
     private String trainerName;

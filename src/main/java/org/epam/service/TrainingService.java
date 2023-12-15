@@ -113,8 +113,8 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public GetTrainingsResponse getTraineeTrainingsList(GetTraineeTrainingsListRequest request) {
-        Trainee trainee = getTrainee(request.getUsername());
+    public GetTrainingsResponse getTraineeTrainingsList(String username, GetTraineeTrainingsListRequest request) {
+        Trainee trainee = getTrainee(username);
         List<Training> trainings = trainingFilterByDate(trainee.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
         if (request.getTrainingType() != null) {
             trainings = trainings.stream()
@@ -132,8 +132,8 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public GetTrainingsResponse getTrainerTrainingsList(GetTrainerTrainingsListRequest request) {
-        Trainer trainer = getTrainer(request.getUsername());
+    public GetTrainingsResponse getTrainerTrainingsList(String username, GetTrainerTrainingsListRequest request) {
+        Trainer trainer = getTrainer(username);
         List<Training> trainings = trainingFilterByDate(trainer.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
         if (request.getTraineeName() != null) {
             trainings = trainings.stream()
