@@ -3,12 +3,14 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
-import org.epam.dao.TraineeDaoImpl;
-import org.epam.dao.TrainerDaoImpl;
-import org.epam.dao.UserDao;
+import org.epam.dao.TraineeRepository;
+import org.epam.dao.TrainerRepository;
+import org.epam.dao.UserRepository;
 import org.epam.dto.LoginRequest;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;
+import org.epam.mapper.TraineeMapper;
+import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
@@ -22,25 +24,27 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final UserDao userDao;
-    private final TraineeDaoImpl traineeDao;
-    private final TrainerDaoImpl trainerDao;
+    private final UserRepository userDao;
+    private final TraineeRepository traineeDao;
+    private final TrainerRepository trainerDao;
     private final PasswordChecker passwordChecker;
+    private final TraineeMapper traineeMapper;
+    private final TrainerMapper trainerMapper;
 
     @Transactional(readOnly = true)
     public Object login(LoginRequest request) throws VerificationException, InvalidDataException {
-        User user = userDao.getByUsername(request.getUsername()).orElseThrow(() -> new InvalidDataException(LoginService.class
+        User user = userDao.findByUsername(request.getUsername()).orElseThrow(() -> new InvalidDataException(LoginService.class
                 .getSimpleName()+"login", "username" + request.getUsername() + "was incorrect"));
         boolean check = passwordChecker.checkPassword(request.getUsername(), request.getPassword(), user);
         if (check) {
-            Optional<Trainee> trainee = traineeDao.getModelByUserId(user.getId());
-            Optional<Trainer> trainer = trainerDao.getModelByUserId(user.getId());
+            Optional<Trainee> trainee = traineeDao.findByUser(user);
+            Optional<Trainer> trainer = trainerDao.findByUser(user);
             if (trainee.isPresent()) {
                 log.info("User with username: " + request.getUsername() + " logged in as TRAINEE");
-                return trainee.get();
+                return traineeMapper.traineeToShortTraineeDto(trainee.get());
             } else if (trainer.isPresent()) {
                 log.info("User with username: " + request.getUsername() + " logged in as TRAINER");
-                return trainer.get();
+                return trainerMapper.trainerToShortTrainerDto(trainer.get());
             } else {
                 throw new InvalidDataException("getModelByUser(" +request.getUsername() + ")",
                         "No trainer or trainee with username: " + request.getUsername() + " found ");

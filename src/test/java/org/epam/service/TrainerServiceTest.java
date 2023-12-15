@@ -28,6 +28,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -85,15 +86,15 @@ class TrainerServiceTest {
         trainer.getUser().setFirstName("user1");
         UpdateTrainerProfileRequest request
                 = trainerMapper.trainerToUpdateRequest(trainer1);
-        request.setFirstname("user1");
+        request.setUsername("user1");
         TrainerProfileResponse response
                 = trainerMapper.trainerToProfileResponse(trainer1);
         response.setFirstName("user1");
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user1));
+        when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(Optional.ofNullable(user1));
         when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
-        when(mockUserDao.update(1, user)).thenReturn(Optional.of(user));
-        when(mockTrainerDaoImpl.update(1, trainer)).thenReturn(Optional.of(trainer));
-        assertEquals(response, trainerService.update(request));
+        when(mockUserDao.update(anyInt(), any(User.class))).thenReturn(Optional.of(user));
+        when(mockTrainerDaoImpl.update(anyInt(), any(Trainer.class))).thenReturn(Optional.of(trainer));
+        assertEquals(response, trainerService.update(user1.getUsername(), request));
     }
     @Test
     void selectByUsername() {

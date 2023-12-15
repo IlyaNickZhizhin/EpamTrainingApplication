@@ -3,8 +3,7 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.epam.dao.TraineeDaoImpl;
-import org.epam.dao.UserDao;
+import org.epam.dao.TraineeRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -25,19 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class TraineeService {
 
     private final TraineeMapper traineeMapper;
-    private final TraineeDaoImpl gymDao;
-    private final UserDao userDao;
+    private final TraineeRepository gymDao;
+    private final UserService userService;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
-        Trainee trainee = gymDao.create(prepare(request)).orElseThrow(() -> {
-            log.error("Troubles with creating " + getModelName() + " with user: " + request.getFirstname() + "." + request.getLastname());
-            throw new InvalidDataException("gymDao.create(" + request + ")" ,
-                    "Troubles with creating " + getModelName() + " with user: " + request.getFirstname() + "." + request.getLastname());
-        });
-        log.info("Created " + getModelName() + " with id " + trainee.getId());
-        return traineeMapper.traineeToRegistrationResponse(trainee);
+        Trainee trainee = prepare(request);
+        return traineeMapper.traineeToRegistrationResponse(gymDao.save(trainee));
     }
 
     @Transactional
@@ -49,18 +43,12 @@ public class TraineeService {
         pair.left.setActive(request.isActive());
         if (request.getDateOfBirth() != null) pair.right.setDateOfBirth(request.getDateOfBirth());
         if (request.getAddress() != null) pair.right.setAddress(request.getAddress());
-        pair.right.setUser(userDao.update(pair.left.getId(), pair.left).orElseThrow(() -> {
+        pair.right.setUser(userService.update(pair.left.getId(), pair.left).orElseThrow(() -> {
             log.error("Troubles with updating user " + request.getUsername());
             return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
                     "Troubles with updating user " + request.getUsername());
         }));
-        Trainee updateTrainee = gymDao.update(pair.right.getId(), pair.right).orElseThrow(
-                () -> {
-                    log.error("Troubles with updating " + getModelName() + " " + request.getUsername());
-                    return new InvalidDataException("gymDao.update(" + pair.right.getId() + ", " + pair.right + ")",
-                            "Troubles with updating " + getModelName() + " " + request.getUsername());
-                }
-        );
+        Trainee updateTrainee = gymDao.save(pair.right);
         return traineeMapper.traineeToProfileResponse(updateTrainee);
     }
     @Transactional(readOnly = true)
@@ -75,7 +63,7 @@ public class TraineeService {
             throw new ProhibitedActionException("New password is the same as old");
         }
         pair.left.setPassword(request.getNewPassword());
-        return userDao.update(pair.left.getId(), pair.left).orElseThrow(() -> {
+        return userService.update(pair.left.getId(), pair.left).orElseThrow(() -> {
             log.error("Troubles with updating user " + request.getUsername());
             return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
                     "Troubles with updating user " + request.getUsername());
@@ -87,7 +75,7 @@ public class TraineeService {
         User user = getUserTrainee(request.getUsername()).left;
         if (user.isActive() != request.isActive()) {
             user.setActive(request.isActive());
-            userDao.update(user.getId(), user).orElseThrow(() -> {
+            userService.update(user.getId(), user).orElseThrow(() -> {
                 log.error("Troubles with updating user " + request.getUsername());
                 return new InvalidDataException("userDao.update(" + user.getId() + ", " + user + ")",
                         "Troubles with updating user " + request.getUsername());
@@ -99,14 +87,14 @@ public class TraineeService {
     @Transactional
     public boolean delete(String username) {
         ImmutablePair<User,Trainee> pair = getUserTrainee(username);
-        gymDao.delete(pair.right.getId());
-        return userDao.delete(pair.left.getId()).orElse(new User()).equals(pair.left);
+        gymDao.deleteById(pair.right.getId());
+        return userService.delete(pair.left.getId()).orElse(new User()).equals(pair.left);
     }
 
     private Trainee prepare(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
-        User user = userDao.setNewUser(request.getFirstname(), request.getLastname()).orElseThrow(() -> {
+        User user = userService.setNewUser(request.getFirstname(), request.getLastname()).orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstname() + "." + request.getLastname());
             return new InvalidDataException("userDao.setNewUser(" + request.getFirstname() + ", " + request.getLastname() + ")"
                     , "Troubles with creating user: " + request.getFirstname() + "." + request.getLastname());
@@ -124,11 +112,11 @@ public class TraineeService {
     }
 
     private ImmutablePair<User,Trainee> getUserTrainee(String username) {
-        User user = userDao.getByUsername(username).orElseThrow(() -> {
+        User user = userService.findByUsername(username).orElseThrow(() -> {
             log.error("No user with username: " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
-        Trainee trainee = gymDao.getModelByUser(user).orElseThrow(() -> {
+        Trainee trainee = gymDao.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username: " + username);
             return new ProhibitedActionException("No one except trainee could use this service, " +
                     "but there are no trainee with username: " + username);

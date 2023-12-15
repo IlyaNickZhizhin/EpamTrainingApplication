@@ -3,8 +3,7 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.epam.dao.TrainerDaoImpl;
-import org.epam.dao.UserDao;
+import org.epam.dao.TrainerRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -24,13 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TrainerService {
     private final TrainerMapper trainerMapper;
-    private final TrainerDaoImpl gymDao;
-    private final UserDao userDao;
+    private final TrainerRepository gymDao;
+    private final UserService userService;
 
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
-        User user = userDao.setNewUser(request.getFirstName(), request.getLastName()).orElseThrow(() -> {
+        User user = userService.setNewUser(request.getFirstName(), request.getLastName()).orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstName() + "." + request.getLastName());
             return new InvalidDataException("userDao.setNewUser(" + request.getFirstName() + ", " + request.getLastName() + ")",
                     "Troubles with creating user: " + request.getFirstName() + " " + request.getLastName());
@@ -39,13 +38,8 @@ public class TrainerService {
         Trainer trainer = new Trainer();
         trainer.setUser(user);
         trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
-        Trainer createdTrainer = gymDao.create(trainer).orElseThrow(() -> {
-            log.error("Troubles with creating " + getModelName() + " with user: " + request.getFirstName() + "." + request.getLastName());
-            return new InvalidDataException("gymDao.create(" + trainer + ")",
-                    "Troubles with creating " + getModelName() + " with user: " + request.getFirstName() + "." + request.getLastName());
-        });
         log.info("Created " + getModelName() + " with id " + trainer.getId());
-        return trainerMapper.trainerToRegistrationResponse(createdTrainer);
+        return trainerMapper.trainerToRegistrationResponse(gymDao.save(trainer));
 
     }
     @Transactional
@@ -57,19 +51,13 @@ public class TrainerService {
         pair.left.setActive(request.isActive());
         if (request.getSpecialization() != null)
             pair.right.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
-        pair.right.setUser(userDao.update(pair.left.getId(), pair.left)
+        pair.right.setUser(userService.update(pair.left.getId(), pair.left)
                 .orElseThrow(() -> {
                     log.error("Troubles with updating user " + request.getUsername());
                     return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
                             "Troubles with updating user " + request.getUsername());
                 }));
-        Trainer updatedTrainer = gymDao.update(pair.right.getId(), pair.right).orElseThrow(
-                () -> {
-                    log.error("Troubles with updating " + getModelName() + " " + request.getUsername());
-                    return new InvalidDataException("gymDao.update(" + pair.right.getId() + ", " + pair.right + ")",
-                            "Troubles with updating " + getModelName() + " " + request.getUsername());
-                });
-        return trainerMapper.trainerToProfileResponse(updatedTrainer);
+        return trainerMapper.trainerToProfileResponse(gymDao.save(pair.right));
     }
     @Transactional(readOnly = true)
     public TrainerProfileResponse selectByUsername(String username) {
@@ -81,7 +69,7 @@ public class TrainerService {
         ImmutablePair<User, Trainer> pair = getUserTrainer(request.getUsername());
         if (pair.left.getPassword().equals(request.getNewPassword())) throw new ProhibitedActionException("New password is the same as old");
         pair.left.setPassword(request.getNewPassword());
-        return userDao.update(pair.left.getId(), pair.left)
+        return userService.update(pair.left.getId(), pair.left)
                 .orElseThrow(
                         () -> {
                             log.error("Troubles with updating user " + request.getUsername());
@@ -96,7 +84,7 @@ public class TrainerService {
         User user = getUserTrainer(request.getUsername()).left;
         if (user.isActive() != request.isActive()) {
             user.setActive(request.isActive());
-            userDao.update(user.getId(), user).orElseThrow(() -> {
+            userService.update(user.getId(), user).orElseThrow(() -> {
                 log.error("Troubles with updating user " + request.getUsername());
                 return new InvalidDataException("userDao.update(" + user.getId() + ", " + user + ")",
                         "Troubles with updating user " + request.getUsername());
@@ -110,11 +98,11 @@ public class TrainerService {
     }
 
     private ImmutablePair<User, Trainer> getUserTrainer(String username) {
-        User user = userDao.getByUsername(username).orElseThrow(() -> {
+        User user = userService.findByUsername(username).orElseThrow(() -> {
             log.error("No user with username " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username " + username);
         });
-        Trainer trainer = gymDao.getModelByUser(user).orElseThrow(() -> {
+        Trainer trainer = gymDao.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username " + username);
             return new ProhibitedActionException("No one except trainer could use this service, " +
                     "but there are no trainer with username " + username);

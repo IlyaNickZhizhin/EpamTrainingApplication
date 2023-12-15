@@ -20,7 +20,7 @@ public class UserDao {
 
     private final EntityManager entityManager;
     private final PasswordGenerator passwordGenerator;
-    UsernameGenerator usernameGenerator = new UsernameGenerator(this);
+    private final UsernameGenerator usernameGenerator;
 
 
     public Optional<User> create(User user) {

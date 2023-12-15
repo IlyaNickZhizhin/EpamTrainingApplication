@@ -100,7 +100,7 @@ class TrainingServiceTest {
         when(mockUserDao.getByUsername(request.getTrainerUsername())).thenReturn(Optional.ofNullable(user1));
         when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
         when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
-        when(mockTrainingDaoImpl.create(training)).thenReturn(Optional.ofNullable(training1));
+        when(mockTrainingDaoImpl.create(any(Training.class))).thenReturn(Optional.ofNullable(training1));
         assertEquals(request, trainingService.create(request));
     }
 

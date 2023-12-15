@@ -49,8 +49,9 @@ public class TraineeDaoImplImplTest {
     public void testUpdate() {
         Trainee updatedTrainee = reader.readEntity("trainees/trainee3", Trainee.class);
         updatedTrainee.setAddress("new address");
-        when(entityManager.merge(updatedTrainee)).thenReturn(updatedTrainee);
-        Trainee nt = traineeDaoImpl.update(1, updatedTrainee).orElse(new Trainee());
+        when(entityManager.find(Trainee.class, 3)).thenReturn(trainee3);
+        when(entityManager.merge(any(Trainee.class))).thenReturn(updatedTrainee);
+        Trainee nt = traineeDaoImpl.update(3, updatedTrainee).orElse(new Trainee());
         assertEquals(nt.getAddress(), updatedTrainee.getAddress());
         verify(entityManager).merge(updatedTrainee);
     }

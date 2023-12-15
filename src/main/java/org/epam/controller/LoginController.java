@@ -28,7 +28,8 @@ public class LoginController {
     @Operation(summary = "checks username and password")
     public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
         try {
-            return new ResponseEntity<>(loginService.login(request), HttpStatus.OK);
+            ResponseEntity<Object> re = new ResponseEntity<>(loginService.login(request), HttpStatus.OK);
+            return re;
         } catch (VerificationException | InvalidDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

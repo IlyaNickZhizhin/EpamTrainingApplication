@@ -146,6 +146,8 @@ class TrainingControllerTest {
         trainings.add(training2);
         trainer1.setTrainings(trainings);
         GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
+        request.setPeriodFrom(LocalDate.MIN);
+        request.setPeriodTo(LocalDate.MAX);
         GetTrainingsResponse response = new GetTrainingsResponse();
         response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
         when(trainingService.getTrainerTrainingsList(user1.getUsername(), request)).thenReturn(response);
@@ -206,6 +208,8 @@ class TrainingControllerTest {
     @Test
     void testGetTrainerTrainingsListEx() {
         GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
+        request.setPeriodFrom(LocalDate.MIN);
+        request.setPeriodTo(LocalDate.MAX);
         when(trainingService.getTrainerTrainingsList(user1.getUsername(), request))
                 .thenThrow(new InvalidDataException("1","2"));
         assertEquals(

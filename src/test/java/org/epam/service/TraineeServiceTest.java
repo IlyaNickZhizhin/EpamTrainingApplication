@@ -90,7 +90,7 @@ class TraineeServiceTest {
         when(mockTraineeDaoImpl.getModelByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
         when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(user));
         when(mockTraineeDaoImpl.update(3, trainee)).thenReturn(Optional.of(trainee));
-        assertEquals(response, traineeService.update(request));
+        assertEquals(response, traineeService.update(user.getUsername(), request));
     }
     @Test
     void selectByUsername() {

@@ -16,8 +16,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <spring-boot.version>3.1.5</spring-boot.version>
     <actuator.version>3.1.2</actuator.version>
-    <micrometr-core>1.11.2</micrometr-core>
-    <micrometr-prometeus>1.11.2</micrometr-prometeus>
+    <micrometr>1.11.2</micrometr>
     <springdoc>2.3.0</springdoc>
     <lombok.version>1.18.30</lombok.version>
     <jackson-databind.version>2.15.3</jackson-databind.version>
@@ -62,20 +61,20 @@
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
+      <artifactId>spring-boot-actuator-autoconfigure</artifactId>
       <version>${actuator.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
-      <version>${micrometr-core}</version>
+      <version>${micrometr}</version>
     </dependency>
 
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
-      <version>${micrometr-prometeus}</version>
+      <version>${micrometr}</version>
     </dependency>
 
     <dependency>

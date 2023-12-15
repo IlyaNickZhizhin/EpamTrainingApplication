@@ -25,9 +25,6 @@ server:
   port: 8081
 management:
   endpoints:
-    jmx:
-      exposure:
-        include: "*"
     web:
       exposure:
         include: "*"
@@ -41,10 +38,6 @@ management:
     metrics:
       export:
         enabled: true
-  metrics:
-    distribution:
-      percentiles-histogram:
-        "http.server.requests": true
 ---
 
 spring:

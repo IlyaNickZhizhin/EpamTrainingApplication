@@ -4,16 +4,21 @@ import org.epam.Reader;
 import org.epam.dao.UserDao;
 import org.epam.model.User;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class UsernameGeneratorTest {
 
     UserDao mock = mock(UserDao.class);
 
-    UsernameGenerator usernameGenerator = new UsernameGenerator(mock);
+    @InjectMocks
+    UsernameGenerator usernameGenerator;
 
     Reader reader = new Reader();
 

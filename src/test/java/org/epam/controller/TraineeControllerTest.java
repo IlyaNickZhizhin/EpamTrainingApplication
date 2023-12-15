@@ -99,11 +99,9 @@ public class TraineeControllerTest {
     @Test
     void testTraineeUpdate() {
         UpdateTraineeProfileRequest request = traineeMapper.traineeToUpdateRequest(trainee3);
-        request.setFirstname("User3");
         TraineeProfileResponse response = traineeMapper.traineeToProfileResponse(trainee3);
-        response.setFirstname("User3");
-        when(traineeService.update(request)).thenReturn(response);
-        assertEquals(response, traineeController.update(request).getBody());
+        when(traineeService.update("User3", request)).thenReturn(response);
+        assertEquals(response, traineeController.update("User3", request).getBody());
     }
 
     @Test
@@ -111,8 +109,8 @@ public class TraineeControllerTest {
         UpdateTraineeProfileRequest request = traineeMapper.traineeToUpdateRequest(trainee3);
         request.setFirstname("User3");
         TraineeProfileResponse response = new TraineeProfileResponse();
-        when(traineeService.update(request)).thenThrow(new InvalidDataException("1","2"));
-        assertEquals(response, traineeController.update(request).getBody());
+        when(traineeService.update("User3", request)).thenThrow(new InvalidDataException("1","2"));
+        assertEquals(response, traineeController.update("User3", request).getBody());
     }
 
     @Test

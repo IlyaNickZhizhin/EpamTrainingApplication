@@ -99,20 +99,17 @@ class TrainerControllerTest {
     @Test
     void testTrainerUpdate() {
         UpdateTrainerProfileRequest request = trainerMapper.trainerToUpdateRequest(trainer1);
-        request.setFirstname("User1");
         TrainerProfileResponse response = trainerMapper.trainerToProfileResponse(trainer1);
-        response.setFirstName("User1");
-        when(trainerService.update(request)).thenReturn(response);
-        assertEquals(response, trainerController.update(request).getBody());
+        when(trainerService.update("User1", request)).thenReturn(response);
+        assertEquals(response, trainerController.update("User1", request).getBody());
     }
 
     @Test
     void testTrainerUpdateEx() {
         UpdateTrainerProfileRequest request = trainerMapper.trainerToUpdateRequest(trainer1);
-        request.setFirstname("User1");
         TrainerProfileResponse response = new TrainerProfileResponse();
-        when(trainerService.update(request)).thenThrow(new InvalidDataException("1","2"));
-        assertEquals(response, trainerController.update(request).getBody());
+        when(trainerService.update("User1", request)).thenThrow(new InvalidDataException("1","2"));
+        assertEquals(response, trainerController.update("User1", request).getBody());
     }
 
     @Test
