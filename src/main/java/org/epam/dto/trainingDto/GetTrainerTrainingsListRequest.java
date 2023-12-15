@@ -1,6 +1,5 @@
 package org.epam.dto.trainingDto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
