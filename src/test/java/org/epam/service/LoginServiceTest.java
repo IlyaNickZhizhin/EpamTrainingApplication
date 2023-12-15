@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -59,6 +60,6 @@ class LoginServiceTest {
         when(userDao.findByUsername(request.getUsername())).thenReturn(Optional.of(user1));
         when(traineeDao.findByUser(user1)).thenReturn(Optional.empty());
         when(trainerDao.findByUser(user1)).thenReturn(Optional.of(trainer1));
-        assertTrue(loginService.login(request) instanceof TrainerDto);
+        assertInstanceOf(TrainerDto.class, loginService.login(request));
     }
 }
