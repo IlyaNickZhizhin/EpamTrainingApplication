@@ -5,15 +5,15 @@
   <groupId>org.epam</groupId>
   <artifactId>EpamTraningApplication</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
 
   <name>EpamTrainingApplication</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.java.binaries>target/classes</sonar.java.binaries>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <spring-boot.version>3.1.5</spring-boot.version>
     <actuator.version>3.1.2</actuator.version>
     <micrometr>1.11.2</micrometr>
@@ -194,11 +194,8 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.3.2</version>
-        <configuration>
-          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-        </configuration>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
       </plugin>
 
       <plugin>

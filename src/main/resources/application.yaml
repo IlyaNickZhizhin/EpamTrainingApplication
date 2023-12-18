@@ -23,6 +23,7 @@ spring:
     enabled: true
 server:
   port: 8081
+
 management:
   endpoints:
     web:
@@ -38,6 +39,7 @@ management:
     metrics:
       export:
         enabled: true
+
 ---
 
 spring:
