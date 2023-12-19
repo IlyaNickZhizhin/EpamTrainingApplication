@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TrainerService {
     private final TrainerMapper trainerMapper;
-    private final TrainerRepository gymDao;
+    private final TrainerRepository trainerRepository;
     private final UserService userService;
 
     @Transactional
@@ -39,7 +39,7 @@ public class TrainerService {
         trainer.setUser(user);
         trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
         log.info("Created " + getModelName() + " with id " + trainer.getId());
-        return trainerMapper.trainerToRegistrationResponse(gymDao.save(trainer));
+        return trainerMapper.trainerToRegistrationResponse(trainerRepository.save(trainer));
 
     }
     @Transactional
@@ -57,7 +57,7 @@ public class TrainerService {
                     return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
                             "Troubles with updating user " + request.getUsername());
                 }));
-        return trainerMapper.trainerToProfileResponse(gymDao.save(pair.right));
+        return trainerMapper.trainerToProfileResponse(trainerRepository.save(pair.right));
     }
     @Transactional(readOnly = true)
     public TrainerProfileResponse selectByUsername(String username) {
@@ -102,7 +102,7 @@ public class TrainerService {
             log.error("No user with username " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username " + username);
         });
-        Trainer trainer = gymDao.findByUser(user).orElseThrow(() -> {
+        Trainer trainer = trainerRepository.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username " + username);
             return new ProhibitedActionException("No one except trainer could use this service, " +
                     "but there are no trainer with username " + username);

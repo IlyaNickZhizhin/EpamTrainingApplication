@@ -24,21 +24,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final UserRepository userDao;
-    private final TraineeRepository traineeDao;
-    private final TrainerRepository trainerDao;
+    private final UserRepository userRepository;
+    private final TraineeRepository traineeRepository;
+    private final TrainerRepository trainerRepository;
     private final PasswordChecker passwordChecker;
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
 
     @Transactional(readOnly = true)
     public Object login(LoginRequest request) throws VerificationException, InvalidDataException {
-        User user = userDao.findByUsername(request.getUsername()).orElseThrow(() -> new InvalidDataException(LoginService.class
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new InvalidDataException(LoginService.class
                 .getSimpleName()+"login", "username" + request.getUsername() + "was incorrect"));
         boolean check = passwordChecker.checkPassword(request.getUsername(), request.getPassword(), user);
         if (check) {
-            Optional<Trainee> trainee = traineeDao.findByUser(user);
-            Optional<Trainer> trainer = trainerDao.findByUser(user);
+            Optional<Trainee> trainee = traineeRepository.findByUser(user);
+            Optional<Trainer> trainer = trainerRepository.findByUser(user);
             if (trainee.isPresent()) {
                 log.info("User with username: " + request.getUsername() + " logged in as TRAINEE");
                 return traineeMapper.traineeToShortTraineeDto(trainee.get());

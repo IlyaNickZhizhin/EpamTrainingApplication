@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TrainingService {
-    private final UserRepository userDao;
-    private final TraineeRepository traineeDao;
-    private final TrainerRepository trainerDao;
+    private final UserRepository userRepository;
+    private final TraineeRepository traineeRepository;
+    private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingDao;
     private final TrainingMapper trainingMapper;
 
@@ -46,12 +46,12 @@ public class TrainingService {
 
     @Transactional
     public AddTrainingRequest create(AddTrainingRequest request) {
-        Trainee EE = getTrainee(request.getTraineeUsername());
-        Trainer ER = getTrainer(request.getTrainerUsername());
-        List<Object> eeEr = checkTraineeTrainerConnection(EE, ER);
+        Trainee trainee = getTrainee(request.getTraineeUsername());
+        Trainer trainer = getTrainer(request.getTrainerUsername());
+        List<Object> traineeTrainerConnection = checkTraineeTrainerConnection(trainee, trainer);
         Training training = new Training();
-        training.setTrainee((Trainee) eeEr.get(0));
-        training.setTrainer((Trainer) eeEr.get(1));
+        training.setTrainee((Trainee) traineeTrainerConnection.get(0));
+        training.setTrainer((Trainer) traineeTrainerConnection.get(1));
         training.setTrainingType(trainingMapper.stringToTrainingType(request.getTrainingType()));
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
@@ -69,17 +69,17 @@ public class TrainingService {
         List<String> newTrainers = request.getTrainerUsernames();
         newTrainers.removeAll(exist);
         List<Trainer> trainers = newTrainers.stream()
-                .map(userDao::findByUsername)
+                .map(userRepository::findByUsername)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(trainerDao::findByUser)
+                .map(trainerRepository::findByUser)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-        List<Trainer> ERSlist =  trainee.getTrainers();
-        ERSlist.addAll(trainers);
-        trainee.setTrainers(ERSlist);
-        Trainee updatedTrainee = traineeDao.save(trainee);
+        List<Trainer> trainerList =  trainee.getTrainers();
+        trainerList.addAll(trainers);
+        trainee.setTrainers(trainerList);
+        Trainee updatedTrainee = traineeRepository.save(trainee);
         return trainingMapper.traineeToTrainersResponse(updatedTrainee);
     }
 
@@ -92,7 +92,7 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public GetTrainersResponse getNotAssignedOnTraineeActiveTrainers(String traineeUsername) {
         Trainee trainee = getTrainee(traineeUsername);
-        List<Trainer> existingTrainers = new ArrayList<>(CollectionUtils.emptyIfNull(trainerDao.findAll()));
+        List<Trainer> existingTrainers = new ArrayList<>(CollectionUtils.emptyIfNull(trainerRepository.findAll()));
         List<Trainer> onTrainee = trainee.getTrainers();
         existingTrainers.removeAll(onTrainee);
         GetTrainersResponse response = new GetTrainersResponse();
@@ -148,26 +148,26 @@ public class TrainingService {
     }
 
     private List<Object> checkTraineeTrainerConnection(Trainee trainee, Trainer trainer){
-        List<Trainer> ERSlist = trainee.getTrainers();
-        List<Trainee> EESlist = trainer.getTrainees();
+        List<Trainer> trainerList = trainee.getTrainers();
+        List<Trainee> traineeList = trainer.getTrainees();
         if(!trainee.getTrainers().contains(trainer)) {
-            ERSlist.add(trainer);
-            trainee.setTrainers(ERSlist);
+            trainerList.add(trainer);
+            trainee.setTrainers(trainerList);
         } else {
             if(!trainer.getTrainees().contains(trainee)) {
-                EESlist.add(trainee);
-                trainer.setTrainees(EESlist);
+                traineeList.add(trainee);
+                trainer.setTrainees(traineeList);
             }
         }
         return List.of(trainee, trainer);
     }
 
     private Trainee getTrainee(String username) {
-        User user = userDao.findByUsername(username).orElseThrow(() -> {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> {
             log.error("No user with username: " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
-        return traineeDao.findByUser(user).orElseThrow(() -> {
+        return traineeRepository.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username " + username);
             return new ProhibitedActionException("No one except trainee could use this method in trainingService, " +
                     "but there are no trainee with username: " + username);
@@ -175,11 +175,11 @@ public class TrainingService {
     }
 
     private Trainer getTrainer(String username) {
-        User user = userDao.findByUsername(username).orElseThrow(() -> {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> {
             log.error("No user with username " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
-        return trainerDao.findByUser(user).orElseThrow(() -> {
+        return trainerRepository.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username: " + username);
             return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
                     "but there are no trainer with username: " + username);

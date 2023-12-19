@@ -24,14 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class TraineeService {
 
     private final TraineeMapper traineeMapper;
-    private final TraineeRepository gymDao;
+    private final TraineeRepository traineeRepository;
     private final UserService userService;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
         Trainee trainee = prepare(request);
-        return traineeMapper.traineeToRegistrationResponse(gymDao.save(trainee));
+        return traineeMapper.traineeToRegistrationResponse(traineeRepository.save(trainee));
     }
 
     @Transactional
@@ -48,7 +48,7 @@ public class TraineeService {
             return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
                     "Troubles with updating user " + request.getUsername());
         }));
-        Trainee updateTrainee = gymDao.save(pair.right);
+        Trainee updateTrainee = traineeRepository.save(pair.right);
         return traineeMapper.traineeToProfileResponse(updateTrainee);
     }
     @Transactional(readOnly = true)
@@ -87,7 +87,7 @@ public class TraineeService {
     @Transactional
     public boolean delete(String username) {
         ImmutablePair<User,Trainee> pair = getUserTrainee(username);
-        gymDao.deleteById(pair.right.getId());
+        traineeRepository.deleteById(pair.right.getId());
         return userService.delete(pair.left.getId()).orElse(new User()).equals(pair.left);
     }
 
@@ -116,7 +116,7 @@ public class TraineeService {
             log.error("No user with username: " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
-        Trainee trainee = gymDao.findByUser(user).orElseThrow(() -> {
+        Trainee trainee = traineeRepository.findByUser(user).orElseThrow(() -> {
             log.error("No trainee with username: " + username);
             return new ProhibitedActionException("No one except trainee could use this service, " +
                     "but there are no trainee with username: " + username);
