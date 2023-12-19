@@ -1,6 +1,7 @@
 package org.epam.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,11 +14,15 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
+import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
+import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.service.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/v1/api/trainer")
@@ -125,6 +130,39 @@ public class TrainerController {
         } catch (InvalidDataException e) {
             log.error("Error while updating trainer profile: " + request.getUsername(), e);
             return new ResponseEntity<>(new TrainerProfileResponse(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{username}/trainings")
+    @Operation(summary = "get trainings list for trainer", description = "get trainings list for trainer",
+            parameters = {
+                    @Parameter(name = "username", required = true, description = "The username"),
+                    @Parameter(name = "periodFrom", required = false, description = "The start of the period"),
+                    @Parameter(name = "periodTo", required = false, description = "The end of the period"),
+                    @Parameter(name = "traineeName", required = false, description = "The name of the trainee")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Trainings list received",
+                            content = @Content(schema = @Schema(implementation = GetTrainingsResponse.class)))
+            }
+    )
+    public ResponseEntity<GetTrainingsResponse> getTrainerTrainingsList(@PathVariable String username,
+                                                                        @RequestParam (required = false)
+                                                                        LocalDate periodFrom,
+                                                                        @RequestParam (required = false)
+                                                                        LocalDate periodTo,
+                                                                        @RequestParam (required = false)
+                                                                        String traineeName) {
+        log.info("Getting trainer " + username+ " trainings list");
+        try {
+            GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
+            request.setPeriodFrom(periodFrom); request.setPeriodTo(periodTo); request.setTraineeName(traineeName);
+            GetTrainingsResponse response = trainerService.getTrainerTrainingsList(username, request);
+            log.info("Trainer " + username + " trainings list received successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (InvalidDataException e) {
+            log.error("Error while getting trainer " + username + " trainings list", e);
+            return new ResponseEntity<>(new GetTrainingsResponse(), HttpStatus.BAD_REQUEST);
         }
     }
 }

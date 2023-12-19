@@ -10,22 +10,30 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
+import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
+import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.mapper.TrainerMapper;
+import org.epam.mapper.TrainingMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.Training;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TrainerService {
-    private final TrainerMapper trainerMapper;
     private final TrainerRepository trainerRepository;
     private final UserService userService;
-
+    private final TrainerMapper trainerMapper;
+    private final TrainingMapper trainingMapper;
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
@@ -93,6 +101,21 @@ public class TrainerService {
         return true;
     }
 
+    @Transactional(readOnly = true)
+    public GetTrainingsResponse getTrainerTrainingsList(String username, GetTrainerTrainingsListRequest request) {
+        Trainer trainer = getTrainer(username);
+        List<Training> trainings = trainingFilterByDate(trainer.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
+        if (request.getTraineeName() != null) {
+            trainings = trainings.stream()
+                    .filter(training -> training.getTrainee().getUser().getUsername().equals(request.getTraineeName()))
+                    .collect(Collectors.toList());
+        }
+        GetTrainingsResponse response = new GetTrainingsResponse();
+        response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
+        return response;
+    }
+
+
     protected String getModelName() {
         return "Trainer";
     }
@@ -109,4 +132,31 @@ public class TrainerService {
         });
         return new ImmutablePair<>(user,trainer);
     }
+
+    private Trainer getTrainer(String username) {
+        User user = userService.findByUsername(username).orElseThrow(() -> {
+            log.error("No user with username " + username);
+            return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
+        });
+        return trainerRepository.findByUser(user).orElseThrow(() -> {
+            log.error("No trainee with username: " + username);
+            return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
+                    "but there are no trainer with username: " + username);
+        });
+    }
+
+    private List<Training> trainingFilterByDate(List<Training> trainings, LocalDate periodFrom, LocalDate periodTo) {
+        if (periodFrom != null) {
+            trainings = trainings.stream()
+                    .filter(training -> training.getTrainingDate().isAfter(periodFrom))
+                    .collect(Collectors.toList());
+        }
+        if (periodTo != null) {
+            trainings = trainings.stream()
+                    .filter(training -> training.getTrainingDate().isBefore(periodTo))
+                    .collect(Collectors.toList());
+        }
+        return trainings;
+    }
+
 }

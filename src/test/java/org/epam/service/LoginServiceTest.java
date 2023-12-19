@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -56,9 +57,7 @@ class LoginServiceTest {
     @Test
     void testLogin() {
         LoginRequest request = Mappers.getMapper(TraineeMapper.class).userToLoginRequest(user1);
-        when(userDao.findByUsername(request.getUsername())).thenReturn(Optional.of(user1));
-        when(traineeDao.findByUser(user1)).thenReturn(Optional.empty());
-        when(trainerDao.findByUser(user1)).thenReturn(Optional.of(trainer1));
-        assertInstanceOf(TrainerDto.class, loginService.login(request));
+        when(userDao.findByUsername(user1.getUsername())).thenReturn(Optional.of(user1));
+        assertEquals("Authorized", loginService.login(request));
     }
 }

@@ -7,10 +7,15 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.traineeDto.TraineeProfileResponse;
 import org.epam.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.dto.traineeDto.UpdateTraineeProfileRequest;
+import org.epam.dto.trainingDto.GetTraineeTrainingsListRequest;
+import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
+import org.epam.mapper.TrainingMapper;
+import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
+import org.epam.model.gymModel.Training;
 import org.epam.service.TraineeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +25,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -36,17 +46,22 @@ public class TraineeControllerTest {
     @Spy
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
     @Spy
-    @InjectMocks
     TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
 
+    @Spy
+    @InjectMocks
+    TrainingMapper trainingMapper = Mappers.getMapper(TrainingMapper.class);
+
     Reader reader = new Reader();
-    Trainee trainee3; Trainee trainee4;
+    Trainee trainee3; Trainee trainee4; User user3; User user1;
 
 
     @BeforeEach
     public void setUp() {
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
+        user3 = reader.readEntity("users/user3", User.class);
+        user1 = reader.readEntity("users/user1", User.class);
         trainee3 = reader.readEntity("trainees/trainee3", Trainee.class);
         trainee4 = reader.readEntity("trainees/trainee4", Trainee.class);
     }
@@ -137,5 +152,33 @@ public class TraineeControllerTest {
     void testTraineeDeleteEx() {
         when(traineeService.delete(trainee3.getUser().getUsername())).thenThrow(new InvalidDataException("1","2"));
         assertEquals(false, traineeController.delete(trainee3.getUser().getUsername()).getBody());
+    }
+
+    @Test
+    void testGetTraineeTrainingsList() {
+        List<Training> trainingList = new ArrayList<>();
+        Training training1 = reader.readEntity("trainings/training1", Training.class);
+        Training training2 = reader.readEntity("trainings/training2", Training.class);
+        trainingList.add(training1);
+        trainingList.add(training2);
+        trainee3.setTrainings(trainingList);
+        GetTraineeTrainingsListRequest request = new GetTraineeTrainingsListRequest();
+        GetTrainingsResponse response = new GetTrainingsResponse();
+        response.setTrainings(trainingMapper.traineeTrainingsToShortDtos(trainee3.getTrainings()));
+        when(traineeService.getTraineeTrainingsList(user3.getUsername(), request)).thenReturn(response);
+        assertEquals(response, traineeController.getTraineeTrainingsList(user3.getUsername(), null, null, null, null).getBody());
+    }
+
+    @Test
+    void testGetTraineeTrainingsListEx() {
+        GetTraineeTrainingsListRequest request = new GetTraineeTrainingsListRequest();
+        request.setPeriodFrom(null);
+        request.setPeriodTo(null);
+        request.setTrainingType(null);
+        when(traineeService.getTraineeTrainingsList(user1.getUsername(), request))
+                .thenThrow(new InvalidDataException("1","2"));
+        assertEquals(
+                new ResponseEntity<>(new GetTrainingsResponse(), HttpStatus.BAD_REQUEST),
+                traineeController.getTraineeTrainingsList(user1.getUsername(), null, null, null, null));
     }
 }

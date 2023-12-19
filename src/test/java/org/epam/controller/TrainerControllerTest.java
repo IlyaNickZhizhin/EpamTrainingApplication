@@ -7,10 +7,15 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
+import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
+import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
+import org.epam.mapper.TrainingMapper;
+import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.Training;
 import org.epam.service.TrainerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +25,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -36,16 +47,21 @@ class TrainerControllerTest {
     @Spy
     TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
     @Spy
-    @InjectMocks
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
 
+    @Spy
+    @InjectMocks
+    TrainingMapper trainingMapper = Mappers.getMapper(TrainingMapper.class);
+
     Reader reader = new Reader();
-    Trainer trainer1; Trainer trainer2;
+    Trainer trainer1; Trainer trainer2; User user1; User user2;
 
     @BeforeEach
     public void setUp() {
         reader.setStartPath("src/test/resources/models/");
         reader.setEndPath(".json");
+        user1 = reader.readEntity("users/user1", User.class);
+        user2 = reader.readEntity("users/user2", User.class);
         trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
         trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
     }
@@ -124,6 +140,34 @@ class TrainerControllerTest {
         TrainerProfileResponse response = new TrainerProfileResponse();
         when(trainerService.selectByUsername(trainer2.getUser().getUsername())).thenThrow(new InvalidDataException("1","2"));
         assertEquals(response, trainerController.selectByUsername(trainer2.getUser().getUsername()).getBody());
+    }
+
+    @Test
+    void testGetTrainerTrainingsList() {
+        List<Training> trainings = new ArrayList<>();
+        Training training1 = reader.readEntity("trainings/training1", Training.class);
+        Training training2 = reader.readEntity("trainings/training2", Training.class);
+        trainings.add(training1);
+        trainings.add(training2);
+        trainer1.setTrainings(trainings);
+        GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
+        request.setPeriodFrom(LocalDate.MIN);
+        request.setPeriodTo(LocalDate.MAX);
+        GetTrainingsResponse response = new GetTrainingsResponse();
+        response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
+        when(trainerService.getTrainerTrainingsList(user1.getUsername(), request)).thenReturn(response);
+        assertEquals(response, trainerController.getTrainerTrainingsList(user1.getUsername(), LocalDate.MIN, LocalDate.MAX, null).getBody());
+    }
+    @Test
+    void testGetTrainerTrainingsListEx() {
+        GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
+        request.setPeriodFrom(LocalDate.MIN);
+        request.setPeriodTo(LocalDate.MAX);
+        when(trainerService.getTrainerTrainingsList(user1.getUsername(), request))
+                .thenThrow(new InvalidDataException("1","2"));
+        assertEquals(
+                new ResponseEntity<>(new GetTrainingsResponse(), HttpStatus.BAD_REQUEST),
+                trainerController.getTrainerTrainingsList(user1.getUsername(), LocalDate.MIN, LocalDate.MAX, null));
     }
 
 }

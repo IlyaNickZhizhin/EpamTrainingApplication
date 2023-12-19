@@ -127,34 +127,6 @@ class TrainingControllerTest {
     }
 
     @Test
-    void testGetTraineeTrainingsList() {
-        List<Training> trainingList = new ArrayList<>();
-        trainingList.add(training1);
-        trainingList.add(training2);
-        trainee3.setTrainings(trainingList);
-        GetTraineeTrainingsListRequest request = new GetTraineeTrainingsListRequest();
-        GetTrainingsResponse response = new GetTrainingsResponse();
-        response.setTrainings(trainingMapper.traineeTrainingsToShortDtos(trainee3.getTrainings()));
-        when(trainingService.getTraineeTrainingsList(user3.getUsername(), request)).thenReturn(response);
-        assertEquals(response, trainingController.getTraineeTrainingsList(user3.getUsername(), null, null, null, null).getBody());
-    }
-
-    @Test
-    void testGetTrainerTrainingsList() {
-        List<Training> trainings = new ArrayList<>();
-        trainings.add(training1);
-        trainings.add(training2);
-        trainer1.setTrainings(trainings);
-        GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
-        request.setPeriodFrom(LocalDate.MIN);
-        request.setPeriodTo(LocalDate.MAX);
-        GetTrainingsResponse response = new GetTrainingsResponse();
-        response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
-        when(trainingService.getTrainerTrainingsList(user1.getUsername(), request)).thenReturn(response);
-        assertEquals(response, trainingController.getTrainerTrainingsList(user1.getUsername(), LocalDate.MIN, LocalDate.MAX, null).getBody());
-    }
-
-    @Test
     void testTrainingCreateEx() {
         AddTrainingRequest request = trainingMapper.trainingToAddTrainingRequest(training1);
         InvalidDataException ex = new InvalidDataException("1","2");
@@ -190,31 +162,6 @@ class TrainingControllerTest {
         assertEquals(new ResponseEntity<>(
                 new GetTrainersResponse(), HttpStatus.BAD_REQUEST),
                 trainingController.getNotAssignedOnTraineeActiveTrainers(trainee3.getUser().getUsername()));
-    }
-
-    @Test
-    void testGetTraineeTrainingsListEx() {
-        GetTraineeTrainingsListRequest request = new GetTraineeTrainingsListRequest();
-        request.setPeriodFrom(null);
-        request.setPeriodTo(null);
-        request.setTrainingType(null);
-        when(trainingService.getTraineeTrainingsList(user1.getUsername(), request))
-                .thenThrow(new InvalidDataException("1","2"));
-        assertEquals(
-                new ResponseEntity<>(new GetTrainingsResponse(), HttpStatus.BAD_REQUEST),
-                trainingController.getTraineeTrainingsList(user1.getUsername(), null, null, null, null));
-    }
-
-    @Test
-    void testGetTrainerTrainingsListEx() {
-        GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
-        request.setPeriodFrom(LocalDate.MIN);
-        request.setPeriodTo(LocalDate.MAX);
-        when(trainingService.getTrainerTrainingsList(user1.getUsername(), request))
-                .thenThrow(new InvalidDataException("1","2"));
-        assertEquals(
-                new ResponseEntity<>(new GetTrainingsResponse(), HttpStatus.BAD_REQUEST),
-                trainingController.getTrainerTrainingsList(user1.getUsername(), LocalDate.MIN, LocalDate.MAX, null));
     }
 
 }

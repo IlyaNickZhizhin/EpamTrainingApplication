@@ -100,53 +100,6 @@ public class TrainingService {
         return response;
     }
 
-    @Transactional(readOnly = true)
-    public GetTrainingsResponse getTraineeTrainingsList(String username, GetTraineeTrainingsListRequest request) {
-        Trainee trainee = getTrainee(username);
-        List<Training> trainings = trainingFilterByDate(trainee.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
-        if (request.getTrainingType() != null) {
-            trainings = trainings.stream()
-                    .filter(training -> training.getTrainingType().equals(TrainingType.of(request.getTrainingType())))
-                    .collect(Collectors.toList());
-        }
-        if (request.getTrainerName() != null) {
-            trainings = trainings.stream()
-                    .filter(training -> training.getTrainer().getUser().getUsername().equals(request.getTrainerName()))
-                    .collect(Collectors.toList());
-        }
-        GetTrainingsResponse response = new GetTrainingsResponse();
-        response.setTrainings(trainingMapper.traineeTrainingsToShortDtos(trainings));
-        return response;
-    }
-
-    @Transactional(readOnly = true)
-    public GetTrainingsResponse getTrainerTrainingsList(String username, GetTrainerTrainingsListRequest request) {
-        Trainer trainer = getTrainer(username);
-        List<Training> trainings = trainingFilterByDate(trainer.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
-        if (request.getTraineeName() != null) {
-            trainings = trainings.stream()
-                    .filter(training -> training.getTrainee().getUser().getUsername().equals(request.getTraineeName()))
-                    .collect(Collectors.toList());
-        }
-        GetTrainingsResponse response = new GetTrainingsResponse();
-        response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
-        return response;
-    }
-
-    private List<Training> trainingFilterByDate(List<Training> trainings, LocalDate periodFrom, LocalDate periodTo) {
-        if (periodFrom != null) {
-            trainings = trainings.stream()
-                    .filter(training -> training.getTrainingDate().isAfter(periodFrom))
-                    .collect(Collectors.toList());
-        }
-        if (periodTo != null) {
-            trainings = trainings.stream()
-                    .filter(training -> training.getTrainingDate().isBefore(periodTo))
-                    .collect(Collectors.toList());
-        }
-        return trainings;
-    }
-
     private List<Object> checkTraineeTrainerConnection(Trainee trainee, Trainer trainer){
         List<Trainer> trainerList = trainee.getTrainers();
         List<Trainee> traineeList = trainer.getTrainees();
@@ -162,6 +115,17 @@ public class TrainingService {
         return List.of(trainee, trainer);
     }
 
+    private Trainer getTrainer(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> {
+            log.error("No user with username " + username);
+            return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
+        });
+        return trainerRepository.findByUser(user).orElseThrow(() -> {
+            log.error("No trainee with username: " + username);
+            return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
+                    "but there are no trainer with username: " + username);
+        });
+    }
     private Trainee getTrainee(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> {
             log.error("No user with username: " + username);
@@ -174,16 +138,18 @@ public class TrainingService {
         });
     }
 
-    private Trainer getTrainer(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> {
-            log.error("No user with username " + username);
-            return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
-        });
-        return trainerRepository.findByUser(user).orElseThrow(() -> {
-            log.error("No trainee with username: " + username);
-            return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
-                    "but there are no trainer with username: " + username);
-        });
+    private List<Training> trainingFilterByDate(List<Training> trainings, LocalDate periodFrom, LocalDate periodTo) {
+        if (periodFrom != null) {
+            trainings = trainings.stream()
+                    .filter(training -> training.getTrainingDate().isAfter(periodFrom))
+                    .collect(Collectors.toList());
+        }
+        if (periodTo != null) {
+            trainings = trainings.stream()
+                    .filter(training -> training.getTrainingDate().isBefore(periodTo))
+                    .collect(Collectors.toList());
+        }
+        return trainings;
     }
 
 }
