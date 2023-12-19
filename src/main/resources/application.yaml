@@ -17,7 +17,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/epam_training_app
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
   liquibase:
     change-log: db/changelog/db.changelog-master.xml
     enabled: true

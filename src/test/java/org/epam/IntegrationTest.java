@@ -1,6 +1,5 @@
 package org.epam;
 
-import org.epam.config.Config;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.LoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -27,7 +26,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = {TestConfig.class, TestInitDB.class, Config.class})
+@SpringBootTest
 @ActiveProfiles("test")
 public class IntegrationTest {
 
