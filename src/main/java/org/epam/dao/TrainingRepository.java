@@ -1,7 +1,5 @@
 package org.epam.dao;
 
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 import org.springframework.data.jpa.repository.JpaRepository;

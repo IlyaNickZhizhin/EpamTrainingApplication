@@ -16,8 +16,6 @@ import org.epam.service.LoginService;
 import org.epam.service.TraineeService;
 import org.epam.service.TrainerService;
 import org.epam.service.TrainingService;
-import org.epam.testBeans.TestConfig;
-import org.epam.testBeans.TestInitDB;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
