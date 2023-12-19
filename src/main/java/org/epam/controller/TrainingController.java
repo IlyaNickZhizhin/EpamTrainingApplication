@@ -1,22 +1,21 @@
 package org.epam.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.epam.dto.trainingDto.*;
+import org.epam.dto.trainingDto.AddTrainingRequest;
+import org.epam.dto.trainingDto.GetTrainersResponse;
+import org.epam.dto.trainingDto.GetTrainingTypesResponse;
+import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
 import org.epam.exceptions.InvalidDataException;
-import org.epam.model.gymModel.TrainingType;
 import org.epam.service.TrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/v1/api/training")

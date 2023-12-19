@@ -6,7 +6,6 @@ import org.epam.dao.TraineeRepository;
 import org.epam.dao.TrainerRepository;
 import org.epam.dao.UserRepository;
 import org.epam.dto.LoginRequest;
-import org.epam.dto.trainerDto.TrainerDto;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
@@ -23,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

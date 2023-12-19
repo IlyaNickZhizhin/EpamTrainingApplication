@@ -12,12 +12,8 @@ import org.epam.exceptions.VerificationException;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
-import org.epam.model.gymModel.Trainee;
-import org.epam.model.gymModel.Trainer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Slf4j

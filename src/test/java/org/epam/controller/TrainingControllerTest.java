@@ -1,7 +1,10 @@
 package org.epam.controller;
 
 import org.epam.Reader;
-import org.epam.dto.trainingDto.*;
+import org.epam.dto.trainingDto.AddTrainingRequest;
+import org.epam.dto.trainingDto.GetTrainersResponse;
+import org.epam.dto.trainingDto.GetTrainingTypesResponse;
+import org.epam.dto.trainingDto.UpdateTraineeTrainerListRequest;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.mapper.TrainerMapper;
 import org.epam.mapper.TrainingMapper;
@@ -22,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
