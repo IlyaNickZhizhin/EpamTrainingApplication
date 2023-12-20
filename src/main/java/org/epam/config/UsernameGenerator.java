@@ -14,11 +14,13 @@ public class UsernameGenerator {
     private final UserRepository userDao;
 
     public String getDefaultUsername(String firstName, String lastName) {
-        log.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
+        log.info("Creating default username for user with first name: " + firstName.substring(0,0)
+                + ". and last name: " + lastName.substring(0,0)+ ".");
         StringBuilder username = new StringBuilder(firstName.concat("." + lastName));
         int indexOfUsername = 1;
         if (userDao.findByUsername(username.toString()).isPresent()) {
-            log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
+            log.info("Default username for user with first name: " + firstName.substring(0,0) + ". and last name: "
+                    + lastName.substring(0,0) + ". already exists");
             username.append(indexOfUsername);
             indexOfUsername++;
         }
@@ -27,7 +29,9 @@ public class UsernameGenerator {
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created with username: " + username. toString() );
+        log.info("Default username for user with first name: " + firstName.substring(0,0)
+                + ". and last name: " + lastName.substring(0,0) + ". created with username: "
+                + firstName.substring(0,0) + "." + lastName.substring(0,0) + (indexOfUsername-1));
         return username.toString();
     }
 

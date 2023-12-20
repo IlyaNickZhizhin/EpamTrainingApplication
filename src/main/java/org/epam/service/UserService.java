@@ -19,7 +19,8 @@ class UserService {
     private final PasswordGenerator passwordGenerator;
 
     public Optional<User> setNewUser(String firstName, String lastName) {
-        log.info("Setting new user with first name: " + firstName + " and last name: " + lastName);
+        log.info("Setting new user with first name: " + firstName.substring(0,0) + ". and last name: "
+                + lastName.substring(0,0) + "***");
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -48,7 +49,7 @@ class UserService {
     }
 
     public Optional<User> findByUsername(String username) {
-        log.info("Getting user with username: " + username);
+        log.info("Getting user with username: " + username.substring(0,0) +"***");
         return userRepository.findByUsername(username);
     }
 }

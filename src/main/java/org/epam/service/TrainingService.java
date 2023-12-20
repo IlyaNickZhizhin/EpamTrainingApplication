@@ -58,7 +58,7 @@ public class TrainingService {
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
-        log.info("Training between trainee username: " + request.getTraineeUsername() + " and trainer username: " + request.getTrainerUsername() + " was created");
+        log.info("Training between trainee #: " + trainee.getId() + " and trainer #: " + trainer.getId() + " was created");
         return trainingMapper.trainingToAddTrainingRequest(trainingDao.save(training));
     }
 
@@ -67,7 +67,7 @@ public class TrainingService {
         Trainee trainee = getTrainee(request.getTraineeUsername());
         List<String> exist = trainee.getTrainers().stream()
                 .map(trainer -> trainer.getUser().getUsername())
-                .collect(Collectors.toList());
+                .toList();
         List<String> newTrainers = request.getTrainerUsernames();
         newTrainers.removeAll(exist);
         List<Trainer> trainers = newTrainers.stream()
@@ -77,7 +77,7 @@ public class TrainingService {
                 .map(trainerRepository::findByUser)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList());
+                .toList();
         List<Trainer> trainerList =  trainee.getTrainers();
         trainerList.addAll(trainers);
         trainee.setTrainers(trainerList);
@@ -94,9 +94,13 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public GetTrainersResponse getNotAssignedOnTraineeActiveTrainers(String traineeUsername) {
         Trainee trainee = getTrainee(traineeUsername);
+        log.info("Start finding trainers for trainee #: " + trainee.getId());
         List<Trainer> existingTrainers = new ArrayList<>(CollectionUtils.emptyIfNull(trainerRepository.findAll()));
+        log.info("Existing trainers size: " + existingTrainers.size());
         List<Trainer> onTrainee = trainee.getTrainers();
+        log.info("Trainee already has " + onTrainee.size() + "trainers");
         existingTrainers.removeAll(onTrainee);
+        log.info("Possible trainers for trainee #: " +trainee.getId() + "size" + existingTrainers.size());
         GetTrainersResponse response = new GetTrainersResponse();
         response.setTrainers(trainingMapper.trainersToShortTrainersDto(existingTrainers));
         return response;
@@ -105,15 +109,20 @@ public class TrainingService {
     private List<Object> checkTraineeTrainerConnection(Trainee trainee, Trainer trainer){
         List<Trainer> trainerList = trainee.getTrainers();
         List<Trainee> traineeList = trainer.getTrainees();
+        log.info("Trainee #: " + trainee.getId() + " has " + trainerList.size() + " trainers");
         if(!trainee.getTrainers().contains(trainer)) {
             trainerList.add(trainer);
             trainee.setTrainers(trainerList);
+            log.info("Trainer #: " + trainer.getId() + " added to trainee #: " + trainee.getId());
         } else {
+            log.info("Trainer #: " + trainer.getId() + " already assigned to trainee #: " + trainee.getId());
             if(!trainer.getTrainees().contains(trainee)) {
                 traineeList.add(trainee);
                 trainer.setTrainees(traineeList);
+                log.info("Trainee #: " + trainee.getId() + " added to trainer #: " + trainer.getId());
             }
         }
+        log.info("Trainee #: " + trainee.getId() + " has " + trainerList.size() + " trainers");
         return List.of(trainee, trainer);
     }
 
@@ -123,9 +132,9 @@ public class TrainingService {
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
         return trainerRepository.findByUser(user).orElseThrow(() -> {
-            log.error("No trainee with username: " + username);
+            log.error("No trainee with user: " + user.getId());
             return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
-                    "but there are no trainer with username: " + username);
+                    "but there are no trainer with user: " + user.getId());
         });
     }
     private Trainee getTrainee(String username) {
@@ -133,10 +142,11 @@ public class TrainingService {
             log.error("No user with username: " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
+        log.info("User with id: " + user.getId() + " found");
         return traineeRepository.findByUser(user).orElseThrow(() -> {
-            log.error("No trainee with username " + username);
+            log.error("No trainee with user #" + user.getId());
             return new ProhibitedActionException("No one except trainee could use this method in trainingService, " +
-                    "but there are no trainee with username: " + username);
+                    "but there are no trainee with user #: " + user.getId());
         });
     }
 
@@ -145,11 +155,13 @@ public class TrainingService {
             trainings = trainings.stream()
                     .filter(training -> training.getTrainingDate().isAfter(periodFrom))
                     .collect(Collectors.toList());
+            log.info("Trainings filtered by periodFrom: " + periodFrom + "to size: " + trainings.size());
         }
         if (periodTo != null) {
             trainings = trainings.stream()
                     .filter(training -> training.getTrainingDate().isBefore(periodTo))
                     .collect(Collectors.toList());
+            log.info("Trainings filtered by periodTo: " + periodTo + "to size: " + trainings.size());
         }
         return trainings;
     }

@@ -38,11 +38,17 @@ public class TrainerService {
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
         User user = userService.setNewUser(request.getFirstName(), request.getLastName()).orElseThrow(() -> {
-            log.error("Troubles with creating user: " + request.getFirstName() + "." + request.getLastName());
-            return new InvalidDataException("userDao.setNewUser(" + request.getFirstName() + ", " + request.getLastName() + ")",
-                    "Troubles with creating user: " + request.getFirstName() + " " + request.getLastName());
+            log.error("Troubles with creating user: " + request.getFirstName().substring(0,0) + "."
+                    + request.getLastName().substring(0,0));
+            return new InvalidDataException("userDao.setNewUser(" + request.getFirstName().substring(0,0)
+                    + "***, " + request.getLastName().substring(0,0) + "***)",
+                    "Troubles with creating user: "
+                            + request.getFirstName().substring(0,0)
+                            + "*** " + request.getLastName().substring(0,0) + "***");
         });
-        log.info("Creating " + getModelName() + " with user: " + request.getFirstName() + "." + request.getLastName());
+        log.info("Creating " + getModelName() + " with user: " + request.getFirstName().substring(0,0)
+                + "***." + request.getLastName().substring(0,0)+"***");
+        log.info("User created with id:" + user.getId() + " going to parametrize " + getModelName());
         Trainer trainer = new Trainer();
         trainer.setUser(user);
         trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
@@ -59,17 +65,24 @@ public class TrainerService {
         pair.left.setActive(request.isActive());
         if (request.getSpecialization() != null)
             pair.right.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
+        log.info("User #" + pair.left.getId() + "and Trainer #" + pair.right.getId()
+                + "updated successfully, going to save models");
         pair.right.setUser(userService.update(pair.left.getId(), pair.left)
                 .orElseThrow(() -> {
-                    log.error("Troubles with updating user " + request.getUsername());
-                    return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
-                            "Troubles with updating user " + request.getUsername());
+                    log.error("Troubles with updating user #" + pair.left.getId());
+                    return new InvalidDataException("userDao.update(" + pair.left.getId() + ",  the user)",
+                            "Troubles with updating user #" + pair.left.getId());
                 }));
-        return trainerMapper.trainerToProfileResponse(trainerRepository.save(pair.right));
+        log.info("User #" + pair.left.getId() + "updates save successfully, going to save trainer");
+        Trainer trainer = trainerRepository.save(pair.right);
+        log.info("Trainer #" + trainer.getId() + " saved successfully");
+        return trainerMapper.trainerToProfileResponse(trainer);
     }
     @Transactional(readOnly = true)
     public TrainerProfileResponse selectByUsername(String username) {
-        return trainerMapper.trainerToProfileResponse(getUserTrainer(username).right);
+        Trainer trainer = getTrainer(username);
+        log.info("Trainer #" + trainer.getId() + " selected successfully");
+        return trainerMapper.trainerToProfileResponse(trainer);
     }
 
     @Transactional
@@ -80,9 +93,9 @@ public class TrainerService {
         return userService.update(pair.left.getId(), pair.left)
                 .orElseThrow(
                         () -> {
-                            log.error("Troubles with updating user " + request.getUsername());
-                            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
-                                    "Troubles with updating user " + request.getUsername());
+                            log.error("Troubles with updating user #" + pair.left.getId());
+                            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", the user)",
+                                    "Troubles with updating user #" + pair.left.getId());
                         }
                 )
                 .getPassword().equals(request.getNewPassword());
@@ -93,9 +106,9 @@ public class TrainerService {
         if (user.isActive() != request.isActive()) {
             user.setActive(request.isActive());
             userService.update(user.getId(), user).orElseThrow(() -> {
-                log.error("Troubles with updating user " + request.getUsername());
-                return new InvalidDataException("userDao.update(" + user.getId() + ", " + user + ")",
-                        "Troubles with updating user " + request.getUsername());
+                log.error("Troubles with updating user #" + user.getId());
+                return new InvalidDataException("userDao.update(" + user.getId() + ", the user)",
+                        "Troubles with updating user #" + user.getId());
             });
         }
         return true;
@@ -126,9 +139,9 @@ public class TrainerService {
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username " + username);
         });
         Trainer trainer = trainerRepository.findByUser(user).orElseThrow(() -> {
-            log.error("No trainee with username " + username);
+            log.error("No trainee with user #" + user.getId());
             return new ProhibitedActionException("No one except trainer could use this service, " +
-                    "but there are no trainer with username " + username);
+                    "but there are no trainer with user #" + user.getId());
         });
         return new ImmutablePair<>(user,trainer);
     }
@@ -139,9 +152,9 @@ public class TrainerService {
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
         return trainerRepository.findByUser(user).orElseThrow(() -> {
-            log.error("No trainee with username: " + username);
+            log.error("No trainee with user: " + user.getId());
             return new ProhibitedActionException("No one except trainer could use this method in trainingService, " +
-                    "but there are no trainer with username: " + username);
+                    "but there are no trainer with user: " + user.getId());
         });
     }
 

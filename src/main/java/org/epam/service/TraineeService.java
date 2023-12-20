@@ -41,6 +41,7 @@ public class TraineeService {
     public RegistrationResponse create(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
         Trainee trainee = prepare(request);
+        log.info("Created " + getModelName() + " with id " + trainee.getId());
         return traineeMapper.traineeToRegistrationResponse(traineeRepository.save(trainee));
     }
 
@@ -53,17 +54,23 @@ public class TraineeService {
         pair.left.setActive(request.isActive());
         if (request.getDateOfBirth() != null) pair.right.setDateOfBirth(request.getDateOfBirth());
         if (request.getAddress() != null) pair.right.setAddress(request.getAddress());
+        log.info("User #" + pair.left.getId() + "and Trainee #" + pair.right.getId() 
+                + "updated successfully, going to save models");
         pair.right.setUser(userService.update(pair.left.getId(), pair.left).orElseThrow(() -> {
-            log.error("Troubles with updating user " + request.getUsername());
-            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
-                    "Troubles with updating user " + request.getUsername());
+            log.error("Troubles with updating trainee #: " + pair.right.getId() 
+                    + "with user #:" + pair.left.getId());
+            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", the user)",
+                    "Troubles with updating user #" + pair.left.getId());
         }));
+        log.info("User #" + pair.left.getId() + "updates save successfully, going to save trainee");
         Trainee updateTrainee = traineeRepository.save(pair.right);
+        log.info("Trainee #" + updateTrainee.getId() + "saved successfully");
         return traineeMapper.traineeToProfileResponse(updateTrainee);
     }
     @Transactional(readOnly = true)
     public TraineeProfileResponse selectByUsername(String username) {
-        Trainee trainee = getUserTrainee(username).right;
+        Trainee trainee = getTrainee(username);
+        log.info("Trainee #" + trainee.getId() + "found successfully");
         return traineeMapper.traineeToProfileResponse(trainee);
     }
     @Transactional
@@ -74,9 +81,9 @@ public class TraineeService {
         }
         pair.left.setPassword(request.getNewPassword());
         return userService.update(pair.left.getId(), pair.left).orElseThrow(() -> {
-            log.error("Troubles with updating user " + request.getUsername());
-            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", " + pair.left + ")",
-                    "Troubles with updating user " + request.getUsername());
+            log.error("Troubles with updating user #" + pair.left.getId());
+            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", the user)",
+                    "Troubles with updating user #" + pair.left.getId());
         }).getPassword().equals(request.getNewPassword());
     }
 
@@ -86,9 +93,9 @@ public class TraineeService {
         if (user.isActive() != request.isActive()) {
             user.setActive(request.isActive());
             userService.update(user.getId(), user).orElseThrow(() -> {
-                log.error("Troubles with updating user " + request.getUsername());
-                return new InvalidDataException("userDao.update(" + user.getId() + ", " + user + ")",
-                        "Troubles with updating user " + request.getUsername());
+                log.error("Troubles with updating user #" + user.getId());
+                return new InvalidDataException("userDao.update(" + user.getId() + ", the user)",
+                        "Troubles with updating user #" + user.getId());
             });
         }
         return true;
@@ -96,27 +103,37 @@ public class TraineeService {
 
     @Transactional(readOnly = true)
     public GetTrainingsResponse getTraineeTrainingsList(String username, GetTraineeTrainingsListRequest request) {
+        log.info("Getting trainee trainings list in" + getClass().getSimpleName());
         Trainee trainee = getTrainee(username);
         List<Training> trainings = trainingFilterByDate(trainee.getTrainings(), request.getPeriodFrom(), request.getPeriodTo());
+        log.info("Trainee #" +trainee.getId()+ "trainings list with size:" + trainings.size() + "received successfully");
         if (request.getTrainingType() != null) {
             trainings = trainings.stream()
                     .filter(training -> training.getTrainingType().equals(TrainingType.of(request.getTrainingType())))
                     .collect(Collectors.toList());
+            log.info("Trainee trainings list filtered by type" + request.getTrainingType().name() 
+                    + "to size:" + trainings.size());
         }
         if (request.getTrainerName() != null) {
             trainings = trainings.stream()
                     .filter(training -> training.getTrainer().getUser().getUsername().equals(request.getTrainerName()))
                     .collect(Collectors.toList());
+            log.info("Trainee trainings list filtered by trainer" + request.getTrainerName() 
+                    + "to size:" + trainings.size());
         }
         GetTrainingsResponse response = new GetTrainingsResponse();
         response.setTrainings(trainingMapper.traineeTrainingsToShortDtos(trainings));
+        log.info("Trainee #" +trainee.getId()+ "trainings list filtered by all parameters to size:" + trainings.size());
         return response;
     }
 
     @Transactional
     public boolean delete(String username) {
         ImmutablePair<User,Trainee> pair = getUserTrainee(username);
+        log.info("Deleting " + getModelName() + "# " + pair.right.getId() + " with user # " + pair.left.getId());
         traineeRepository.deleteById(pair.right.getId());
+        log.info("Deleting " + getModelName() + "# " + pair.right.getId() + " was successful." +
+                " Going ro delete user #" + pair.left.getId());
         return userService.delete(pair.left.getId()).orElse(new User()).equals(pair.left);
     }
 
@@ -124,11 +141,14 @@ public class TraineeService {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
         User user = userService.setNewUser(request.getFirstname(), request.getLastname()).orElseThrow(() -> {
-            log.error("Troubles with creating user: " + request.getFirstname() + "." + request.getLastname());
-            return new InvalidDataException("userDao.setNewUser(" + request.getFirstname() + ", " + request.getLastname() + ")"
-                    , "Troubles with creating user: " + request.getFirstname() + "." + request.getLastname());
+            log.error("Troubles with creating user: " + request.getFirstname().substring(0,0) + "." 
+                    + request.getLastname().substring(0,0));
+            return new InvalidDataException("userDao.setNewUser(" + request.getFirstname().substring(0,0) + "***, "
+                    + request.getLastname().substring(0,0) + "***)"
+                    , "Troubles with creating user: " + request.getFirstname().substring(0,0) + "***."
+                    + request.getLastname().substring(0,0));
         });
-        log.info("Creating " + getModelName() + " with user: " + request.getFirstname() + "." + request.getLastname());
+        log.info("User created with id:" + user.getId() + " going to parametrize " + getModelName());
         trainee.setUser(user);
         trainee.setAddress(request.getAddress());
         trainee.setDateOfBirth(request.getDateOfBirth());
@@ -145,11 +165,13 @@ public class TraineeService {
             log.error("No user with username: " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
+        log.info("User with id: " + user.getId() + " found");
         Trainee trainee = traineeRepository.findByUser(user).orElseThrow(() -> {
-            log.error("No trainee with username: " + username);
+            log.error("No trainee with user # " + user.getId());
             return new ProhibitedActionException("No one except trainee could use this service, " +
-                    "but there are no trainee with username: " + username);
+                    "but there are no trainee with user #: " + user.getId());
         });
+        log.info("Trainee with id: " + trainee.getId() + " found");
         return new ImmutablePair<>(user,trainee);
     }
 
@@ -158,10 +180,11 @@ public class TraineeService {
             log.error("No user with username: " + username);
             return new InvalidDataException("userDao.getByUsername(" + username + ")", "No user with username: " + username);
         });
+        log.info("User with id: " + user.getId() + " found");
         return traineeRepository.findByUser(user).orElseThrow(() -> {
-            log.error("No trainee with username " + username);
+            log.error("No trainee with user #" + user.getId());
             return new ProhibitedActionException("No one except trainee could use this method in trainingService, " +
-                    "but there are no trainee with username: " + username);
+                    "but there are no trainee with user #: " + user.getId());
         });
     }
 
@@ -170,11 +193,15 @@ public class TraineeService {
             trainings = trainings.stream()
                     .filter(training -> training.getTrainingDate().isAfter(periodFrom))
                     .collect(Collectors.toList());
+            log.info("Trainee trainings list filtered by date from " + periodFrom
+                    + "to size:" + trainings.size());
         }
         if (periodTo != null) {
             trainings = trainings.stream()
                     .filter(training -> training.getTrainingDate().isBefore(periodTo))
                     .collect(Collectors.toList());
+            log.info("Trainee trainings list filtered by date to " + periodTo
+                    + "to size:" + trainings.size());
         }
         return trainings;
     }

@@ -34,16 +34,15 @@ public class TrainingController {
         responses = {@ApiResponse(responseCode = "201", description = "Training created",
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class)))})
     public ResponseEntity<AddTrainingRequest> create(@RequestBody AddTrainingRequest request) {
-        log.info("Creating training with trainee" + " " + request.getTraineeUsername() + " " +
-                "and trainer" + " " + request.getTrainerUsername() + " " + "and type" + " " + request.getTrainingType());
+        log.info("Creating " + request.getTrainingType().name() + " training with name: " + request.getTrainingName() +
+                " on " + request.getTrainingDate() + " at " + request.getTrainingDuration());
         try {
             AddTrainingRequest response = trainingService.create(request);
-            log.info("Training with trainee " + request.getTraineeUsername() + " and trainer" +
-                     request.getTrainerUsername() + " and type " + request.getTrainingType() + " created successfully");
+            log.info(request.getTrainingType().name() + " training with name: " + request.getTrainingName() +
+            " on " + request.getTrainingDate() + " at " + request.getTrainingDuration() + " created successfully");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (InvalidDataException e) {
-            log.error("Error while creating training with trainee" + request.getTraineeUsername() + " and trainer " +
-                    request.getTrainerUsername() + " and type " + request.getTrainingType() + " created successfully", e);
+            log.error("Error while creating " + request.getTrainingType().name() + " training with name: " + request.getTrainingName(), e);
             return new ResponseEntity<>(new AddTrainingRequest(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -74,13 +73,13 @@ public class TrainingController {
     })
     public ResponseEntity<GetTrainersResponse> updateTrainersList(@RequestBody
                                                                       UpdateTraineeTrainerListRequest request) {
-        log.info("Updating trainee "+ request.getTraineeUsername() + " trainers list");
+        log.info("Updating trainee trainers list in" + getClass().getSimpleName());
         try {
             GetTrainersResponse response = trainingService.updateTrainersList(request);
-            log.info("Trainee " + request.getTraineeUsername() + " Trainers list updated successfully");
+            log.info("Trainee trainers list updated successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error while updating trainee " + request.getTraineeUsername() + " trainers list", e);
+            log.error("Error while updating trainee trainers list", e);
             return new ResponseEntity<>(new GetTrainersResponse(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -90,13 +89,13 @@ public class TrainingController {
         responses = {@ApiResponse(responseCode = "200", description = "Trainers list received",
             content = @Content(schema = @Schema(implementation = GetTrainersResponse.class)))})
     public ResponseEntity<GetTrainersResponse> getTrainersList(@PathVariable String username) {
-        log.info("Getting trainee " + username + " trainers list");
+        log.info("Getting trainee trainers list");
         try {
             GetTrainersResponse response = trainingService.getTrainersList(username);
-            log.info("Trainee " + username + " trainers list received successfully");
+            log.info("Trainee trainers list received successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error while getting trainee " + username + " trainers list", e);
+            log.error("Error while getting trainee trainers list", e);
             return new ResponseEntity<>(new GetTrainersResponse(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -106,13 +105,13 @@ public class TrainingController {
         responses = {@ApiResponse(responseCode = "200", description = "Available trainers list received",
             content = @Content(schema = @Schema(implementation = GetTrainersResponse.class)))})
     public ResponseEntity<GetTrainersResponse> getNotAssignedOnTraineeActiveTrainers(@PathVariable String username) {
-        log.info("Getting trainee " + username + " available trainers list");
+        log.info("Getting trainee available trainers list");
         try {
             GetTrainersResponse response = trainingService.getNotAssignedOnTraineeActiveTrainers(username);
-            log.info("Trainee " + username + " available trainers list received successfully");
+            log.info("Trainee available trainers list received successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error while getting trainee " + username + " available trainers list", e);
+            log.error("Error while getting trainee available trainers list", e);
             return new ResponseEntity<>(new GetTrainersResponse(), HttpStatus.BAD_REQUEST);
         }
     }
