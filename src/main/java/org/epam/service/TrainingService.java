@@ -70,16 +70,18 @@ public class TrainingService {
                 .toList();
         List<String> newTrainers = request.getTrainerUsernames();
         newTrainers.removeAll(exist);
-        List<Trainer> trainers = newTrainers.stream()
+        List<User> usersOfNewTrainersToAdd = newTrainers.stream()
                 .map(userRepository::findByUsername)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .toList();
+        List<Trainer> trainersToAdd = usersOfNewTrainersToAdd.stream()
                 .map(trainerRepository::findByUser)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
         List<Trainer> trainerList =  trainee.getTrainers();
-        trainerList.addAll(trainers);
+        trainerList.addAll(trainersToAdd);
         trainee.setTrainers(trainerList);
         Trainee updatedTrainee = traineeRepository.save(trainee);
         return trainingMapper.traineeToTrainersResponse(updatedTrainee);
