@@ -1,30 +1,37 @@
 package org.epam.config;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.epam.dao.UserDao;
+import org.epam.dao.UserRepository;
+import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
+
+@Component
+@RequiredArgsConstructor
 @Slf4j
 public class UsernameGenerator {
 
-    private UserDao userDao;
+    private final UserRepository userDao;
 
     public String getDefaultUsername(String firstName, String lastName) {
-        log.info("Creating default username for user with first name: " + firstName + " and last name: " + lastName);
+        log.info("Creating default username for user with first name: " + firstName.substring(0,0)
+                + ". and last name: " + lastName.substring(0,0)+ ".");
         StringBuilder username = new StringBuilder(firstName.concat("." + lastName));
         int indexOfUsername = 1;
-        if (userDao.getByUsernameForUsernameGenerator(username.toString())!=null) {
-            log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " already exists");
+        if (userDao.findByUsername(username.toString()).isPresent()) {
+            log.info("Default username for user with first name: " + firstName.substring(0,0) + ". and last name: "
+                    + lastName.substring(0,0) + ". already exists");
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        while (userDao.getByUsernameForUsernameGenerator(username.toString())!=null) {
+        while (userDao.findByUsername(username.toString()).isPresent()) {
             username.delete((username.length()-String.valueOf(indexOfUsername).length()),username.length());
             username.append(indexOfUsername);
             indexOfUsername++;
         }
-        log.info("Default username for user with first name: " + firstName + " and last name: " + lastName + " created with username: " + username. toString() );
+        log.info("Default username for user with first name: " + firstName.substring(0,0)
+                + ". and last name: " + lastName.substring(0,0) + ". created with username: "
+                + firstName.substring(0,0) + "." + lastName.substring(0,0) + (indexOfUsername-1));
         return username.toString();
     }
 

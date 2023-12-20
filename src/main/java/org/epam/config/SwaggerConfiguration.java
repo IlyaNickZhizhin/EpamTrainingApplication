@@ -24,7 +24,8 @@ public class SwaggerConfiguration {
 
     @Bean
     public OpenAPI api(){
-        return new OpenAPI().info(
+        return new OpenAPI()
+                .info(
                 new Info()
                         .title("EpamTrainingApplication Rest API")
                         .description("created by the intern of Epam Training Center")

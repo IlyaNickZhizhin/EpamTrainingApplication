@@ -1,6 +1,7 @@
 package org.epam.dto.traineeDto;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import org.epam.dto.trainerDto.TrainerDto;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Setter
+@Getter
 @EqualsAndHashCode
 public class TraineeProfileResponse {
     private String firstname;

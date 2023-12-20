@@ -1,6 +1,7 @@
 package org.epam.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,18 +14,15 @@ import org.epam.dto.RegistrationResponse;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
+import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
+import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.service.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/v1/api/trainer")
@@ -44,12 +42,12 @@ public class TrainerController {
                             content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
             })
     public ResponseEntity<RegistrationResponse> register(@RequestBody TrainerRegistrationRequest request) {
-        log.info("Registering trainer with name" + request.getFirstname() + " " + request.getLastname());
+        log.info("Registering trainer in " + getClass().getSimpleName());
         try {
             RegistrationResponse response = trainerService.create(request);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (InvalidDataException e) {
-            log.error("Error while registering trainer", e);
+            log.error("Error while registering trainer in " + getClass().getSimpleName(), e);
             return new ResponseEntity<>(new RegistrationResponse(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -64,13 +62,13 @@ public class TrainerController {
                     @ApiResponse(responseCode = "400", description = "Invalid username or password")
             })
     public ResponseEntity<Boolean> changePassword(@RequestBody ChangeLoginRequest request) {
-        log.info("Changing password for" + request.getUsername() + "trainer");
+        log.info("Changing password for trainer in " + getClass().getSimpleName());
         try {
             boolean result = trainerService.changePassword(request);
-            log.info("Password of " + request.getUsername() + "changed successfully");
+            log.info("Password changed successfully in " + getClass().getSimpleName());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error while changing password for" + request.getUsername(), e);
+            log.error("Error while changing password", e);
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
@@ -85,13 +83,13 @@ public class TrainerController {
                     @ApiResponse(responseCode = "400", description = "Invalid username or password")
             })
     public ResponseEntity<Boolean> setActive(@RequestBody ActivateDeactivateRequest request) {
-        log.info("Changing active status of trainer: " + request.getUsername());
+        log.info("Changing active status in " + getClass().getSimpleName());
         try {
             boolean result = trainerService.setActive(request);
-            log.info("Active status of trainer: " + request.getUsername() + " changed successfully");
+            log.info("Active status of trainer in requested condition" + request.isActive());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error while changing active status of trainer: " + request.getUsername(), e);
+            log.error("Error while changing active status of trainer", e);
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
@@ -104,10 +102,10 @@ public class TrainerController {
                     @ApiResponse(responseCode = "400", description = "Invalid username")
             })
     public ResponseEntity<TrainerProfileResponse> selectByUsername(@PathVariable String username) {
-        log.info("Selecting trainer by username: " + username);
+        log.info("Selecting trainer by username: " + username.substring(0,0) + ".");
         try {
             TrainerProfileResponse response = trainerService.selectByUsername(username);
-            log.info("Trainer " + username + " selected successfully");
+            log.info("Trainer username: " + username.substring(0,0) + ". selected successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {
             return new ResponseEntity<>(new TrainerProfileResponse(), HttpStatus.BAD_REQUEST);
@@ -124,14 +122,47 @@ public class TrainerController {
                     @ApiResponse(responseCode = "400", description = "Invalid username")
             })
     public ResponseEntity<TrainerProfileResponse> update(@RequestBody UpdateTrainerProfileRequest request) {
-        log.info("Updating trainer profile: " + request.getUsername());
+        log.info("Updating trainer profile in " + getClass().getSimpleName());
         try {
             TrainerProfileResponse response = trainerService.update(request);
-            log.info("Trainer profile: " + request.getUsername() + " updated successfully");
+            log.info("Trainer profile in" + getClass().getSimpleName() + " updated successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error while updating trainer profile: " + request.getUsername(), e);
+            log.error("Error while updating trainer profile", e);
             return new ResponseEntity<>(new TrainerProfileResponse(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{username}/trainings")
+    @Operation(summary = "get trainings list for trainer", description = "get trainings list for trainer",
+            parameters = {
+                    @Parameter(name = "username", required = true, description = "The username"),
+                    @Parameter(name = "periodFrom", description = "The start of the period"),
+                    @Parameter(name = "periodTo", description = "The end of the period"),
+                    @Parameter(name = "traineeName", description = "The name of the trainee")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Trainings list received",
+                            content = @Content(schema = @Schema(implementation = GetTrainingsResponse.class)))
+            }
+    )
+    public ResponseEntity<GetTrainingsResponse> getTrainerTrainingsList(@PathVariable String username,
+                                                                        @RequestParam (required = false)
+                                                                        LocalDate periodFrom,
+                                                                        @RequestParam (required = false)
+                                                                        LocalDate periodTo,
+                                                                        @RequestParam (required = false)
+                                                                        String traineeName) {
+        log.info("Getting trainer trainings list");
+        try {
+            GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
+            request.setPeriodFrom(periodFrom); request.setPeriodTo(periodTo); request.setTraineeName(traineeName);
+            GetTrainingsResponse response = trainerService.getTrainerTrainingsList(username, request);
+            log.info("Trainer trainings list received successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (InvalidDataException e) {
+            log.error("Error while getting trainer trainings list", e);
+            return new ResponseEntity<>(new GetTrainingsResponse(), HttpStatus.BAD_REQUEST);
         }
     }
 }
