@@ -2,18 +2,21 @@ package org.epam.service;
 
 
 import org.epam.Reader;
-import org.epam.dao.TrainerDaoImpl;
-import org.epam.dao.UserDao;
+import org.epam.dao.TrainerRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
 import org.epam.dto.trainerDto.TrainerProfileResponse;
 import org.epam.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.dto.trainerDto.UpdateTrainerProfileRequest;
+import org.epam.dto.trainingDto.GetTrainerTrainingsListRequest;
+import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
+import org.epam.mapper.TrainingMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
+import org.epam.model.gymModel.Training;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +26,15 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,17 +42,20 @@ import static org.mockito.Mockito.when;
 class TrainerServiceTest {
 
     @Mock
-    private TrainerDaoImpl mockTrainerDaoImpl = mock(TrainerDaoImpl.class);
+    private TrainerRepository mockTrainerDaoImpl = mock(TrainerRepository.class);
 
     @Mock
-    private UserDao mockUserDao = mock(UserDao.class);
+    private UserService mockUserDao = mock(UserService.class);
 
     @Spy
     TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
 
     @Spy
-    @InjectMocks
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+
+    @Spy
+    @InjectMocks
+    TrainingMapper trainingMapper = Mappers.getMapper(TrainingMapper.class);
 
     @InjectMocks
     private TrainerService trainerService;
@@ -73,7 +83,7 @@ class TrainerServiceTest {
         Trainer trainer = trainer1;
         trainer.setId(0);
         when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName())).thenReturn(Optional.ofNullable(user1));
-        when(mockTrainerDaoImpl.create(trainer)).thenReturn(Optional.ofNullable(trainer1));
+        when(mockTrainerDaoImpl.save(trainer)).thenReturn(trainer1);
         assertEquals(response, trainerService.create(request));
     }
 
@@ -85,21 +95,21 @@ class TrainerServiceTest {
         trainer.getUser().setFirstName("user1");
         UpdateTrainerProfileRequest request
                 = trainerMapper.trainerToUpdateRequest(trainer1);
-        request.setFirstname("user1");
+        request.setUsername("user1");
         TrainerProfileResponse response
                 = trainerMapper.trainerToProfileResponse(trainer1);
         response.setFirstName("user1");
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user1));
-        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
-        when(mockUserDao.update(1, user)).thenReturn(Optional.of(user));
-        when(mockTrainerDaoImpl.update(1, trainer)).thenReturn(Optional.of(trainer));
+        when(mockUserDao.findByUsername("user1")).thenReturn(Optional.ofNullable(user1));
+        when(mockTrainerDaoImpl.findByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
+        when(mockUserDao.update(anyInt(), any(User.class))).thenReturn(Optional.of(user));
+        when(mockTrainerDaoImpl.save(any(Trainer.class))).thenReturn(trainer);
         assertEquals(response, trainerService.update(request));
     }
     @Test
     void selectByUsername() {
         TrainerProfileResponse response = trainerMapper.trainerToProfileResponse(trainer1);
-        when(mockUserDao.getByUsername(user1.getUsername())).thenReturn(Optional.ofNullable(user1));
-        when(mockTrainerDaoImpl.getModelByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
+        when(mockUserDao.findByUsername(user1.getUsername())).thenReturn(Optional.ofNullable(user1));
+        when(mockTrainerDaoImpl.findByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
         assertEquals(response, trainerService.selectByUsername(user1.getUsername()));
     }
     @Test
@@ -109,8 +119,8 @@ class TrainerServiceTest {
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user2", User.class);
         userNew.setPassword("newPassword");
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
-        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
+        when(mockUserDao.findByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
+        when(mockTrainerDaoImpl.findByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
         when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(userNew));
         assertTrue(trainerService.changePassword(request));
     }
@@ -120,8 +130,27 @@ class TrainerServiceTest {
                 reader.readDto("trainers/trainer2", Trainer.class, trainerMapper::trainerToActivateDeactivateRequest);
         request.setActive(false);
         user2.setActive(false);
-        when(mockUserDao.getByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
-        when(mockTrainerDaoImpl.getModelByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
+        when(mockUserDao.findByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
+        when(mockTrainerDaoImpl.findByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
         assertTrue(trainerService.setActive(request));
+    }
+    @Test
+    void testGetTrainerTrainingsList() {
+        Trainer trainer = reader.readEntity("trainers/trainer1", Trainer.class);
+        Training training1 = reader.readEntity("trainings/training1", Training.class);
+        Training training2 = reader.readEntity("trainings/training2", Training.class);
+        List<Training> trainings = new ArrayList<>();
+        trainings.add(training1);
+        trainings.add(training2);
+        trainer.setTrainings(trainings);
+        User user = reader.readEntity("users/user1", User.class);
+        GetTrainerTrainingsListRequest request = new GetTrainerTrainingsListRequest();
+        request.setPeriodFrom(LocalDate.MIN);
+        request.setPeriodTo(LocalDate.MAX);
+        GetTrainingsResponse response = new GetTrainingsResponse();
+        response.setTrainings(trainingMapper.trainerTrainingsToShortDtos(trainings));
+        when(mockUserDao.findByUsername(user1.getUsername())).thenReturn(Optional.ofNullable(user));
+        when(mockTrainerDaoImpl.findByUser(user)).thenReturn(Optional.of(trainer));
+        assertEquals(response, trainerService.getTrainerTrainingsList(user1.getUsername(), request));
     }
 }

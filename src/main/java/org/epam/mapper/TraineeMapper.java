@@ -59,6 +59,11 @@ public interface TraineeMapper {
     @Mapping(target = "active", source = "user.active")
     UpdateTraineeProfileRequest traineeToUpdateRequest(Trainee trainee);
 
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "oldPassword", ignore = true)
+    @Mapping(target = "newPassword", ignore = true)
+    ChangeLoginRequest traineeDtoToChangeLoginRequest(TraineeDto trainee);
+
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "oldPassword", source = "user.password")
     @Mapping(target = "newPassword", ignore = true)

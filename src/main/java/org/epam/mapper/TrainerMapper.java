@@ -32,8 +32,8 @@ public interface TrainerMapper {
     @Mapping(source = "trainees", target = "trainees", qualifiedByName = "traineesToShortTraineesDto")
     TrainerProfileResponse trainerToProfileResponse(Trainer trainer);
 
-    @Mapping(source = "user.firstName", target = "firstname")
-    @Mapping(source = "user.lastName", target = "lastname")
+    @Mapping(source = "user.firstName", target = "firstName")
+    @Mapping(source = "user.lastName", target = "lastName")
     @Mapping(source = "user.username", target = "username")
     @Mapping(source = "specialization", target = "specialization", qualifiedByName = "trainingTypeToTrainingName")
     TrainerDto trainerToShortTrainerDto(Trainer trainer);
@@ -45,12 +45,17 @@ public interface TrainerMapper {
     @Mapping(target = "specialization", source = "specialization", qualifiedByName = "trainingTypeToTrainingName")
     TrainerRegistrationRequest trainerToRegistrationRequest(Trainer trainer);
 
-    @Mapping(target = "firstname", source = "user.firstName")
-    @Mapping(target = "lastname", source = "user.lastName")
+    @Mapping(target = "firstName", source = "user.firstName")
+    @Mapping(target = "lastName", source = "user.lastName")
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "active", source = "user.active")
     @Mapping(target = "specialization", source = "specialization", qualifiedByName = "trainingTypeToTrainingName")
     UpdateTrainerProfileRequest trainerToUpdateRequest(Trainer trainer);
+
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "oldPassword", ignore = true)
+    @Mapping(target = "newPassword", ignore = true)
+    ChangeLoginRequest trainerDtoToChangeLoginRequest(TrainerDto trainer);
 
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "oldPassword", source = "user.password")

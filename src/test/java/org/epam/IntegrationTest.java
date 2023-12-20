@@ -1,6 +1,5 @@
 package org.epam;
 
-import org.epam.config.Config;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.LoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -15,23 +14,15 @@ import org.epam.service.LoginService;
 import org.epam.service.TraineeService;
 import org.epam.service.TrainerService;
 import org.epam.service.TrainingService;
-import org.epam.testBeans.TestConfig;
-import org.epam.testBeans.TestInitDB;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInitDB.class, Config.class})
-@WebAppConfiguration
+@SpringBootTest
 @ActiveProfiles("test")
 public class IntegrationTest {
 
@@ -90,23 +81,29 @@ public class IntegrationTest {
         LoginRequest traineeLoginRequest6
                 = reader.readDto("users/user6", User.class, traineeMapper::userToLoginRequest);
         traineeLoginRequest6.setPassword(traineeRegistrationResponse6.getPassword());
-        Trainer trainer1 = (Trainer) loginService.login(trainerLoginRequest1);
-        Trainer trainer2 = (Trainer) loginService.login(trainerLoginRequest2);
-        Trainee trainee3 = (Trainee) loginService.login(traineeLoginRequest3);
-        Trainee trainee4 = (Trainee) loginService.login(traineeLoginRequest4);
-        Trainee trainee5 = (Trainee) loginService.login(traineeLoginRequest5);
-        Trainee trainee6 = (Trainee) loginService.login(traineeLoginRequest6);
+        Trainer trainer1 = reader.readEntity("trainers/trainer1", Trainer.class);
+        Trainer trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
+        Trainee trainee3 = reader.readEntity("trainees/trainee3", Trainee.class);
+        Trainee trainee4 = reader.readEntity("trainees/trainee4", Trainee.class);
+        Trainee trainee5 = reader.readEntity("trainees/trainee5", Trainee.class);
+        Trainee trainee6 = reader.readEntity("trainees/trainee6", Trainee.class);
         ChangeLoginRequest trainerChangeLoginRequest1 = trainerMapper.trainerToChangeLoginRequest(trainer1);
+        trainerChangeLoginRequest1.setOldPassword(trainerRegistrationResponse1.getPassword());
         trainerChangeLoginRequest1.setNewPassword("password01");
         ChangeLoginRequest trainerChangeLoginRequest2 = trainerMapper.trainerToChangeLoginRequest(trainer2);
+        trainerChangeLoginRequest2.setOldPassword(trainerRegistrationResponse2.getPassword());
         trainerChangeLoginRequest2.setNewPassword("password02");
         ChangeLoginRequest traineeChangeLoginRequest3 = traineeMapper.traineeToChangeLoginRequest(trainee3);
+        traineeChangeLoginRequest3.setOldPassword(traineeRegistrationResponse3.getPassword());
         traineeChangeLoginRequest3.setNewPassword("password03");
         ChangeLoginRequest traineeChangeLoginRequest4 = traineeMapper.traineeToChangeLoginRequest(trainee4);
+        traineeChangeLoginRequest4.setOldPassword(traineeRegistrationResponse4.getPassword());
         traineeChangeLoginRequest4.setNewPassword("password04");
         ChangeLoginRequest traineeChangeLoginRequest5 = traineeMapper.traineeToChangeLoginRequest(trainee5);
+        traineeChangeLoginRequest5.setOldPassword(traineeRegistrationResponse5.getPassword());
         traineeChangeLoginRequest5.setNewPassword("password05");
         ChangeLoginRequest traineeChangeLoginRequest6 = traineeMapper.traineeToChangeLoginRequest(trainee6);
+        traineeChangeLoginRequest6.setOldPassword(traineeRegistrationResponse6.getPassword());
         traineeChangeLoginRequest6.setNewPassword("password06");
         assertTrue(trainerService.changePassword(trainerChangeLoginRequest1));
         assertTrue(trainerService.changePassword(trainerChangeLoginRequest2));

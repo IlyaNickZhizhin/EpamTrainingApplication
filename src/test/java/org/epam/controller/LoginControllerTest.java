@@ -36,8 +36,8 @@ public class LoginControllerTest {
         LoginRequest request = new LoginRequest();
         request.setUsername(user.getUsername());
         request.setPassword(user.getPassword());
-        when(loginService.login(request)).thenReturn(trainer);
-        assertEquals(new ResponseEntity<>(loginService.login(request), HttpStatus.OK), loginController.login(request));
+        when(loginService.login(request)).thenReturn("Authorized");
+        assertEquals(new ResponseEntity<>("Authorized", HttpStatus.OK), loginController.login(request));
     }
 
     @Test

@@ -5,19 +5,24 @@
   <groupId>org.epam</groupId>
   <artifactId>EpamTraningApplication</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
 
   <name>EpamTrainingApplication</name>
+
+   <parent>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-parent</artifactId>
+     <version>3.1.2</version>
+     <relativePath/>
+   </parent>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.java.binaries>target/classes</sonar.java.binaries>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <spring.version>6.0.13</spring.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <micrometr>1.11.2</micrometr>
     <springdoc>2.3.0</springdoc>
-    <jakarta.servlet-api>6.0.0</jakarta.servlet-api>
-    <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
     <lombok.version>1.18.30</lombok.version>
     <jackson-databind.version>2.15.3</jackson-databind.version>
     <jackson-datatype-jsr310.version>2.15.3</jackson-datatype-jsr310.version>
@@ -29,40 +34,26 @@
     <logback.version>1.4.11</logback.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <lombok-mapstruct.version>0.1.0</lombok-mapstruct.version>
-    <modelmapper.version>3.1.1</modelmapper.version>
-    <hibernate-core.version>6.2.13.Final</hibernate-core.version>
-    <hibernate-entitymanager.version>5.6.15.Final</hibernate-entitymanager.version>
-    <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
     <liquibase-core.version>4.23.0</liquibase-core.version>
     <postgres.version>42.6.0</postgres.version>
     <commons-dbcp.version>1.4</commons-dbcp.version>
-
   </properties>
 
   <dependencies>
-
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${spring.version}</version>
-    </dependency>
-
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-          <version>${spring.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-orm</artifactId>
-      <version>${spring.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
+
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-      <version>${spring.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
     </dependency>
 
     <dependency>
@@ -72,15 +63,20 @@
     </dependency>
 
     <dependency>
-      <groupId>jakarta.servlet</groupId>
-      <artifactId>jakarta.servlet-api</artifactId>
-      <version>${jakarta.servlet-api}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-actuator-autoconfigure</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-      <version>${jakarta.annotation-api.version}</version>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-core</artifactId>
+      <version>${micrometr}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+      <version>${micrometr}</version>
     </dependency>
 
     <dependency>
@@ -99,27 +95,6 @@
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>${jackson-datatype-jsr310.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
     </dependency>
     
     <dependency>
@@ -159,33 +134,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>${hibernate-core.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-entitymanager</artifactId>
-      <version>${hibernate-entitymanager.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate-validator.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
       <version>${liquibase-core.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-      <version>${spring.version}</version>
     </dependency>
 
     <dependency>
@@ -194,22 +145,8 @@
       <version>${commons-dbcp.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <version>${spring.version}</version>
-      <scope>test</scope>
-    </dependency>
-      <dependency>
-          <groupId>org.mockito</groupId>
-          <artifactId>mockito-junit-jupiter</artifactId>
-          <version>${mockito.version}</version>
-          <scope>test</scope>
-      </dependency>
-
-
-
   </dependencies>
+
   <build>
     <plugins>
 
@@ -259,11 +196,8 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.3.2</version>
-        <configuration>
-          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-        </configuration>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
       </plugin>
 
       <plugin>
