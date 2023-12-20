@@ -1,4 +1,4 @@
-package org.epam.dao;
+package org.epam.repository;
 
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;

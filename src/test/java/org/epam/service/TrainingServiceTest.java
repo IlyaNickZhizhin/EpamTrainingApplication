@@ -1,10 +1,10 @@
 package org.epam.service;
 
 import org.epam.Reader;
-import org.epam.dao.TraineeRepository;
-import org.epam.dao.TrainerRepository;
-import org.epam.dao.TrainingRepository;
-import org.epam.dao.UserRepository;
+import org.epam.repository.TraineeRepository;
+import org.epam.repository.TrainerRepository;
+import org.epam.repository.TrainingRepository;
+import org.epam.repository.UserRepository;
 import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTrainersResponse;
 import org.epam.dto.trainingDto.GetTrainingTypesResponse;

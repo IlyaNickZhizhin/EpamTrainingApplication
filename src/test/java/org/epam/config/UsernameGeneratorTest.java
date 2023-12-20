@@ -1,7 +1,7 @@
 package org.epam.config;
 
 import org.epam.Reader;
-import org.epam.dao.UserRepository;
+import org.epam.repository.UserRepository;
 import org.epam.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

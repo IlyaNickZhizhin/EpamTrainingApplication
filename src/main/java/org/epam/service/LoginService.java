@@ -3,7 +3,7 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.security.PasswordChecker;
-import org.epam.dao.UserRepository;
+import org.epam.repository.UserRepository;
 import org.epam.dto.LoginRequest;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;

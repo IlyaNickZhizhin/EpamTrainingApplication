@@ -2,7 +2,7 @@ package org.epam.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.epam.dao.UserRepository;
+import org.epam.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 

@@ -3,10 +3,10 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.epam.dao.TraineeRepository;
-import org.epam.dao.TrainerRepository;
-import org.epam.dao.TrainingRepository;
-import org.epam.dao.UserRepository;
+import org.epam.repository.TraineeRepository;
+import org.epam.repository.TrainerRepository;
+import org.epam.repository.TrainingRepository;
+import org.epam.repository.UserRepository;
 import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTrainersResponse;
 import org.epam.dto.trainingDto.GetTrainingTypesResponse;
@@ -20,12 +20,9 @@ import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -151,21 +148,4 @@ public class TrainingService {
                     "but there are no trainee with user #: " + user.getId());
         });
     }
-
-    private List<Training> trainingFilterByDate(List<Training> trainings, LocalDate periodFrom, LocalDate periodTo) {
-        if (periodFrom != null) {
-            trainings = trainings.stream()
-                    .filter(training -> training.getTrainingDate().isAfter(periodFrom))
-                    .collect(Collectors.toList());
-            log.info("Trainings filtered by periodFrom: " + periodFrom + "to size: " + trainings.size());
-        }
-        if (periodTo != null) {
-            trainings = trainings.stream()
-                    .filter(training -> training.getTrainingDate().isBefore(periodTo))
-                    .collect(Collectors.toList());
-            log.info("Trainings filtered by periodTo: " + periodTo + "to size: " + trainings.size());
-        }
-        return trainings;
-    }
-
 }

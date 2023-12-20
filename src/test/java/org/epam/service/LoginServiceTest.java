@@ -2,9 +2,9 @@ package org.epam.service;
 
 import org.epam.Reader;
 import org.epam.config.security.PasswordChecker;
-import org.epam.dao.TraineeRepository;
-import org.epam.dao.TrainerRepository;
-import org.epam.dao.UserRepository;
+import org.epam.repository.TraineeRepository;
+import org.epam.repository.TrainerRepository;
+import org.epam.repository.UserRepository;
 import org.epam.dto.LoginRequest;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;

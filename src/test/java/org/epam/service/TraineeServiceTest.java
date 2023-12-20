@@ -1,7 +1,7 @@
 package org.epam.service;
 
 import org.epam.Reader;
-import org.epam.dao.TraineeRepository;
+import org.epam.repository.TraineeRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;

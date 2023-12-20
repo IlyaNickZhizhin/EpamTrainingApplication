@@ -3,7 +3,7 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.epam.dao.TrainerRepository;
+import org.epam.repository.TrainerRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
