@@ -121,10 +121,10 @@ public class TrainerController {
                             content = @Content(schema = @Schema(implementation = TrainerProfileResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid username")
             })
-    public ResponseEntity<TrainerProfileResponse> update(@PathVariable String username, @RequestBody UpdateTrainerProfileRequest request) {
+    public ResponseEntity<TrainerProfileResponse> update(@RequestBody UpdateTrainerProfileRequest request) {
         log.info("Updating trainer profile in " + getClass().getSimpleName());
         try {
-            TrainerProfileResponse response = trainerService.update(username, request);
+            TrainerProfileResponse response = trainerService.update(request);
             log.info("Trainer profile in" + getClass().getSimpleName() + " updated successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {

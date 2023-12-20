@@ -57,8 +57,8 @@ public class TrainerService {
 
     }
     @Transactional
-    public TrainerProfileResponse update(String username, UpdateTrainerProfileRequest request) {
-        ImmutablePair<User, Trainer> pair = getUserTrainer(username);
+    public TrainerProfileResponse update(UpdateTrainerProfileRequest request) {
+        ImmutablePair<User, Trainer> pair = getUserTrainer(request.getUsername());
         pair.left.setUsername(request.getUsername());
         pair.left.setFirstName(request.getFirstName());
         pair.left.setLastName(request.getLastName());

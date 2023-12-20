@@ -99,11 +99,11 @@ class TrainerServiceTest {
         TrainerProfileResponse response
                 = trainerMapper.trainerToProfileResponse(trainer1);
         response.setFirstName("user1");
-        when(mockUserDao.findByUsername(user1.getUsername())).thenReturn(Optional.ofNullable(user1));
+        when(mockUserDao.findByUsername("user1")).thenReturn(Optional.ofNullable(user1));
         when(mockTrainerDaoImpl.findByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
         when(mockUserDao.update(anyInt(), any(User.class))).thenReturn(Optional.of(user));
         when(mockTrainerDaoImpl.save(any(Trainer.class))).thenReturn(trainer);
-        assertEquals(response, trainerService.update(user1.getUsername(), request));
+        assertEquals(response, trainerService.update(request));
     }
     @Test
     void selectByUsername() {
