@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
-import org.epam.dao.UserRepository;
+import org.epam.repository.UserRepository;
 import org.epam.model.User;
 import org.springframework.stereotype.Service;
 
