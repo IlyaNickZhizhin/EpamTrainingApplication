@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-training_types
+      author: IlyaZhizhin
+      changes:
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: BASIC
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: CARDIO
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: STRENGTH
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: WORKOUT
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: YOGA
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: PILATES
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: DANCE
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: BOXING
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: BODYBUILDING
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: CROSSFIT
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: AEROBICS
+        - insert:
+            tableName: training_types
+            columns:
+              - column:
+                  name: training_name
+                  value: ZUMBA

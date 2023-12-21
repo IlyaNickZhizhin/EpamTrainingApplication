@@ -6,6 +6,9 @@ import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
 import org.epam.repository.UserRepository;
 import org.epam.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,7 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-class UserService {
+class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGenerator passwordGenerator;
@@ -51,5 +54,10 @@ class UserService {
     public Optional<User> findByUsername(String username) {
         log.info("Getting user with username: " + username.substring(0,0) +"***");
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return findByUsername(username).orElseThrow(()->new UsernameNotFoundException("User not found"));
     }
 }

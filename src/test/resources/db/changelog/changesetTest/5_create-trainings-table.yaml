@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-trainings
+      author: IlyaZhizhin
+      changes:
+        - createTable:
+            tableName: trainings
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: trainee_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_trainee_id
+                    references: trainees(id)
+                    nullable: false
+              - column:
+                  name: trainer_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_trainer_id
+                    references: trainers(id)
+                    nullable: false
+              - column:
+                  name: training_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: training_type_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_training_type_id
+                    references: training_types(id)
+                    nullable: false
+              - column:
+                  name: training_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: float
+                  constraints:
+                    nullable: false
+

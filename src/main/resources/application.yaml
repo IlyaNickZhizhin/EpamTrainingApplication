@@ -19,7 +19,7 @@ spring:
     hibernate:
       ddl-auto: validate
   liquibase:
-    change-log: db/changelog/db.changelog-master.xml
+    change-log: db/changelog/db.changelog-master.yaml
     enabled: true
 server:
   port: 8081
