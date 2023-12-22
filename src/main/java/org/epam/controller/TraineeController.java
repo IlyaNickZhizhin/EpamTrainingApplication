@@ -23,6 +23,7 @@ import org.epam.model.gymModel.TrainingType;
 import org.epam.service.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -58,6 +59,7 @@ public class TraineeController {
     }
 
     @PatchMapping("/password")
+    @PreAuthorize("#request.username == principal.username")
     @Operation(summary = "Change password",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Change password details",
                     content = @Content(schema = @Schema(implementation = ChangeLoginRequest.class))),
@@ -79,6 +81,7 @@ public class TraineeController {
     }
 
     @PatchMapping("/active")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == principal.username")
     @Operation(summary = "Activate or deactivate trainee",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Activation or deactivation details",
                     content = @Content(schema = @Schema(implementation = ActivateDeactivateRequest.class))),
@@ -101,6 +104,7 @@ public class TraineeController {
     }
 
     @PutMapping("/{username}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == principal.username")
     @Operation(summary = "Update trainee profile",
             parameters = {
                     @Parameter(name = "username", in = ParameterIn.PATH, description = "Username of the trainee", required = true)
@@ -144,6 +148,7 @@ public class TraineeController {
     }
 
     @DeleteMapping("/{username}")
+    @PreAuthorize("#username == principal.username")
     @Operation(summary = "Delete trainee profile",
             parameters = {
                     @Parameter(name = "username", in = ParameterIn.PATH, description = "Username of the trainee", required = true)
@@ -165,6 +170,7 @@ public class TraineeController {
     }
 
     @GetMapping("/{username}/trainings")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #username == principal.username")
     @Operation(summary = "get trainings list for trainee", description = "get trainings list for trainee",
             parameters = {
                     @Parameter(name = "username", required = true, description = "The username"),

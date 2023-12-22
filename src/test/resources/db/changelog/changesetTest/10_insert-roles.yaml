@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-roles
+      author: IlyaZhizhin
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: authority
+                  value: ROLE_ADMIN
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: authority
+                  value: ROLE_TRAINER
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: authority
+                  value: ROLE_TRAINEE

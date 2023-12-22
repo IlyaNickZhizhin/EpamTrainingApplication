@@ -15,3 +15,7 @@ databaseChangeLog:
       file: changesetTest/7_create-trainee_trainers-table.yaml
   - include:
       file: changesetTest/8_add-roles-to-user.yaml
+  - include:
+      file: changesetTest/9_create-users-roles-table.yaml
+  - include:
+      file: changesetTest/10_create-roles-table.yaml

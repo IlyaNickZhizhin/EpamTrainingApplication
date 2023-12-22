@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-trainees
+      id: create-training-types
       author: IlyaZhizhin
       changes:
         - sql:
