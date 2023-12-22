@@ -2,14 +2,14 @@ package org.epam.service;
 
 import org.epam.Reader;
 import org.epam.config.security.PasswordChecker;
-import org.epam.repository.TraineeRepository;
-import org.epam.repository.TrainerRepository;
-import org.epam.repository.UserRepository;
 import org.epam.dto.LoginRequest;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
+import org.epam.repository.TraineeRepository;
+import org.epam.repository.TrainerRepository;
+import org.epam.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
