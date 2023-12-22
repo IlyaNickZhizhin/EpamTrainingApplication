@@ -17,3 +17,5 @@ databaseChangeLog:
       file: classpath:db/changelog/changeset/8_add-roles-to-user.yaml
   - include:
       file: classpath:db/changelog/changeset/9_create_users-roles-table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/10_insert-roles.yaml

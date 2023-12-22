@@ -3,6 +3,10 @@ databaseChangeLog:
       id: add-roles-to-user
       author: IlyaZhizhin
       changes:
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE TYPE authorities AS ENUM ('ROLE_ADMIN', 'ROLE_TRAINER', 'ROLE_TRAINEE');
         - createTable:
             tableName: roles
             columns:
@@ -14,6 +18,6 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: authority
-                  type: smallint
+                  type: authorities
 
 

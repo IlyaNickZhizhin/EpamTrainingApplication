@@ -3,7 +3,6 @@ package org.epam.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.epam.repository.TraineeRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -16,10 +15,12 @@ import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.ProhibitedActionException;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainingMapper;
+import org.epam.model.Role;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
+import org.epam.repository.TraineeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,7 +141,7 @@ public class TraineeService {
     private Trainee prepare(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
-        User user = userService.setNewUser(request.getFirstname(), request.getLastname()).orElseThrow(() -> {
+        User user = userService.setNewUser(request.getFirstname(), request.getLastname(), Role.of(Role.Authority.ROLE_TRAINEE)).orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstname().substring(0,0) + "." 
                     + request.getLastname().substring(0,0));
             return new InvalidDataException("userDao.setNewUser(" + request.getFirstname().substring(0,0) + "***, "

@@ -1,7 +1,6 @@
 package org.epam.service;
 
 import org.epam.Reader;
-import org.epam.repository.TraineeRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -13,9 +12,11 @@ import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
 import org.epam.mapper.TrainingMapper;
+import org.epam.model.Role;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Training;
+import org.epam.repository.TraineeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -76,7 +77,7 @@ class TraineeServiceTest {
                 = reader.readDto("users/user3", User.class, traineeMapper::userToRegistrationResponce);
         Trainee trainee = trainee3;
         trainee.setId(0);
-        when(mockUserDao.setNewUser(user3.getFirstName(),user3.getLastName())).thenReturn(Optional.ofNullable(user3));
+        when(mockUserDao.setNewUser(user3.getFirstName(),user3.getLastName(), Role.of(Role.Authority.ROLE_TRAINEE))).thenReturn(Optional.ofNullable(user3));
         when(mockTraineeDaoImpl.save(trainee)).thenReturn(trainee3);
         assertEquals(response, traineeService.create(request));
     }

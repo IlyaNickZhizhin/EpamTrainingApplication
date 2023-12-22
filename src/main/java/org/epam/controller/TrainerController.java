@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,7 @@ public class TrainerController {
                     @ApiResponse(responseCode = "201", description = "Trainer registered",
                             content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
             })
+    @SecurityRequirements
     public ResponseEntity<RegistrationResponse> register(@RequestBody TrainerRegistrationRequest request) {
         log.info("Registering trainer in " + getClass().getSimpleName());
         try {

@@ -4,14 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
-import org.epam.repository.UserRepository;
+import org.epam.model.Role;
 import org.epam.model.User;
+import org.epam.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ class UserService implements UserDetailsService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGenerator passwordGenerator;
 
-    public Optional<User> setNewUser(String firstName, String lastName) {
+    public Optional<User> setNewUser(String firstName, String lastName, Role role) {
         log.info("Setting new user with first name: " + firstName.substring(0,0) + ". and last name: "
                 + lastName.substring(0,0) + "***");
         User user = new User();
@@ -30,6 +32,7 @@ class UserService implements UserDetailsService {
         user.setUsername(usernameGenerator.getDefaultUsername(firstName, lastName));
         user.setPassword(passwordGenerator.getDefaultPassword());
         user.setActive(true);
+        user.setRoles(Set.of(role));
         return Optional.of(userRepository.save(user));
     }
 

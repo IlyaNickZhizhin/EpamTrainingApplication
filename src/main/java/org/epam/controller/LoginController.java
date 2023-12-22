@@ -1,6 +1,7 @@
 package org.epam.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @Operation(summary = "checks username and password")
+    @SecurityRequirements
     public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
         log.info("Checking username and password in" +getClass().getSimpleName());
         try {

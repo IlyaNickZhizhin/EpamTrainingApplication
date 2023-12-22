@@ -1,23 +1,21 @@
 package org.epam.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import io.jsonwebtoken.Claims;
 
 import java.security.Key;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
-
-    private static final String SECRET_KEY = "epam";
+    private static final String SECRET_KEY = "wE+KbVBGeWh45kQ6oN7TPAzRQIOqnTO5fPbyk0bLyoE=";
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }

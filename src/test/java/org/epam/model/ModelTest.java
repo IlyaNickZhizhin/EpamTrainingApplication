@@ -67,5 +67,13 @@ public class ModelTest {
         assertNotEquals(training1.hashCode(), training2.hashCode());
     }
 
+    @Test
+    public void testAuthorityConversion() {
+        Role role = Role.of("ROLE_ADMIN");
+        assertEquals(Role.Authority.ROLE_ADMIN, role.getAuthority());
+        String authority = role.getAuthority();
+        assertEquals("ROLE_ADMIN", authority);
+    }
+
 
 }
