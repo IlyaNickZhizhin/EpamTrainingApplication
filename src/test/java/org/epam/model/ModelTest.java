@@ -70,7 +70,7 @@ public class ModelTest {
     @Test
     public void testAuthorityConversion() {
         Role role = Role.of("ROLE_ADMIN");
-        assertEquals(Role.Authority.ROLE_ADMIN, role.getAuthority());
+        assertEquals(Role.Authority.ROLE_ADMIN.toString(), role.getAuthority());
         String authority = role.getAuthority();
         assertEquals("ROLE_ADMIN", authority);
     }

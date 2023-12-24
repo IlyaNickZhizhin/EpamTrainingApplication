@@ -8,6 +8,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+my-props:
+  jwt:
+    secret-key: wE+KbVBGeWh45kQ6oN7TPAzRQIOqnTO5fPbyk0bLyoE=
+    max-attempts: 5
+    cold-pause-min: 1
 ---
 spring:
   config:

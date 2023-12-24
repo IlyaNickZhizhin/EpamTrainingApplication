@@ -1,6 +1,7 @@
 package org.epam.testBeans;
 
 import jakarta.annotation.PostConstruct;
+import org.epam.model.Role;
 import org.epam.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,9 @@ public class TestInitDB {
     @Autowired
     TrainingTypeRepository trainingTypeRepository;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     @Value("${spring.liquibase.enabled}")
     private boolean enabled;
 
@@ -30,6 +34,12 @@ public class TestInitDB {
                     trainingType.setTrainingName(trainingName);
                     trainingTypeRepository.save(trainingType);
                 }
+            List<Role.Authority> roleList = Role.Authority.getAuthorities();
+                for (Role.Authority authority : roleList) {
+                    Role role = new Role();
+                    role.setAuthority(authority);
+                    roleRepository.save(role);
+            }
         }
     }
 }

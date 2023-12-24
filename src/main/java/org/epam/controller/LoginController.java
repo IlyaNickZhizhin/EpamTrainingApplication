@@ -28,7 +28,7 @@ public class LoginController {
     @PostMapping("/login")
     @Operation(summary = "checks username and password")
     @SecurityRequirements
-    public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         log.info("Checking username and password in" +getClass().getSimpleName());
         try {
             return new ResponseEntity<>(loginService.login(request), HttpStatus.OK);
