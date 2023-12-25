@@ -2,12 +2,16 @@ package org.epam.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.epam.config.security.PasswordChecker;
-import org.epam.repository.UserRepository;
 import org.epam.dto.LoginRequest;
 import org.epam.exceptions.InvalidDataException;
 import org.epam.exceptions.VerificationException;
 import org.epam.model.User;
+import org.epam.repository.UserRepository;
+import org.epam.service.security.JwtService;
+import org.epam.service.security.LoginAttemptService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class LoginService {
 
     private final UserRepository userRepository;
-    private final PasswordChecker passwordChecker;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final LoginAttemptService loginAttemptService;
 
     @Transactional(readOnly = true)
     public String login(LoginRequest request) throws VerificationException, InvalidDataException {
@@ -25,13 +31,18 @@ public class LoginService {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new InvalidDataException(LoginService.class
                 .getSimpleName()+".login", "username" + request.getUsername() + "was incorrect"));
         log.info("User with id: " + user.getId() + " found");
-        boolean check = passwordChecker.checkPassword(request.getUsername(), request.getPassword(), user);
-        if (check) {
+        if (loginAttemptService.isBlocked(user.getUsername())) {
+            return "Wait for 5 minutes";
+        }
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             log.info("Password for user with id: " + user.getId() + " was correct");
-            return "Authorized";
-        } else {
+            return jwtService.generateToken(user);
+        } catch (BadCredentialsException e) {
             log.error("Password for user with id: " + user.getId() + " was incorrect");
-            return "Not authorized";
+            loginAttemptService.loginFailed(user.getUsername());
+            return e.getMessage();
         }
     }
 }

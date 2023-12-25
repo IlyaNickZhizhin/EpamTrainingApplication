@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - include:
+      file: classpath:db/changelog/changeset/1_create-users-table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/2_create-training_types-table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/3_create-trainee-table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/4_create-trainers-table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/5_create-trainings-table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/6_insert-training_types.yaml
+  - include:
+      file: classpath:db/changelog/changeset/7_create_trainee_trainers_table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/8_add-roles-to-user.yaml
+  - include:
+      file: classpath:db/changelog/changeset/9_create_users-roles-table.yaml
+  - include:
+      file: classpath:db/changelog/changeset/10_insert-roles.yaml

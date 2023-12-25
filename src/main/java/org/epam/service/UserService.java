@@ -4,30 +4,41 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.config.PasswordGenerator;
 import org.epam.config.UsernameGenerator;
-import org.epam.repository.UserRepository;
+import org.epam.model.Role;
 import org.epam.model.User;
+import org.epam.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-class UserService {
+class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGenerator passwordGenerator;
+    private final PasswordEncoder passwordEncoder;
 
-    public Optional<User> setNewUser(String firstName, String lastName) {
+    public Optional<User> setNewUser(String firstName, String lastName, Role role) {
         log.info("Setting new user with first name: " + firstName.substring(0,0) + ". and last name: "
                 + lastName.substring(0,0) + "***");
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(usernameGenerator.getDefaultUsername(firstName, lastName));
-        user.setPassword(passwordGenerator.getDefaultPassword());
+        String password = passwordGenerator.getDefaultPassword();
+        user.setPassword(passwordEncoder.encode(password));
         user.setActive(true);
-        return Optional.of(userRepository.save(user));
+        user.setRoles(Set.of(role));
+        userRepository.save(user);
+        user.setPassword(password);
+        return Optional.of(user);
     }
 
 
@@ -51,5 +62,10 @@ class UserService {
     public Optional<User> findByUsername(String username) {
         log.info("Getting user with username: " + username.substring(0,0) +"***");
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return findByUsername(username).orElseThrow(()->new UsernameNotFoundException("User not found"));
     }
 }

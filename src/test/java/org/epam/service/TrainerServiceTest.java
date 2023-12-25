@@ -2,7 +2,6 @@ package org.epam.service;
 
 
 import org.epam.Reader;
-import org.epam.repository.TrainerRepository;
 import org.epam.dto.ActivateDeactivateRequest;
 import org.epam.dto.ChangeLoginRequest;
 import org.epam.dto.RegistrationResponse;
@@ -14,9 +13,11 @@ import org.epam.dto.trainingDto.GetTrainingsResponse;
 import org.epam.mapper.TraineeMapper;
 import org.epam.mapper.TrainerMapper;
 import org.epam.mapper.TrainingMapper;
+import org.epam.model.Role;
 import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
+import org.epam.repository.TrainerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -52,6 +55,9 @@ class TrainerServiceTest {
 
     @Spy
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+
+    @Spy
+    PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Spy
     @InjectMocks
@@ -82,7 +88,7 @@ class TrainerServiceTest {
                 = reader.readDto("users/user1", User.class, traineeMapper::userToRegistrationResponce);
         Trainer trainer = trainer1;
         trainer.setId(0);
-        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName())).thenReturn(Optional.ofNullable(user1));
+        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName(), Role.of(Role.Authority.ROLE_TRAINER))).thenReturn(Optional.ofNullable(user1));
         when(mockTrainerDaoImpl.save(trainer)).thenReturn(trainer1);
         assertEquals(response, trainerService.create(request));
     }
@@ -118,7 +124,8 @@ class TrainerServiceTest {
                 = reader.readDto("trainers/trainer2", Trainer.class, trainerMapper::trainerToChangeLoginRequest);
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user2", User.class);
-        userNew.setPassword("newPassword");
+        String s = encoder.encode("newPassword");
+        userNew.setPassword(s);
         when(mockUserDao.findByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
         when(mockTrainerDaoImpl.findByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
         when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(userNew));

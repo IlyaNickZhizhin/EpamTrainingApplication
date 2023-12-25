@@ -1,8 +1,8 @@
 package org.epam.config;
 
 import org.epam.Reader;
-import org.epam.repository.UserRepository;
 import org.epam.model.User;
+import org.epam.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

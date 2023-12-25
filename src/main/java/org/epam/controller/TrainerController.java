@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.epam.exceptions.InvalidDataException;
 import org.epam.service.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -29,6 +31,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Tag(name="Trainer controller", description = "for registration, updating, deleting, selecting trainer")
 @Slf4j
+@CrossOrigin
 public class TrainerController {
 
     private final TrainerService trainerService;
@@ -41,6 +44,7 @@ public class TrainerController {
                     @ApiResponse(responseCode = "201", description = "Trainer registered",
                             content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
             })
+    @SecurityRequirements
     public ResponseEntity<RegistrationResponse> register(@RequestBody TrainerRegistrationRequest request) {
         log.info("Registering trainer in " + getClass().getSimpleName());
         try {
@@ -53,6 +57,7 @@ public class TrainerController {
     }
 
     @PatchMapping("/password")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == authentication.principal.username")
     @Operation(summary = "Change password",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Change password details",
                     content = @Content(schema = @Schema(implementation = ChangeLoginRequest.class))),
@@ -74,6 +79,7 @@ public class TrainerController {
     }
 
     @PatchMapping("/active")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == authentication.principal.username")
     @Operation(summary = "Activate or deactivate trainer",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Activate or deactivate trainer details",
                     content = @Content(schema = @Schema(implementation = ActivateDeactivateRequest.class))),
@@ -113,6 +119,7 @@ public class TrainerController {
     }
 
     @PutMapping("/{username}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == authentication.principal.username")
     @Operation(summary = "Update trainer profile",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Update trainer profile details",
                     content = @Content(schema = @Schema(implementation = UpdateTrainerProfileRequest.class))),
@@ -134,6 +141,7 @@ public class TrainerController {
     }
 
     @GetMapping("/{username}/trainings")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #username == authentication.principal.username")
     @Operation(summary = "get trainings list for trainer", description = "get trainings list for trainer",
             parameters = {
                     @Parameter(name = "username", required = true, description = "The username"),

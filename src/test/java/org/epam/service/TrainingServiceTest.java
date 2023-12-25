@@ -1,10 +1,6 @@
 package org.epam.service;
 
 import org.epam.Reader;
-import org.epam.repository.TraineeRepository;
-import org.epam.repository.TrainerRepository;
-import org.epam.repository.TrainingRepository;
-import org.epam.repository.UserRepository;
 import org.epam.dto.trainingDto.AddTrainingRequest;
 import org.epam.dto.trainingDto.GetTrainersResponse;
 import org.epam.dto.trainingDto.GetTrainingTypesResponse;
@@ -16,6 +12,10 @@ import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
+import org.epam.repository.TraineeRepository;
+import org.epam.repository.TrainerRepository;
+import org.epam.repository.TrainingRepository;
+import org.epam.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

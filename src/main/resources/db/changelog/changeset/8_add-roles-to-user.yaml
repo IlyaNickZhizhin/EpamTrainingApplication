@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-roles-to-user
+      author: IlyaZhizhin
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE TYPE authorities AS ENUM ('ROLE_ADMIN', 'ROLE_TRAINER', 'ROLE_TRAINEE');
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: authority
+                  type: authorities
+
+
