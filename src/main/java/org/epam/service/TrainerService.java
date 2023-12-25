@@ -20,6 +20,7 @@ import org.epam.model.User;
 import org.epam.model.gymModel.Trainer;
 import org.epam.model.gymModel.Training;
 import org.epam.repository.TrainerRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ public class TrainerService {
     private final UserService userService;
     private final TrainerMapper trainerMapper;
     private final TrainingMapper trainingMapper;
+    private final PasswordEncoder encoder;
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
@@ -89,9 +91,18 @@ public class TrainerService {
     @Transactional
     public boolean changePassword(ChangeLoginRequest request) {
         ImmutablePair<User, Trainer> pair = getUserTrainer(request.getUsername());
-        if (pair.left.getPassword().equals(request.getNewPassword())) throw new ProhibitedActionException("New password is the same as old");
-        pair.left.setPassword(request.getNewPassword());
-        return userService.update(pair.left.getId(), pair.left)
+        if (encoder.matches(request.getNewPassword(), pair.left.getPassword())) {
+            throw new ProhibitedActionException("New password is the same as old");
+        }
+        pair.left.setPassword(encoder.encode(request.getNewPassword()));
+        User user = userService.update(pair.left.getId(), pair.left)
+                .orElseThrow(
+                        () -> {
+                            log.error("Troubles with updating user #" + pair.left.getId());
+                            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", the user)",
+                                    "Troubles with updating user #" + pair.left.getId());
+                        });
+        return encoder.matches(request.getNewPassword(), userService.update(pair.left.getId(), pair.left)
                 .orElseThrow(
                         () -> {
                             log.error("Troubles with updating user #" + pair.left.getId());
@@ -99,7 +110,7 @@ public class TrainerService {
                                     "Troubles with updating user #" + pair.left.getId());
                         }
                 )
-                .getPassword().equals(request.getNewPassword());
+                .getPassword());
     }
     @Transactional
     public boolean setActive(ActivateDeactivateRequest request) {

@@ -33,6 +33,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Tag(name = "Trainee controller", description = "for registration, updating, deleting, selecting trainee")
 @Slf4j
+@CrossOrigin
 public class TraineeController {
 
     private final TraineeService traineeService;

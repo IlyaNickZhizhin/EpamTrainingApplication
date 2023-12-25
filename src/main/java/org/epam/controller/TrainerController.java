@@ -31,6 +31,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Tag(name="Trainer controller", description = "for registration, updating, deleting, selecting trainer")
 @Slf4j
+@CrossOrigin
 public class TrainerController {
 
     private final TrainerService trainerService;

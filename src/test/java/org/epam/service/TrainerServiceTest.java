@@ -26,6 +26,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -53,6 +55,9 @@ class TrainerServiceTest {
 
     @Spy
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
+
+    @Spy
+    PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Spy
     @InjectMocks
@@ -119,7 +124,8 @@ class TrainerServiceTest {
                 = reader.readDto("trainers/trainer2", Trainer.class, trainerMapper::trainerToChangeLoginRequest);
         request.setNewPassword("newPassword");
         User userNew = reader.readEntity("users/user2", User.class);
-        userNew.setPassword("newPassword");
+        String s = encoder.encode("newPassword");
+        userNew.setPassword(s);
         when(mockUserDao.findByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user2));
         when(mockTrainerDaoImpl.findByUser(user2)).thenReturn(Optional.ofNullable(trainer2));
         when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(userNew));

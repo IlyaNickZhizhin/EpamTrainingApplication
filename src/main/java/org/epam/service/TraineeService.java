@@ -21,6 +21,7 @@ import org.epam.model.gymModel.Trainee;
 import org.epam.model.gymModel.Training;
 import org.epam.model.gymModel.TrainingType;
 import org.epam.repository.TraineeRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class TraineeService {
     private final TrainingMapper trainingMapper;
     private final TraineeRepository traineeRepository;
     private final UserService userService;
+    private final PasswordEncoder encoder;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
@@ -77,15 +79,19 @@ public class TraineeService {
     @Transactional
     public boolean changePassword(ChangeLoginRequest request) {
         ImmutablePair<User,Trainee> pair = getUserTrainee(request.getUsername());
-        if (pair.left.getPassword().equals(request.getNewPassword())) {
+        if (encoder.matches(request.getNewPassword(), pair.left.getPassword())) {
             throw new ProhibitedActionException("New password is the same as old");
         }
-        pair.left.setPassword(request.getNewPassword());
-        return userService.update(pair.left.getId(), pair.left).orElseThrow(() -> {
-            log.error("Troubles with updating user #" + pair.left.getId());
-            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", the user)",
-                    "Troubles with updating user #" + pair.left.getId());
-        }).getPassword().equals(request.getNewPassword());
+        pair.left.setPassword(encoder.encode(request.getNewPassword()));
+        return encoder.matches(request.getNewPassword(), userService.update(pair.left.getId(), pair.left)
+                .orElseThrow(
+                        () -> {
+                            log.error("Troubles with updating user #" + pair.left.getId());
+                            return new InvalidDataException("userDao.update(" + pair.left.getId() + ", the user)",
+                                    "Troubles with updating user #" + pair.left.getId());
+                        }
+                )
+                .getPassword());
     }
 
     @Transactional

@@ -10,6 +10,7 @@ import org.epam.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,6 +23,7 @@ class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGenerator passwordGenerator;
+    private final PasswordEncoder passwordEncoder;
 
     public Optional<User> setNewUser(String firstName, String lastName, Role role) {
         log.info("Setting new user with first name: " + firstName.substring(0,0) + ". and last name: "
@@ -30,10 +32,13 @@ class UserService implements UserDetailsService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(usernameGenerator.getDefaultUsername(firstName, lastName));
-        user.setPassword(passwordGenerator.getDefaultPassword());
+        String password = passwordGenerator.getDefaultPassword();
+        user.setPassword(passwordEncoder.encode(password));
         user.setActive(true);
         user.setRoles(Set.of(role));
-        return Optional.of(userRepository.save(user));
+        userRepository.save(user);
+        user.setPassword(password);
+        return Optional.of(user);
     }
 
 
