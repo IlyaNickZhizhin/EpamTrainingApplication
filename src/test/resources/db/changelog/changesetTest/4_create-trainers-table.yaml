@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-trainees
+      author: IlyaZhizhin
+      changes:
+        - createTable:
+            tableName: trainers
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: specialization
+                  type: int
+                  constraints:
+                    foreignKeyName: training_type_id
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    foreignKeyName: user_id
+                    unique: true
+                    nullable: false
+
+

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-trainees_trainers
+      author: IlyaZhizhin
+      changes:
+        - createTable:
+            tableName: trainees_trainers
+            columns:
+              - column:
+                  name: trainer_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_trainer_id
+                    references: trainers(id)
+                    nullable: false
+              - column:
+                  name: trainee_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_trainee_id
+                    references: trainees(id)
+                    nullable: false

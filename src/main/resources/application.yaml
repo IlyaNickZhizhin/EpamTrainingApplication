@@ -8,6 +8,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+my-props:
+  jwt:
+    secret-key: ${secret:secret-key}
+    max-attempts: 3
+    cold-pause-min: 5
 ---
 spring:
   config:
@@ -19,7 +24,7 @@ spring:
     hibernate:
       ddl-auto: validate
   liquibase:
-    change-log: db/changelog/db.changelog-master.xml
+    change-log: db/changelog/db.changelog-master.yaml
     enabled: true
 server:
   port: 8081

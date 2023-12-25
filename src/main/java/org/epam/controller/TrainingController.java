@@ -15,6 +15,7 @@ import org.epam.exceptions.InvalidDataException;
 import org.epam.service.TrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,11 +24,15 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Training controller", description = "for creating trainings, and other operations with" +
         " entities related to trainings")
 @Slf4j
+@CrossOrigin
 public class TrainingController {
 
     private final TrainingService trainingService;
 
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or " +
+            "hasAuthority('ROLE_TRAINER') and #request.trainerUsername == principal.username " +
+            "or hasAuthority('ROLE_TRAINEE') and #request.traineeUsername == principal.username")
     @Operation(summary = "create training", description = "create training and assign trainee and trainer to it",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Training details",
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class))),
@@ -48,6 +53,7 @@ public class TrainingController {
     }
 
     @GetMapping("/types")
+    @PreAuthorize("hasAuthority('ROLE_TRAINER') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "get all training types", description = "get all training types",
         responses = {@ApiResponse(responseCode = "200", description = "Training types received",
             content = @Content(schema = @Schema(implementation = GetTrainingTypesResponse.class)))})
@@ -63,6 +69,7 @@ public class TrainingController {
     }
 
     @PutMapping("/update-trainers")
+    @PreAuthorize("#request.traineeUsername == principal.username or hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "update trainee trainers list", description = "add new trainers to Trainee trainers list",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "list of trainers usernames",
             content = @Content(schema = @Schema(implementation = UpdateTraineeTrainerListRequest.class))),
@@ -85,6 +92,7 @@ public class TrainingController {
     }
 
     @GetMapping("/{username}/trainers")
+    @PreAuthorize("#username == principal.username or hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "get trainee trainers list", description = "get trainee trainers list",
         responses = {@ApiResponse(responseCode = "200", description = "Trainers list received",
             content = @Content(schema = @Schema(implementation = GetTrainersResponse.class)))})
@@ -101,6 +109,7 @@ public class TrainingController {
     }
 
     @GetMapping("/{username}/available-trainers")
+    @PreAuthorize("#username == principal.username or hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "get trainee available trainers list", description = "get trainee available trainers list",
         responses = {@ApiResponse(responseCode = "200", description = "Available trainers list received",
             content = @Content(schema = @Schema(implementation = GetTrainersResponse.class)))})
