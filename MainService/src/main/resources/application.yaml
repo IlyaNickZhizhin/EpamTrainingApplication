@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: main-service
   datasource:
     username: epamtrainee
     password: epamtraineepassword
@@ -8,9 +10,15 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
 my-props:
   jwt:
-    secret-key: ${secret:secret-key}
+    secret-key: ${secretStore:secret-key}
     max-attempts: 3
     cold-pause-min: 5
 ---

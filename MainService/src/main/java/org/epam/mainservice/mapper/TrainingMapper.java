@@ -1,5 +1,6 @@
 package org.epam.mainservice.mapper;
 
+import org.epam.mainservice.dto.reportDto.TrainerWorkloadRequest;
 import org.epam.mainservice.dto.trainerDto.TrainerDto;
 import org.epam.mainservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.mainservice.dto.trainingDto.GetTrainersResponse;
@@ -50,6 +51,15 @@ public interface TrainingMapper {
     @Mapping(target = "trainingDuration", source = "duration")
     AddTrainingRequest trainingToAddTrainingRequest(Training training);
 
+    @Mapping(source = "trainer.user.firstName", target = "firstName")
+    @Mapping(source = "trainer.user.lastName", target = "lastName")
+    @Mapping(source = "trainer.user.username", target = "username")
+    @Mapping(source = "trainer.user.active", target = "active")
+    @Mapping(source = "duration", target = "duration")
+    @Mapping(source = "trainingDate", target = "trainingDate")
+    @Mapping(target = "actionType", ignore = true)
+    TrainerWorkloadRequest trainingToWorkloadRequest(Training training);
+
     @Named("tNameToTrainingType")
     default TrainingType stringToTrainingType(TrainingType.TrainingName type) {
         return TrainingType.of(type);
@@ -58,13 +68,13 @@ public interface TrainingMapper {
     @Named("trainersToSortTrainersDto")
     default List<TrainerDto> trainingsToShortTrainersDto(List<Trainer> trainers) {
         TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
-        return trainerMapper.trainersToShortTrainersDto(trainers);
+        return trainerMapper.trainersToTrainersDto(trainers);
     }
 
-    @Named("trainersToShortTrainersDto")
+    @Named("trainersToTrainersDto")
     default List<TrainerDto> trainersToShortTrainersDto(List<Trainer> trainers) {
         TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
-        return trainerMapper.trainersToShortTrainersDto(trainers);
+        return trainerMapper.trainersToTrainersDto(trainers);
     }
 
     @Mapping(target = "traineeUsername", source = "trainee.user.username")
