@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,9 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 @Service
+@PropertySource("classpath:secretStore.yaml")
 public class JwtService {
-    @Value("${my-props.jwt.secret-key}")
+    @Value("${secret-key}")
     private String SECRET_KEY;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

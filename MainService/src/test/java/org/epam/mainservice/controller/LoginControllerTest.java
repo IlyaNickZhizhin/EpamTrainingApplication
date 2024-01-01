@@ -4,7 +4,6 @@ import org.epam.mainservice.Reader;
 import org.epam.mainservice.dto.LoginRequest;
 import org.epam.mainservice.exceptions.InvalidDataException;
 import org.epam.mainservice.model.User;
-import org.epam.mainservice.model.gymModel.Trainer;
 import org.epam.mainservice.service.LoginService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -3,6 +3,7 @@ package org.epam.mainservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.epam.mainservice.config.ReportFeignClient;
 import org.epam.mainservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.mainservice.dto.trainingDto.GetTrainersResponse;
 import org.epam.mainservice.dto.trainingDto.GetTrainingTypesResponse;
@@ -35,6 +36,7 @@ public class TrainingService {
     private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingDao;
     private final TrainingMapper trainingMapper;
+    private final ReportFeignClient reportFeignClient;
 
 
     @Transactional(readOnly = true)
@@ -56,6 +58,12 @@ public class TrainingService {
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
+        try {
+            reportFeignClient.getWorkload(trainingMapper.trainingToWorkloadRequest(training));
+        } catch (Exception ex) {
+            log.warn("Working of fein client was not successful");
+            throw ex;
+        }
         log.info("Training between trainee #: " + trainee.getId() + " and trainer #: " + trainer.getId() + " was created");
         return trainingMapper.trainingToAddTrainingRequest(trainingDao.save(training));
     }

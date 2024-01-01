@@ -42,7 +42,7 @@ public interface TraineeMapper {
     @Named("trainersToTrainersDto")
     default List<TrainerDto> trainersToTrainersDto(List<Trainer> trainers) {
         TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
-        return trainerMapper.trainersToShortTrainersDto(
+        return trainerMapper.trainersToTrainersDto(
                 trainers);
     }
 
