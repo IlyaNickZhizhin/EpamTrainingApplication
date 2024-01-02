@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.epam.reportservice.dto.TrainerWorkloadRequest;
 import org.epam.reportservice.dto.TrainerWorkloadResponse;
 import org.epam.reportservice.service.WorkloadService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,9 +33,14 @@ public class WorkloadController {
                             content = @Content(schema = @Schema(implementation = TrainerWorkloadResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid data for getting workload")
             })
-    public TrainerWorkloadResponse change(@RequestBody TrainerWorkloadRequest request) {
+    public ResponseEntity<TrainerWorkloadResponse> change(@RequestBody TrainerWorkloadRequest request) {
         log.info("Changing workload of trainer" + request.getFirstName() +
                 " " + request.getLastName().charAt(0)  + "***");
-        return workloadService.change(request);
+        try {
+            return new ResponseEntity<>(workloadService.change(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

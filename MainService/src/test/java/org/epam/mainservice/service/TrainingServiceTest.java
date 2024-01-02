@@ -1,6 +1,8 @@
 package org.epam.mainservice.service;
 
 import org.epam.mainservice.Reader;
+import org.epam.mainservice.config.ReportFeignClient;
+import org.epam.mainservice.dto.reportDto.TrainerWorkloadResponse;
 import org.epam.mainservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.mainservice.dto.trainingDto.GetTrainersResponse;
 import org.epam.mainservice.dto.trainingDto.GetTrainingTypesResponse;
@@ -45,6 +47,8 @@ class TrainingServiceTest {
     private TrainerRepository mockTrainerDaoImpl = mock(TrainerRepository.class);
     @Mock
     private UserRepository mockUserDao = mock(UserRepository.class);
+    @Mock
+    private ReportFeignClient feignClient = mock(ReportFeignClient.class);
     @Spy
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
     @Spy
@@ -103,6 +107,7 @@ class TrainingServiceTest {
         when(mockTraineeDaoImpl.findByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
         when(mockTrainerDaoImpl.findByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
         when(mockTrainingDaoImpl.save(any(Training.class))).thenReturn(training1);
+        when(feignClient.getWorkload(any())).thenReturn(new TrainerWorkloadResponse());
         assertEquals(request, trainingService.create(request));
     }
 
