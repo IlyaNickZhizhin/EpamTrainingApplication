@@ -3,9 +3,11 @@ package org.epam.mainservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.epam.mainservice.config.ReportFeignClient;
 import org.epam.mainservice.dto.ActivateDeactivateRequest;
 import org.epam.mainservice.dto.ChangeLoginRequest;
 import org.epam.mainservice.dto.RegistrationResponse;
+import org.epam.mainservice.dto.reportDto.TrainerWorkloadRequest;
 import org.epam.mainservice.dto.traineeDto.TraineeProfileResponse;
 import org.epam.mainservice.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.mainservice.dto.traineeDto.UpdateTraineeProfileRequest;
@@ -39,6 +41,7 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final UserService userService;
     private final PasswordEncoder encoder;
+    private final ReportFeignClient feignClient;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
@@ -138,6 +141,7 @@ public class TraineeService {
     public boolean delete(String username) {
         ImmutablePair<User,Trainee> pair = getUserTrainee(username);
         log.info("Deleting " + getModelName() + "# " + pair.right.getId() + " with user # " + pair.left.getId());
+        deleteTraineeTrainersFutureWorkload(pair.right);
         traineeRepository.deleteById(pair.right.getId());
         log.info("Deleting " + getModelName() + "# " + pair.right.getId() + " was successful." +
                 " Going ro delete user #" + pair.left.getId());
@@ -211,6 +215,15 @@ public class TraineeService {
                     + "to size:" + trainings.size());
         }
         return trainings;
+    }
+
+    private void deleteTraineeTrainersFutureWorkload(Trainee trainee){
+        List<Training> training4delete = trainingFilterByDate(trainee.getTrainings(), LocalDate.now(), LocalDate.MAX);
+        training4delete.forEach(training -> {
+            TrainerWorkloadRequest workloadRequest = trainingMapper.trainingToWorkloadRequest(training);
+            workloadRequest.setActionType(TrainerWorkloadRequest.ActionType.DELETE);
+            feignClient.getWorkload(workloadRequest);
+        });
     }
 }
 

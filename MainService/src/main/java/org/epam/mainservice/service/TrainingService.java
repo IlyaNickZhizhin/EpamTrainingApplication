@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.epam.mainservice.config.ReportFeignClient;
+import org.epam.mainservice.dto.reportDto.TrainerWorkloadRequest;
 import org.epam.mainservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.mainservice.dto.trainingDto.GetTrainersResponse;
 import org.epam.mainservice.dto.trainingDto.GetTrainingTypesResponse;
@@ -59,7 +60,9 @@ public class TrainingService {
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
         try {
-            reportFeignClient.getWorkload(trainingMapper.trainingToWorkloadRequest(training));
+            TrainerWorkloadRequest request1 = trainingMapper.trainingToWorkloadRequest(training);
+            request1.setActionType(TrainerWorkloadRequest.ActionType.ADD);
+            reportFeignClient.getWorkload(request1);
         } catch (Exception ex) {
             log.warn("Working of fein client was not successful");
             throw ex;
