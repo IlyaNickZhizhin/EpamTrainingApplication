@@ -9,4 +9,5 @@ import org.mapstruct.Mapping;
 public interface ReportMapper {
     @Mapping(target = "map", ignore = true)
     TrainerWorkloadResponse RequestToResponse(TrainerWorkloadRequest request);
+
 }
