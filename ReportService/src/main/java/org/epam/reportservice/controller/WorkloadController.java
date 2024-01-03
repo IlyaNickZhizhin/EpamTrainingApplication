@@ -13,6 +13,7 @@ import org.epam.reportservice.dto.TrainerWorkloadResponse;
 import org.epam.reportservice.service.WorkloadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,12 +34,17 @@ public class WorkloadController {
                             content = @Content(schema = @Schema(implementation = TrainerWorkloadResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid data for getting workload")
             })
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or "+
+            "hasAuthority('ROLE_TRAINER') or " +
+            "hasAuthority('ROLE_TRAINEE')")
     public ResponseEntity<TrainerWorkloadResponse> change(@RequestBody TrainerWorkloadRequest request) {
         log.info("Changing workload of trainer" + request.getFirstName() +
                 " " + request.getLastName().charAt(0)  + "***");
         try {
             return new ResponseEntity<>(workloadService.change(request), HttpStatus.OK);
         } catch (Exception e){
+            log.warn("Exception in WorkloadController.change() while changing workload of trainer "
+                    + request.getFirstName() + " " + request.getLastName().charAt(0) + "***");
             return new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.BAD_REQUEST);
         }
 

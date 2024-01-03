@@ -20,6 +20,7 @@ import org.epam.mainservice.repository.TraineeRepository;
 import org.epam.mainservice.repository.TrainerRepository;
 import org.epam.mainservice.repository.TrainingRepository;
 import org.epam.mainservice.repository.UserRepository;
+import org.epam.mainservice.service.security.JwtService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ public class TrainingService {
     private final TrainingRepository trainingDao;
     private final TrainingMapper trainingMapper;
     private final ReportFeignClient reportFeignClient;
+    private final JwtService jwtService;
 
 
     @Transactional(readOnly = true)
@@ -62,7 +64,8 @@ public class TrainingService {
         try {
             TrainerWorkloadRequest request1 = trainingMapper.trainingToWorkloadRequest(training);
             request1.setActionType(TrainerWorkloadRequest.ActionType.ADD);
-            reportFeignClient.getWorkload(request1);
+            String token = "Bearer " + jwtService.generateToken(trainee.getUser());
+            reportFeignClient.getWorkload(token, request1);
         } catch (Exception ex) {
             log.warn("Working of fein client was not successful");
             throw ex;
