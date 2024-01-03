@@ -23,6 +23,7 @@ import org.epam.mainservice.model.gymModel.Trainee;
 import org.epam.mainservice.model.gymModel.Training;
 import org.epam.mainservice.model.gymModel.TrainingType;
 import org.epam.mainservice.repository.TraineeRepository;
+import org.epam.mainservice.service.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ public class TraineeService {
     private final UserService userService;
     private final PasswordEncoder encoder;
     private final ReportFeignClient feignClient;
+    private final JwtService jwtService;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
@@ -222,7 +224,8 @@ public class TraineeService {
         training4delete.forEach(training -> {
             TrainerWorkloadRequest workloadRequest = trainingMapper.trainingToWorkloadRequest(training);
             workloadRequest.setActionType(TrainerWorkloadRequest.ActionType.DELETE);
-            feignClient.getWorkload(workloadRequest);
+            String token = "Bearer " + jwtService.generateToken(trainee.getUser());
+            feignClient.getWorkload(token, workloadRequest);
         });
     }
 }

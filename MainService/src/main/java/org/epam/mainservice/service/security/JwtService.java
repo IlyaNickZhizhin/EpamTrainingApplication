@@ -7,7 +7,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.epam.mainservice.exceptions.InvalidDataException;
-import org.epam.mainservice.model.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,16 +25,6 @@ public class JwtService {
     private String SECRET_KEY;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public Set<Role> extractRoles(String token) {
-        Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
-        try {
-             List<Role> roles = claimsJws.getBody().get("auth", List.class);
-             return new HashSet<>(roles);
-        } catch (ClassCastException ex) {
-            throw new InvalidDataException("extractRoles(token)", ex.getMessage());
-        }
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

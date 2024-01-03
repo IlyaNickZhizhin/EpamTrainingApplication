@@ -40,7 +40,7 @@ public class SecurityConfig{
                         .requestMatchers("/v1/api/trainee/").permitAll()
                         .requestMatchers("/v1/api/trainer/").permitAll()
                         .requestMatchers("/v1/api/login").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(sess ->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
