@@ -25,7 +25,7 @@ public class WorkloadController {
 
     private final WorkloadService workloadService;
     @PostMapping("/change")
-    @Operation(summary = "Change password",
+    @Operation(summary = "Change trainer workload",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Change workload storage",
                     content = @Content(schema = @Schema(implementation = TrainerWorkloadRequest.class))),
             responses = {

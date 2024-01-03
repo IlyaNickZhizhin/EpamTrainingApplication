@@ -1,19 +1,23 @@
 package org.epam.mainservice.service.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.epam.mainservice.exceptions.InvalidDataException;
+import org.epam.mainservice.model.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @PropertySource("classpath:secretStore.yaml")
@@ -22,6 +26,16 @@ public class JwtService {
     private String SECRET_KEY;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public Set<Role> extractRoles(String token) {
+        Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+        try {
+             List<Role> roles = claimsJws.getBody().get("auth", List.class);
+             return new HashSet<>(roles);
+        } catch (ClassCastException ex) {
+            throw new InvalidDataException("extractRoles(token)", ex.getMessage());
+        }
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -34,6 +48,8 @@ public class JwtService {
     }
 
     public String generateToken(HashMap<String, Object> extraClaims, UserDetails user) {
+        extraClaims.put("auth", user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
