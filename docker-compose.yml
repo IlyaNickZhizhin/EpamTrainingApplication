@@ -1,0 +1,26 @@
+version: '1'
+services:
+  eureka-server:
+    build:
+      context: ./EurekaServer
+    image: eureka-server-image
+    ports:
+      - "8761:8761"
+  main-service:
+    build:
+      context: ./MainService
+    image: main-service-image
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    depends_on:
+      - eureka-server
+  report-service:
+    build:
+      context: ./ReportService
+    image: report-service-image
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
