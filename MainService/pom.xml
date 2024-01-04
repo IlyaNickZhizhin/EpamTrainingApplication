@@ -6,7 +6,7 @@
         <groupId>org.epam</groupId>
         <artifactId>EpamTraningApplication</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>MainService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
