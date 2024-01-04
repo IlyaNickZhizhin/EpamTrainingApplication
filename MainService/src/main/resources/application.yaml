@@ -79,6 +79,8 @@ spring:
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
+server:
+  port: 8081
 eureka:
   client:
     service-url:
