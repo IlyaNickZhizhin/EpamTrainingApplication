@@ -72,7 +72,7 @@ spring:
     activate:
       on-profile: docker
   datasource:
-    url: jdbc:postgresql://db:5433/epam_training_app
+    url: jdbc:postgresql://db:5432/epam_training_app
   jpa:
     hibernate:
       ddl-auto: validate

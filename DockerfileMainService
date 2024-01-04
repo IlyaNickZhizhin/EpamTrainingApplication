@@ -1,8 +1,6 @@
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
 COPY ./pom.xml /app
-COPY ./MainService /app/main-service/
-WORKDIR /app/main-service/
-ARG BUILD_PROFILE
-RUN ./mvnw clean package -D$BUILD_PROFILE
-CMD ["java", "-jar", "target/MainService-0.0.1-SNAPSHOT.jar"]
+COPY ./MainService/pom.xml /app/main-service/pom.xml
+COPY ./MainService/ /app/main-service
+CMD ["java", "-jar", "main-service/target/MainService-0.0.1-SNAPSHOT.jar"]
