@@ -1,13 +1,25 @@
 spring:
   application:
     name: report-service
-
 server:
   port: 8082
-
+---
+spring:
+  profiles:
+    active: local
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-server:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+---
+spring:
+  profiles:
+    active: docker
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
     register-with-eureka: true
     fetch-registry: true

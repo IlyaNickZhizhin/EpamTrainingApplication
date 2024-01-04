@@ -1,6 +1,7 @@
 package org.epam.mainservice.mapper;
 
 import org.epam.mainservice.dto.reportDto.TrainerWorkloadRequest;
+import org.epam.mainservice.dto.reportDto.TrainerWorkloadResponse;
 import org.epam.mainservice.dto.trainerDto.TrainerDto;
 import org.epam.mainservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.mainservice.dto.trainingDto.GetTrainersResponse;
@@ -59,6 +60,9 @@ public interface TrainingMapper {
     @Mapping(source = "trainingDate", target = "trainingDate")
     @Mapping(target = "actionType", ignore = true)
     TrainerWorkloadRequest trainingToWorkloadRequest(Training training);
+
+    @Mapping(target = "map", ignore = true)
+    TrainerWorkloadResponse trainerWorkloadRequestToResponse(TrainerWorkloadRequest request);
 
     @Named("tNameToTrainingType")
     default TrainingType stringToTrainingType(TrainingType.TrainingName type) {

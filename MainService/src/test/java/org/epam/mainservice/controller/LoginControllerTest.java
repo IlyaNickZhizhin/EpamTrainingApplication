@@ -30,7 +30,7 @@ public class LoginControllerTest {
         Reader reader = new Reader();
         reader.setStartPath("");
         reader.setEndPath("");
-        User user = reader.readEntity("new", User.class);
+        User user = reader.readEntity("src/test/resources/models/users/user1.json", User.class);
         LoginRequest request = new LoginRequest();
         request.setUsername(user.getUsername());
         request.setPassword(user.getPassword());
