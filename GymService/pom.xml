@@ -8,7 +8,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>MainService</artifactId>
+    <artifactId>GymService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>MainService</name>
     <description>MainService</description>
