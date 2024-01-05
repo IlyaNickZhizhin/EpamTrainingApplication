@@ -1,6 +1,4 @@
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
-COPY ./pom.xml /app
-COPY ./MainService/pom.xml /app/main-service/pom.xml
-COPY ./MainService/ /app/main-service
-CMD ["java", "-jar", "main-service/target/MainService-0.0.1-SNAPSHOT.jar"]
+COPY ./MainService/target/ /app/
+CMD ["java", "-jar", "MainService-0.0.1-SNAPSHOT.jar"]
