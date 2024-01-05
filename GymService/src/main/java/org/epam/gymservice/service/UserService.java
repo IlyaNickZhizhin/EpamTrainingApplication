@@ -20,7 +20,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGenerator passwordGenerator;

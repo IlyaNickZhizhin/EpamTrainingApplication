@@ -1,4 +1,4 @@
-package org.epam.mainservice.testBeans;
+package org.epam.gymservice.testBeans;
 
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.springframework.data.jpa.repository.JpaRepository;

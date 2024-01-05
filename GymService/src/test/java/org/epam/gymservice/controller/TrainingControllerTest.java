@@ -1,7 +1,6 @@
-package org.epam.mainservice.controller;
+package org.epam.gymservice.controller;
 
-import org.epam.gymservice.controller.TrainingController;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.gymservice.dto.trainingDto.GetTrainersResponse;
 import org.epam.gymservice.dto.trainingDto.GetTrainingTypesResponse;

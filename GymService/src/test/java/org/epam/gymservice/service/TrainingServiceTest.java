@@ -1,7 +1,6 @@
-package org.epam.mainservice.service;
+package org.epam.gymservice.service;
 
-import org.epam.gymservice.service.TrainingService;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.config.ReportFeignClient;
 import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;

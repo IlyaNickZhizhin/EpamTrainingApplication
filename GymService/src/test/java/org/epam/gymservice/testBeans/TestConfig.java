@@ -1,4 +1,4 @@
-package org.epam.mainservice.testBeans;
+package org.epam.gymservice.testBeans;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Value;

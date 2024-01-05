@@ -1,6 +1,5 @@
-package org.epam.mainservice.config;
+package org.epam.gymservice.config;
 
-import org.epam.gymservice.config.PasswordGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

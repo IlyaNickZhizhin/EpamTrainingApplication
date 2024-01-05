@@ -1,7 +1,6 @@
-package org.epam.mainservice.config;
+package org.epam.gymservice.config;
 
-import org.epam.gymservice.config.UsernameGenerator;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.model.User;
 import org.epam.gymservice.repository.UserRepository;
 import org.junit.jupiter.api.Test;

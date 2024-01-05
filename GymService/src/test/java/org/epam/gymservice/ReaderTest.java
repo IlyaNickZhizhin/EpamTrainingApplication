@@ -1,4 +1,4 @@
-package org.epam.mainservice;
+package org.epam.gymservice;
 
 import org.epam.gymservice.model.User;
 import org.epam.gymservice.model.gymModel.Trainee;
