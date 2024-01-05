@@ -1,6 +1,7 @@
 package org.epam.mainservice.service;
 
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.epam.mainservice.Reader;
 import org.epam.mainservice.dto.ActivateDeactivateRequest;
 import org.epam.mainservice.dto.ChangeLoginRequest;
@@ -32,6 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -88,8 +90,8 @@ class TrainerServiceTest {
                 = reader.readDto("users/user1", User.class, traineeMapper::userToRegistrationResponce);
         Trainer trainer = trainer1;
         trainer.setId(0);
-        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName(), Role.of(Role.Authority.ROLE_TRAINER))).thenReturn(Optional.ofNullable(user1));
-        when(mockTrainerDaoImpl.save(trainer)).thenReturn(trainer1);
+        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName(), Role.of(Role.Authority.ROLE_TRAINER)))
+                .thenReturn(ImmutablePair.of(Optional.ofNullable(user1), Objects.requireNonNull(user1).getPassword()));
         assertEquals(response, trainerService.create(request));
     }
 

@@ -2,6 +2,7 @@ package org.epam.mainservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.epam.mainservice.config.PasswordGenerator;
 import org.epam.mainservice.config.UsernameGenerator;
 import org.epam.mainservice.model.Role;
@@ -25,7 +26,7 @@ class UserService implements UserDetailsService {
     private final PasswordGenerator passwordGenerator;
     private final PasswordEncoder passwordEncoder;
 
-    public Optional<User> setNewUser(String firstName, String lastName, Role role) {
+    public ImmutablePair<Optional<User>, String> setNewUser(String firstName, String lastName, Role role) {
         log.info("Setting new user with first name: " + firstName.substring(0,0) + ". and last name: "
                 + lastName.substring(0,0) + "***");
         User user = new User();
@@ -37,8 +38,7 @@ class UserService implements UserDetailsService {
         user.setActive(true);
         user.setRoles(Set.of(role));
         userRepository.save(user);
-        user.setPassword(password);
-        return Optional.of(user);
+        return ImmutablePair.of(Optional.of(user), password);
     }
 
 
