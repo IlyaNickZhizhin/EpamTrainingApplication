@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,7 +41,8 @@ public class TrainerService {
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
-        User user = userService.setNewUser(request.getFirstName(), request.getLastName(), Role.of(Role.Authority.ROLE_TRAINER)).orElseThrow(() -> {
+        ImmutablePair<Optional<User>, String> userWithPass = userService.setNewUser(request.getFirstName(), request.getLastName(), Role.of(Role.Authority.ROLE_TRAINER));
+        User user = userWithPass.left.orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstName().substring(0,0) + "."
                     + request.getLastName().substring(0,0));
             return new InvalidDataException("userDao.setNewUser(" + request.getFirstName().substring(0,0)
@@ -56,7 +58,8 @@ public class TrainerService {
         trainer.setUser(user);
         trainer.setSpecialization(trainerMapper.stringToTrainingType(request.getSpecialization()));
         log.info("Created " + getModelName() + " with id " + trainer.getId());
-        return trainerMapper.trainerToRegistrationResponse(trainerRepository.save(trainer));
+        trainerRepository.save(trainer);
+        return new RegistrationResponse(userWithPass.left.get().getUsername(), userWithPass.right);
 
     }
     @Transactional

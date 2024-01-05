@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,9 +49,11 @@ public class TraineeService {
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
-        Trainee trainee = prepare(request);
+        ImmutablePair<Trainee, String> traineeWithPass = prepare(request);
+        Trainee trainee = traineeWithPass.left;
         log.info("Created " + getModelName() + " with id " + trainee.getId());
-        return traineeMapper.traineeToRegistrationResponse(traineeRepository.save(trainee));
+        traineeRepository.save(trainee);
+        return new RegistrationResponse(trainee.getUser().getUsername(), traineeWithPass.right);
     }
 
     @Transactional
@@ -150,10 +153,12 @@ public class TraineeService {
         return userService.delete(pair.left.getId()).orElse(new User()).equals(pair.left);
     }
 
-    private Trainee prepare(TraineeRegistrationRequest request) {
+    private ImmutablePair<Trainee, String> prepare(TraineeRegistrationRequest request) {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
-        User user = userService.setNewUser(request.getFirstname(), request.getLastname(), Role.of(Role.Authority.ROLE_TRAINEE)).orElseThrow(() -> {
+        ImmutablePair<Optional<User>, String> userWithPass =
+                userService.setNewUser(request.getFirstname(), request.getLastname(), Role.of(Role.Authority.ROLE_TRAINEE));
+        User user = userWithPass.left.orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstname().substring(0,0) + "." 
                     + request.getLastname().substring(0,0));
             return new InvalidDataException("userDao.setNewUser(" + request.getFirstname().substring(0,0) + "***, "
@@ -166,7 +171,7 @@ public class TraineeService {
         trainee.setAddress(request.getAddress());
         trainee.setDateOfBirth(request.getDateOfBirth());
         log.info("Created " + getModelName() + "and parametrized");
-        return trainee;
+        return ImmutablePair.of(trainee, userWithPass.right);
     }
 
     protected String getModelName() {
