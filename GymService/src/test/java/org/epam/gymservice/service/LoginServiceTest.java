@@ -1,7 +1,6 @@
-package org.epam.mainservice.service;
+package org.epam.gymservice.service;
 
-import org.epam.gymservice.service.LoginService;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.dto.LoginRequest;
 import org.epam.gymservice.mapper.TraineeMapper;
 import org.epam.gymservice.mapper.TrainerMapper;

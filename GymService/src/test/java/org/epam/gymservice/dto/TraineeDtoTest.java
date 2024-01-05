@@ -1,6 +1,6 @@
-package org.epam.mainservice.dto;
+package org.epam.gymservice.dto;
 
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.dto.traineeDto.TraineeDto;
 import org.epam.gymservice.mapper.TraineeMapper;
 import org.epam.gymservice.model.gymModel.Trainee;

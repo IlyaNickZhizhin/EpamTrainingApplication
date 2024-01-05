@@ -1,4 +1,4 @@
-package org.epam.mainservice;
+package org.epam.gymservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

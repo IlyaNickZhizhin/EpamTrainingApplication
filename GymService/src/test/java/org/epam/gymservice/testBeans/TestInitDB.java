@@ -1,4 +1,4 @@
-package org.epam.mainservice.testBeans;
+package org.epam.gymservice.testBeans;
 
 import jakarta.annotation.PostConstruct;
 import org.epam.gymservice.model.Role;

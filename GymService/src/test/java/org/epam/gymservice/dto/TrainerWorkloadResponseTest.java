@@ -1,6 +1,6 @@
-package org.epam.mainservice.dto;
+package org.epam.gymservice.dto;
 
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
 import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
 import org.epam.gymservice.mapper.TrainingMapper;

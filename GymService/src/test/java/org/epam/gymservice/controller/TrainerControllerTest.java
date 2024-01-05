@@ -1,7 +1,6 @@
-package org.epam.mainservice.controller;
+package org.epam.gymservice.controller;
 
-import org.epam.gymservice.controller.TrainerController;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.dto.ActivateDeactivateRequest;
 import org.epam.gymservice.dto.ChangeLoginRequest;
 import org.epam.gymservice.dto.RegistrationResponse;

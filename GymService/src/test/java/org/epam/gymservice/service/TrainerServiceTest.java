@@ -1,10 +1,8 @@
-package org.epam.mainservice.service;
+package org.epam.gymservice.service;
 
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.epam.gymservice.service.TrainerService;
-import org.epam.gymservice.service.UserService;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.dto.ActivateDeactivateRequest;
 import org.epam.gymservice.dto.ChangeLoginRequest;
 import org.epam.gymservice.dto.RegistrationResponse;

@@ -1,8 +1,6 @@
-package org.epam.mainservice.model;
+package org.epam.gymservice.model;
 
-import org.epam.gymservice.model.Role;
-import org.epam.gymservice.model.User;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.model.gymModel.Trainee;
 import org.epam.gymservice.model.gymModel.Trainer;
 import org.epam.gymservice.model.gymModel.Training;

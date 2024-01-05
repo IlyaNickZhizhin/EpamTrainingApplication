@@ -1,7 +1,6 @@
-package org.epam.mainservice.controller;
+package org.epam.gymservice.controller;
 
-import org.epam.gymservice.controller.LoginController;
-import org.epam.mainservice.Reader;
+import org.epam.gymservice.Reader;
 import org.epam.gymservice.dto.LoginRequest;
 import org.epam.gymservice.exceptions.InvalidDataException;
 import org.epam.gymservice.model.User;
