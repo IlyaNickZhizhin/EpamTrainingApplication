@@ -1,8 +1,9 @@
 package org.epam.mainservice.config;
 
+import org.epam.gymservice.config.UsernameGenerator;
 import org.epam.mainservice.Reader;
-import org.epam.mainservice.model.User;
-import org.epam.mainservice.repository.UserRepository;
+import org.epam.gymservice.model.User;
+import org.epam.gymservice.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

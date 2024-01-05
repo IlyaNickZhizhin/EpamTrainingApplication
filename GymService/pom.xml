@@ -10,8 +10,8 @@
     </parent>
     <artifactId>GymService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MainService</name>
-    <description>MainService</description>
+    <name>GymService</name>
+    <description>Main Service of Gym Application, all CRUD and main REST here</description>
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>

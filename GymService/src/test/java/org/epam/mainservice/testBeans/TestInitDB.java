@@ -1,8 +1,8 @@
 package org.epam.mainservice.testBeans;
 
 import jakarta.annotation.PostConstruct;
-import org.epam.mainservice.model.Role;
-import org.epam.mainservice.model.gymModel.TrainingType;
+import org.epam.gymservice.model.Role;
+import org.epam.gymservice.model.gymModel.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

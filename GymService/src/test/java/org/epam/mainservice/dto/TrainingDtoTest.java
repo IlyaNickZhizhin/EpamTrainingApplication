@@ -1,10 +1,10 @@
 package org.epam.mainservice.dto;
 
 import org.epam.mainservice.Reader;
-import org.epam.mainservice.dto.trainingDto.TrainingDto;
-import org.epam.mainservice.mapper.TrainerMapper;
-import org.epam.mainservice.mapper.TrainingMapper;
-import org.epam.mainservice.model.gymModel.Training;
+import org.epam.gymservice.dto.trainingDto.TrainingDto;
+import org.epam.gymservice.mapper.TrainerMapper;
+import org.epam.gymservice.mapper.TrainingMapper;
+import org.epam.gymservice.model.gymModel.Training;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,10 +1,11 @@
 package org.epam.mainservice.controller;
 
+import org.epam.gymservice.controller.LoginController;
 import org.epam.mainservice.Reader;
-import org.epam.mainservice.dto.LoginRequest;
-import org.epam.mainservice.exceptions.InvalidDataException;
-import org.epam.mainservice.model.User;
-import org.epam.mainservice.service.LoginService;
+import org.epam.gymservice.dto.LoginRequest;
+import org.epam.gymservice.exceptions.InvalidDataException;
+import org.epam.gymservice.model.User;
+import org.epam.gymservice.service.LoginService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
