@@ -1,7 +1,7 @@
 package org.epam.mainservice.dto;
 
 import org.epam.mainservice.Reader;
-import org.epam.mainservice.dto.reportDto.TrainerWorkloadRequest;
+import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

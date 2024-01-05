@@ -1,10 +1,10 @@
 package org.epam.mainservice;
 
-import org.epam.mainservice.model.User;
-import org.epam.mainservice.model.gymModel.Trainee;
-import org.epam.mainservice.model.gymModel.Trainer;
-import org.epam.mainservice.model.gymModel.Training;
-import org.epam.mainservice.model.gymModel.TrainingType;
+import org.epam.gymservice.model.User;
+import org.epam.gymservice.model.gymModel.Trainee;
+import org.epam.gymservice.model.gymModel.Trainer;
+import org.epam.gymservice.model.gymModel.Training;
+import org.epam.gymservice.model.gymModel.TrainingType;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

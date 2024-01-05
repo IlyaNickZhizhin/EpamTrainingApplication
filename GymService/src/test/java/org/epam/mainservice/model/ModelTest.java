@@ -1,9 +1,11 @@
 package org.epam.mainservice.model;
 
+import org.epam.gymservice.model.Role;
+import org.epam.gymservice.model.User;
 import org.epam.mainservice.Reader;
-import org.epam.mainservice.model.gymModel.Trainee;
-import org.epam.mainservice.model.gymModel.Trainer;
-import org.epam.mainservice.model.gymModel.Training;
+import org.epam.gymservice.model.gymModel.Trainee;
+import org.epam.gymservice.model.gymModel.Trainer;
+import org.epam.gymservice.model.gymModel.Training;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

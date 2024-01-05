@@ -1,9 +1,9 @@
 package org.epam.mainservice.dto;
 
 import org.epam.mainservice.Reader;
-import org.epam.mainservice.dto.reportDto.TrainerWorkloadRequest;
-import org.epam.mainservice.dto.reportDto.TrainerWorkloadResponse;
-import org.epam.mainservice.mapper.TrainingMapper;
+import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
+import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
+import org.epam.gymservice.mapper.TrainingMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;

@@ -26,10 +26,10 @@ services:
   main-service:
     build:
       context: .
-      dockerfile: DockerfileMainService
+      dockerfile: DockerfileGymService
       args:
         - BUILD_PROFILE=docker-test
-    image: main-service-image
+    image: gym-service-image
     ports:
       - "8081:8081"
     environment:

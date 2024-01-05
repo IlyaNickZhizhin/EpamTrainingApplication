@@ -1,16 +1,17 @@
 package org.epam.mainservice.service;
 
+import org.epam.gymservice.service.LoginService;
 import org.epam.mainservice.Reader;
-import org.epam.mainservice.dto.LoginRequest;
-import org.epam.mainservice.mapper.TraineeMapper;
-import org.epam.mainservice.mapper.TrainerMapper;
-import org.epam.mainservice.model.User;
-import org.epam.mainservice.model.gymModel.Trainer;
-import org.epam.mainservice.repository.TraineeRepository;
-import org.epam.mainservice.repository.TrainerRepository;
-import org.epam.mainservice.repository.UserRepository;
-import org.epam.mainservice.service.security.JwtService;
-import org.epam.mainservice.service.security.LoginAttemptService;
+import org.epam.gymservice.dto.LoginRequest;
+import org.epam.gymservice.mapper.TraineeMapper;
+import org.epam.gymservice.mapper.TrainerMapper;
+import org.epam.gymservice.model.User;
+import org.epam.gymservice.model.gymModel.Trainer;
+import org.epam.gymservice.repository.TraineeRepository;
+import org.epam.gymservice.repository.TrainerRepository;
+import org.epam.gymservice.repository.UserRepository;
+import org.epam.gymservice.service.security.JwtService;
+import org.epam.gymservice.service.security.LoginAttemptService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
