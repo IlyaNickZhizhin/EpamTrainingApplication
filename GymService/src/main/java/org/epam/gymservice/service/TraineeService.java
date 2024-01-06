@@ -3,7 +3,6 @@ package org.epam.gymservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.epam.gymservice.config.ReportFeignClient;
 import org.epam.gymservice.dto.ActivateDeactivateRequest;
 import org.epam.gymservice.dto.ChangeLoginRequest;
 import org.epam.gymservice.dto.RegistrationResponse;
@@ -23,6 +22,7 @@ import org.epam.gymservice.model.gymModel.Trainee;
 import org.epam.gymservice.model.gymModel.Training;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.repository.TraineeRepository;
+import org.epam.gymservice.service.feign.AsyncFeignClientMethods;
 import org.epam.gymservice.service.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final UserService userService;
     private final PasswordEncoder encoder;
-    private final ReportFeignClient feignClient;
+    private final AsyncFeignClientMethods feignClient;
     private final JwtService jwtService;
 
     @Transactional
