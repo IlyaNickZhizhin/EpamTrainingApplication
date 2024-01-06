@@ -5,10 +5,6 @@ import lombok.EqualsAndHashCode;
 import org.epam.reportservice.model.TrainerKey;
 import org.epam.reportservice.model.TrainingSession;
 
-import java.time.Month;
-import java.time.Year;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
 
 @Data
