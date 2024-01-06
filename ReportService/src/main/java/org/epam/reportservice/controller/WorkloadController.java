@@ -43,7 +43,8 @@ public class WorkloadController {
         try {
             return new ResponseEntity<>(workloadService.addWorkload(request), HttpStatus.OK);
         } catch (Exception e){
-            log.warn("Exception in WorkloadController.change() while adding workload of trainer "
+            log.warn("Exception in " + this.getClass().getSimpleName() + "."
+                    + Thread.currentThread().getStackTrace()[2].getMethodName()
                     + request.getFirstName() + " " + request.getLastName().charAt(0) + "***");
             return new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.BAD_REQUEST);
         }
@@ -67,7 +68,8 @@ public class WorkloadController {
         try {
             return new ResponseEntity<>(workloadService.deleteWorkload(request), HttpStatus.OK);
         } catch (Exception e){
-            log.warn("Exception in WorkloadController.change() while deleting workload of trainer "
+            log.warn("Exception in " + this.getClass().getSimpleName() + "."
+                    + Thread.currentThread().getStackTrace()[2].getMethodName()
                     + request.getFirstName() + " " + request.getLastName().charAt(0) + "***");
             return new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.BAD_REQUEST);
         }

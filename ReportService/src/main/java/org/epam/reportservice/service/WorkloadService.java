@@ -25,7 +25,9 @@ public class WorkloadService {
     }
 
     public TrainerWorkloadResponse deleteWorkload(TrainerWorkloadRequest request) {
-        log.info("WorkloadService.change(TrainerWorkloadRequest request) starts DELETE workload or trainer " +
+        log.info(this.getClass().getSimpleName() + "." +
+                Thread.currentThread().getStackTrace()[2].getMethodName()
+                + "starts DELETE workload of trainer " +
                                 request.getFirstName() + request.getLastName().charAt(0) + "*** training on " +
                                 request.getTrainingDate());
         TrainerKey key = TrainerKey.of(request);
