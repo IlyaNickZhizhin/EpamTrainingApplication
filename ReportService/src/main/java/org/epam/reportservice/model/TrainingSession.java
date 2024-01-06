@@ -2,7 +2,6 @@ package org.epam.reportservice.model;
 
 import lombok.Data;
 import org.epam.reportservice.dto.TrainerWorkloadRequest;
-import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.time.Month;

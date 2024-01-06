@@ -3,17 +3,17 @@ package org.epam.reportservice.service;
 import org.epam.reportservice.Reader;
 import org.epam.reportservice.dto.TrainerWorkloadRequest;
 import org.epam.reportservice.dto.TrainerWorkloadResponse;
-import org.epam.reportservice.repository.WorkloadStorage;
 import org.epam.reportservice.model.TrainerKey;
 import org.epam.reportservice.model.TrainingSession;
+import org.epam.reportservice.repository.WorkloadStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Queue;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
