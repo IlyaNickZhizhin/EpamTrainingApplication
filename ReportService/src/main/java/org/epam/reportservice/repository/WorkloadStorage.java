@@ -1,17 +1,46 @@
 package org.epam.reportservice.repository;
 
+import lombok.Getter;
+import org.epam.reportservice.model.TrainerKey;
+import org.epam.reportservice.model.TrainingSession;
 import org.springframework.stereotype.Repository;
 
-import java.time.Month;
-import java.time.Year;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Repository
+@Getter
 public class WorkloadStorage {
-    private final Map<String, Map<Year, Map<Month, Double>>> storage = new HashMap<>();
+    private final Map<TrainerKey, Queue<TrainingSession>> storage = new HashMap<>();
 
-    public Map<String, Map<Year, Map<Month, Double>>> getStorage() {
-        return storage;
+    public Queue<TrainingSession> addOrUpdate(TrainerKey key, TrainingSession newSession){
+        if (!storage.containsKey(key)){
+            PriorityQueue<TrainingSession> queue = new PriorityQueue<>();
+            queue.add(newSession);
+            storage.put(key, queue);
+            return queue;
+        }
+        for (TrainingSession session : storage.get(key)) {
+            if (session.getYear().equals(newSession.getYear()) && session.getMonth().equals(newSession.getMonth())) {
+                session.setDuration(session.getDuration()+newSession.getDuration());
+                return storage.get(key);
+            }
+        }
+        storage.get(key).add(newSession);
+        return storage.get(key);
+    }
+
+    public Queue<TrainingSession> deleteOrUpdate(TrainerKey key, TrainingSession newSession){
+        if (!storage.containsKey(key)){
+            throw new NoSuchElementException("Trainer " + key.getFirstName() + " " + key.getLastName().charAt(0) + "***" +
+                    "has no training workload");
+        }
+        for (TrainingSession session : storage.get(key)) {
+            if (session.getYear().equals(newSession.getYear()) && session.getMonth().equals(newSession.getMonth())) {
+                if (session.getDuration() <= newSession.getDuration()) storage.get(key).remove(session);
+                else session.setDuration(session.getDuration()-newSession.getDuration());
+                return storage.get(key);
+            }
+        }
+        return storage.get(key);
     }
 }

@@ -25,28 +25,51 @@ import org.springframework.web.bind.annotation.*;
 public class WorkloadController {
 
     private final WorkloadService workloadService;
-    @PostMapping("/change")
+    @PutMapping("/change")
     @Operation(summary = "Change trainer workload",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Change workload storage",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Add new workload to storage",
                     content = @Content(schema = @Schema(implementation = TrainerWorkloadRequest.class))),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Workload storage changed successfully",
+                    @ApiResponse(responseCode = "200", description = "Workload added changed successfully",
                             content = @Content(schema = @Schema(implementation = TrainerWorkloadResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid data for getting workload")
             })
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or "+
             "hasAuthority('ROLE_TRAINER') or " +
             "hasAuthority('ROLE_TRAINEE')")
-    public ResponseEntity<TrainerWorkloadResponse> change(@RequestBody TrainerWorkloadRequest request) {
-        log.info("Changing workload of trainer" + request.getFirstName() +
+    public ResponseEntity<TrainerWorkloadResponse> add(@RequestBody TrainerWorkloadRequest request) {
+        log.info("Adding workload of trainer" + request.getFirstName() +
                 " " + request.getLastName().charAt(0)  + "***");
         try {
-            return new ResponseEntity<>(workloadService.change(request), HttpStatus.OK);
+            return new ResponseEntity<>(workloadService.addWorkload(request), HttpStatus.OK);
         } catch (Exception e){
-            log.warn("Exception in WorkloadController.change() while changing workload of trainer "
+            log.warn("Exception in WorkloadController.change() while adding workload of trainer "
                     + request.getFirstName() + " " + request.getLastName().charAt(0) + "***");
             return new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @DeleteMapping("/change")
+    @Operation(summary = "Change trainer workload",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Add new workload to storage",
+                    content = @Content(schema = @Schema(implementation = TrainerWorkloadRequest.class))),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Workload added changed successfully",
+                            content = @Content(schema = @Schema(implementation = TrainerWorkloadResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid data for getting workload")
+            })
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or "+
+            "hasAuthority('ROLE_TRAINER') or " +
+            "hasAuthority('ROLE_TRAINEE')")
+    public ResponseEntity<TrainerWorkloadResponse> delete(@RequestBody TrainerWorkloadRequest request) {
+        log.info("Deleting workload of trainer" + request.getFirstName() +
+                " " + request.getLastName().charAt(0)  + "***");
+        try {
+            return new ResponseEntity<>(workloadService.deleteWorkload(request), HttpStatus.OK);
+        } catch (Exception e){
+            log.warn("Exception in WorkloadController.change() while deleting workload of trainer "
+                    + request.getFirstName() + " " + request.getLastName().charAt(0) + "***");
+            return new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

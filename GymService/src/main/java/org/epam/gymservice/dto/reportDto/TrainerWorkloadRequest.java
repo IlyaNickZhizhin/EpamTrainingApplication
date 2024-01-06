@@ -18,10 +18,4 @@ public class TrainerWorkloadRequest {
     LocalDate trainingDate;
     @NotBlank
     double duration;
-    @NotBlank
-    ActionType actionType;
-
-    public enum ActionType{
-        ADD, DELETE
-    }
 }

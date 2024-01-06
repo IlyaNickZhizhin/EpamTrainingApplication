@@ -228,9 +228,8 @@ public class TraineeService {
         List<Training> training4delete = trainingFilterByDate(trainee.getTrainings(), LocalDate.now(), LocalDate.MAX);
         training4delete.forEach(training -> {
             TrainerWorkloadRequest workloadRequest = trainingMapper.trainingToWorkloadRequest(training);
-            workloadRequest.setActionType(TrainerWorkloadRequest.ActionType.DELETE);
             String token = "Bearer " + jwtService.generateToken(trainee.getUser());
-            feignClient.getWorkload(token, workloadRequest);
+            feignClient.deleteWorkload(token, workloadRequest);
         });
     }
 }

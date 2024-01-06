@@ -1,7 +1,6 @@
 package org.epam.reportservice.dto;
 
 import lombok.Data;
-import org.epam.reportservice.model.ActionType;
 
 import java.time.LocalDate;
 
@@ -13,5 +12,4 @@ public class TrainerWorkloadRequest {
     boolean isActive;
     LocalDate trainingDate;
     double duration;
-    ActionType actionType;
 }

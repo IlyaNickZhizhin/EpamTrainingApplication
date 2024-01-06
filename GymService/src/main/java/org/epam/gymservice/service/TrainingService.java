@@ -63,9 +63,8 @@ public class TrainingService {
         training.setDuration(request.getTrainingDuration());
         try {
             TrainerWorkloadRequest request1 = trainingMapper.trainingToWorkloadRequest(training);
-            request1.setActionType(TrainerWorkloadRequest.ActionType.ADD);
             String token = "Bearer " + jwtService.generateToken(trainee.getUser());
-            reportFeignClient.getWorkload(token, request1);
+            reportFeignClient.addWorkload(token, request1);
         } catch (Exception ex) {
             log.warn("Working of fein client was not successful");
             throw ex;

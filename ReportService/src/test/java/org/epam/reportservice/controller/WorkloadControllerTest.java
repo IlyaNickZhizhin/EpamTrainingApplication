@@ -23,12 +23,21 @@ class WorkloadControllerTest {
     @InjectMocks
     private WorkloadController controller;
     @Test
-    void testChange() {
+    void testAdd() {
         Reader reader = new Reader();
         TrainerWorkloadRequest request = reader
                 .readEntity("src/test/resources/models/workloads/workload1.json", TrainerWorkloadRequest.class);
-        when(service.change(request)).thenReturn(new TrainerWorkloadResponse());
+        when(service.addWorkload(request)).thenReturn(new TrainerWorkloadResponse());
         assertEquals(new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.OK),
-                controller.change(request));
+                controller.add(request));
+    }
+    @Test
+    void testDelete() {
+        Reader reader = new Reader();
+        TrainerWorkloadRequest request = reader
+                .readEntity("src/test/resources/models/workloads/workload1.json", TrainerWorkloadRequest.class);
+        when(service.deleteWorkload(request)).thenReturn(new TrainerWorkloadResponse());
+        assertEquals(new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.OK),
+                controller.delete(request));
     }
 }

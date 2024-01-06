@@ -110,7 +110,7 @@ class TrainingServiceTest {
         when(mockTraineeDaoImpl.findByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
         when(mockTrainerDaoImpl.findByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
         when(mockTrainingDaoImpl.save(any(Training.class))).thenReturn(training1);
-        when(feignClient.getWorkload(any(), any())).thenReturn(new TrainerWorkloadResponse());
+        when(feignClient.addWorkload(any(), any())).thenReturn(new TrainerWorkloadResponse());
         when(jwtService.generateToken(training.getTrainee().getUser())).thenReturn("token");
         assertEquals(request, trainingService.create(request));
     }
