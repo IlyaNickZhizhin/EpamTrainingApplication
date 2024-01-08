@@ -1,11 +1,9 @@
 package org.epam.gymservice.dto.reportDto;
 
 import lombok.Data;
+import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 
-import java.time.Month;
-import java.time.Year;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Queue;
 
 @Data
 public class TrainerWorkloadResponse {
@@ -13,5 +11,15 @@ public class TrainerWorkloadResponse {
     String firstName;
     String lastName;
     boolean isActive;
-    Map<Year, Map<Month, Double>> map = new HashMap<>();
+    Queue<TrainingSession> trainingSessions;
+
+    public static TrainerWorkloadResponse of(TrainerProfileResponse trainer, String username, Queue<TrainingSession> session){
+        TrainerWorkloadResponse response = new TrainerWorkloadResponse();
+        response.setUsername(username);
+        response.setFirstName(trainer.getFirstName());
+        response.setLastName(trainer.getLastName());
+        response.setActive(trainer.isActive());
+        response.setTrainingSessions(session);
+        return response;
+    }
 }

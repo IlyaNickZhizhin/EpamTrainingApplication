@@ -40,6 +40,7 @@
     <commons-dbcp.version>1.4</commons-dbcp.version>
     <jwt>0.11.5</jwt>
     <eureka>4.0.2</eureka>
+    <histrix>2.2.10.RELEASE</histrix>
   </properties>
 
   <dependencies>
@@ -163,6 +164,12 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
       <version>${eureka}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+      <version>${histrix}</version>
     </dependency>
   </dependencies>
 
