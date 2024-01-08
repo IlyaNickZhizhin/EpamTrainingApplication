@@ -15,4 +15,10 @@ public class GetTraineeTrainingsListRequest {
     private LocalDate periodTo;
     private String trainerName;
     private TrainingType.TrainingName trainingType;
+
+    public static GetTraineeTrainingsListRequest of(LocalDate periodFrom){
+        GetTraineeTrainingsListRequest request = new GetTraineeTrainingsListRequest();
+        request.setPeriodFrom(periodFrom);
+        return request;
+    }
 }

@@ -13,6 +13,7 @@ import org.epam.gymservice.dto.trainingDto.GetTrainingTypesResponse;
 import org.epam.gymservice.dto.trainingDto.UpdateTraineeTrainerListRequest;
 import org.epam.gymservice.exceptions.InvalidDataException;
 import org.epam.gymservice.service.TrainingService;
+import org.epam.gymservice.service.feign.AsyncFeignClientMethods;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class TrainingController {
 
     private final TrainingService trainingService;
+    private final AsyncFeignClientMethods feignClient;
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or " +
@@ -38,11 +40,13 @@ public class TrainingController {
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class))),
         responses = {@ApiResponse(responseCode = "201", description = "Training created",
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class)))})
-    public ResponseEntity<AddTrainingRequest> create(@RequestBody AddTrainingRequest request) {
+    public ResponseEntity<AddTrainingRequest> create(@RequestHeader("Authorization") String token,
+                                                     @RequestBody AddTrainingRequest request) {
         log.info("Creating " + request.getTrainingType().name() + " training with name: " + request.getTrainingName() +
                 " on " + request.getTrainingDate() + " at " + request.getTrainingDuration());
         try {
             AddTrainingRequest response = trainingService.create(request);
+            feignClient.addWorkload(token, request);
             log.info(request.getTrainingType().name() + " training with name: " + request.getTrainingName() +
             " on " + request.getTrainingDate() + " at " + request.getTrainingDuration() + " created successfully");
             return new ResponseEntity<>(response, HttpStatus.CREATED);

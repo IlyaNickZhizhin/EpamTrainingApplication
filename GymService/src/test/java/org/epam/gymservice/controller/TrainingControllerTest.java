@@ -14,6 +14,7 @@ import org.epam.gymservice.model.gymModel.Trainer;
 import org.epam.gymservice.model.gymModel.Training;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.service.TrainingService;
+import org.epam.gymservice.service.feign.AsyncFeignClientMethods;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,9 @@ class TrainingControllerTest {
 
     @Mock
     TrainingService trainingService;
+
+    @Mock
+    AsyncFeignClientMethods feignClient;
 
     @InjectMocks
     TrainingController trainingController;
@@ -79,7 +83,7 @@ class TrainingControllerTest {
     void testTrainingCreate() {
         AddTrainingRequest request = trainingMapper.trainingToAddTrainingRequest(training1);
         when(trainingService.create(request)).thenReturn(request);
-        assertEquals(request, trainingController.create(request).getBody());
+        assertEquals(request, trainingController.create("token", request).getBody());
     }
 
     @Test
@@ -135,7 +139,7 @@ class TrainingControllerTest {
         when(trainingService.create(request)).thenThrow(ex);
         assertEquals(new ResponseEntity<>(
                 new AddTrainingRequest(), HttpStatus.BAD_REQUEST),
-                trainingController.create(request));
+                trainingController.create("token", request));
     }
 
     @Test

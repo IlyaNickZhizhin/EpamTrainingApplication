@@ -6,7 +6,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.epam.gymservice.dto.ActivateDeactivateRequest;
 import org.epam.gymservice.dto.ChangeLoginRequest;
 import org.epam.gymservice.dto.RegistrationResponse;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
 import org.epam.gymservice.dto.traineeDto.TraineeProfileResponse;
 import org.epam.gymservice.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.gymservice.dto.traineeDto.UpdateTraineeProfileRequest;
@@ -22,8 +21,6 @@ import org.epam.gymservice.model.gymModel.Trainee;
 import org.epam.gymservice.model.gymModel.Training;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.repository.TraineeRepository;
-import org.epam.gymservice.service.feign.AsyncFeignClientMethods;
-import org.epam.gymservice.service.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,8 +40,6 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final UserService userService;
     private final PasswordEncoder encoder;
-    private final AsyncFeignClientMethods feignClient;
-    private final JwtService jwtService;
 
     @Transactional
     public RegistrationResponse create(TraineeRegistrationRequest request) {
@@ -146,7 +141,6 @@ public class TraineeService {
     public boolean delete(String username) {
         ImmutablePair<User,Trainee> pair = getUserTrainee(username);
         log.info("Deleting " + getModelName() + "# " + pair.right.getId() + " with user # " + pair.left.getId());
-        deleteTraineeTrainersFutureWorkload(pair.right);
         traineeRepository.deleteById(pair.right.getId());
         log.info("Deleting " + getModelName() + "# " + pair.right.getId() + " was successful." +
                 " Going ro delete user #" + pair.left.getId());
@@ -222,15 +216,6 @@ public class TraineeService {
                     + "to size:" + trainings.size());
         }
         return trainings;
-    }
-
-    private void deleteTraineeTrainersFutureWorkload(Trainee trainee){
-        List<Training> training4delete = trainingFilterByDate(trainee.getTrainings(), LocalDate.now(), LocalDate.MAX);
-        training4delete.forEach(training -> {
-            TrainerWorkloadRequest workloadRequest = trainingMapper.trainingToWorkloadRequest(training);
-            String token = "Bearer " + jwtService.generateToken(trainee.getUser());
-            feignClient.deleteWorkload(token, workloadRequest);
-        });
     }
 }
 
