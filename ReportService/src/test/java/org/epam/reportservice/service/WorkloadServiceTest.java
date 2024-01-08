@@ -34,7 +34,7 @@ class WorkloadServiceTest {
         TrainingSession newSession = TrainingSession.of(request);
         Queue<TrainingSession> queue = new PriorityQueue<>();
         queue.add(newSession);
-        when(storage.addOrUpdate(key, newSession)).thenReturn(queue);
+        when(storage.addWorkload(key, newSession)).thenReturn(queue);
         TrainerWorkloadResponse response = TrainerWorkloadResponse.of(key, queue);
         assertEquals(response, service.addWorkload(request));
     }
@@ -49,7 +49,7 @@ class WorkloadServiceTest {
         queue.add(newSession);
         Queue<TrainingSession> queue2 = new PriorityQueue<>(queue);
         queue2.remove(newSession);
-        when(storage.deleteOrUpdate(key, newSession)).thenReturn(queue2);
+        when(storage.deleteWorkload(key, newSession)).thenReturn(queue2);
         TrainerWorkloadResponse response = TrainerWorkloadResponse.of(key, queue2);
         assertEquals(response, service.deleteWorkload(request));
     }

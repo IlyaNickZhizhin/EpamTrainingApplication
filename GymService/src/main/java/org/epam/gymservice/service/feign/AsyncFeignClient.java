@@ -24,13 +24,13 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
-public class AsyncFeignClientMethods {
+public class AsyncFeignClient {
     private final ReportFeignClient feignClient;
     private final TrainerService trainerService;
     private final TraineeService traineeService;
 
     @Async
-    @HystrixCommand(fallbackMethod = "fallbackWorkloadChange")
+    @HystrixCommand(fallbackMethod = "takeWorkloadFromGymService")
     public CompletableFuture<TrainerWorkloadResponse> addWorkload(String bearerToken, AddTrainingRequest request) {
         TrainerProfileResponse trainer = trainerService.selectByUsername(request.getTrainerUsername());
         return CompletableFuture
@@ -49,12 +49,12 @@ public class AsyncFeignClientMethods {
     }
 
     @Async
-    @HystrixCommand(fallbackMethod = "fallbackWorkloadChange")
+    @HystrixCommand(fallbackMethod = "takeWorkloadFromGymService")
     public CompletableFuture<TrainerWorkloadResponse> deleteWorkload(String bearerToken, TrainerWorkloadRequest request) {
         return CompletableFuture.supplyAsync(() -> feignClient.deleteWorkload(bearerToken, request));
     }
 
-    public CompletableFuture<TrainerWorkloadResponse> fallbackWorkloadChange(String bearerToken, AddTrainingRequest request){
+    public CompletableFuture<TrainerWorkloadResponse> takeWorkloadFromGymService(String bearerToken, AddTrainingRequest request){
         TrainerProfileResponse trainer = trainerService.selectByUsername(request.getTrainerUsername());
         List<TrainingDto> trainings = trainerService.getTrainerTrainingsList(request.getTrainerUsername(), new GetTrainerTrainingsListRequest()).getTrainings();
         Queue<TrainingSession> sessions = new PriorityQueue<>();
