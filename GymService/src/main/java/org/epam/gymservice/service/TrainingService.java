@@ -3,7 +3,6 @@ package org.epam.gymservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.gymservice.dto.trainingDto.GetTrainersResponse;
 import org.epam.gymservice.dto.trainingDto.GetTrainingTypesResponse;
@@ -19,8 +18,6 @@ import org.epam.gymservice.repository.TraineeRepository;
 import org.epam.gymservice.repository.TrainerRepository;
 import org.epam.gymservice.repository.TrainingRepository;
 import org.epam.gymservice.repository.UserRepository;
-import org.epam.gymservice.service.feign.AsyncFeignClientMethods;
-import org.epam.gymservice.service.security.JwtService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +35,6 @@ public class TrainingService {
     private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingDao;
     private final TrainingMapper trainingMapper;
-    private final AsyncFeignClientMethods feignClient;
-    private final JwtService jwtService;
 
 
     @Transactional(readOnly = true)
@@ -61,14 +56,6 @@ public class TrainingService {
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
         training.setDuration(request.getTrainingDuration());
-        try {
-            TrainerWorkloadRequest request1 = trainingMapper.trainingToWorkloadRequest(training);
-            String token = "Bearer " + jwtService.generateToken(trainee.getUser());
-            feignClient.addWorkload(token, request1);
-        } catch (Exception ex) {
-            log.warn("Working of fein client was not successful");
-            throw ex;
-        }
         log.info("Training between trainee #: " + trainee.getId() + " and trainer #: " + trainer.getId() + " was created");
         return trainingMapper.trainingToAddTrainingRequest(trainingDao.save(training));
     }
