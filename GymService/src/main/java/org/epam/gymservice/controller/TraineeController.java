@@ -21,7 +21,7 @@ import org.epam.gymservice.dto.trainingDto.GetTrainingsResponse;
 import org.epam.gymservice.exceptions.InvalidDataException;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.service.TraineeService;
-import org.epam.gymservice.service.feign.AsyncFeignClientMethods;
+import org.epam.gymservice.service.feign.AsyncFeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +38,7 @@ import java.time.LocalDate;
 public class TraineeController {
 
     private final TraineeService traineeService;
-    private final AsyncFeignClientMethods feignClient;
+    private final AsyncFeignClient feignClient;
 
     @PostMapping("/")
     @Operation(summary = "register trainee",

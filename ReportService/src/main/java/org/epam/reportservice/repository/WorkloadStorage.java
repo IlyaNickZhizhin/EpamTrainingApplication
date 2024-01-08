@@ -12,7 +12,7 @@ import java.util.*;
 public class WorkloadStorage {
     private final Map<TrainerKey, Queue<TrainingSession>> storage = new HashMap<>();
 
-    public Queue<TrainingSession> addOrUpdate(TrainerKey key, TrainingSession newSession){
+    public Queue<TrainingSession> addWorkload(TrainerKey key, TrainingSession newSession){
         if (!storage.containsKey(key)){
             PriorityQueue<TrainingSession> queue = new PriorityQueue<>();
             queue.add(newSession);
@@ -29,7 +29,7 @@ public class WorkloadStorage {
         return storage.get(key);
     }
 
-    public Queue<TrainingSession> deleteOrUpdate(TrainerKey key, TrainingSession newSession){
+    public Queue<TrainingSession> deleteWorkload(TrainerKey key, TrainingSession newSession){
         if (!storage.containsKey(key)){
             throw new NoSuchElementException("Trainer " + key.getFirstName() + " " + key.getLastName().charAt(0) + "***" +
                     "has no training workload");

@@ -21,7 +21,7 @@ public class WorkloadService {
                 request.getFirstName() + " " + request.getLastName().charAt(0) + "*** training on"
                 +  request.getTrainingDate());
         TrainerKey key = TrainerKey.of(request);
-        return TrainerWorkloadResponse.of(key, storage.addOrUpdate(key, TrainingSession.of(request)));
+        return TrainerWorkloadResponse.of(key, storage.addWorkload(key, TrainingSession.of(request)));
     }
 
     public TrainerWorkloadResponse deleteWorkload(TrainerWorkloadRequest request) {
@@ -31,6 +31,6 @@ public class WorkloadService {
                                 request.getFirstName() + request.getLastName().charAt(0) + "*** training on " +
                                 request.getTrainingDate());
         TrainerKey key = TrainerKey.of(request);
-        return TrainerWorkloadResponse.of(key, storage.deleteOrUpdate(key, TrainingSession.of(request)));
+        return TrainerWorkloadResponse.of(key, storage.deleteWorkload(key, TrainingSession.of(request)));
     }
 }
