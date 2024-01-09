@@ -31,9 +31,12 @@ public class TrainingSession implements Comparable<TrainingSession>{
 
     @Override
     public int compareTo(TrainingSession trainingSession) {
-        if (trainingSession.getYear().isAfter(this.year)) return 1;
-        else { if (trainingSession.getMonth().equals(this.month)) return 0;
-            else return -1;
+        if (trainingSession.getYear().isAfter(this.year)) {
+            return 1;
+        } else if (trainingSession.getMonth().equals(this.month)) {
+            return 0;
+        } else {
+            return -1;
         }
     }
 }

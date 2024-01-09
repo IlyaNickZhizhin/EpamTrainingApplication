@@ -4,6 +4,5 @@
   "lastName": "Sidorov",
   "active": true,
   "trainingDate": "2023-11-15",
-  "duration": 1.0,
-  "actionType": "ADD"
+  "duration": 1.0
 }

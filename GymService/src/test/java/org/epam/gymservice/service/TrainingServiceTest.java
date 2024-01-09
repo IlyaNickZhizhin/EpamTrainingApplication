@@ -1,8 +1,6 @@
 package org.epam.gymservice.service;
 
 import org.epam.gymservice.Reader;
-import org.epam.gymservice.config.ReportFeignClient;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.gymservice.dto.trainingDto.GetTrainersResponse;
 import org.epam.gymservice.dto.trainingDto.GetTrainingTypesResponse;
@@ -18,7 +16,7 @@ import org.epam.gymservice.repository.TraineeRepository;
 import org.epam.gymservice.repository.TrainerRepository;
 import org.epam.gymservice.repository.TrainingRepository;
 import org.epam.gymservice.repository.UserRepository;
-import org.epam.gymservice.service.security.JwtService;
+import org.epam.gymservice.service.feign.AsyncFeignClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,11 +47,9 @@ class TrainingServiceTest {
     @Mock
     private UserRepository mockUserDao = mock(UserRepository.class);
     @Mock
-    private ReportFeignClient feignClient = mock(ReportFeignClient.class);
+    private AsyncFeignClient feignClient = mock(AsyncFeignClient.class);
     @Spy
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
-    @Mock
-    JwtService jwtService = mock(JwtService.class);
     @Spy
     @InjectMocks
     TrainingMapper trainingMapper = Mappers.getMapper(TrainingMapper.class);
@@ -110,8 +106,6 @@ class TrainingServiceTest {
         when(mockTraineeDaoImpl.findByUser(user3)).thenReturn(Optional.ofNullable(trainee3));
         when(mockTrainerDaoImpl.findByUser(user1)).thenReturn(Optional.ofNullable(trainer1));
         when(mockTrainingDaoImpl.save(any(Training.class))).thenReturn(training1);
-        when(feignClient.addWorkload(any(), any())).thenReturn(new TrainerWorkloadResponse());
-        when(jwtService.generateToken(training.getTrainee().getUser())).thenReturn("token");
         assertEquals(request, trainingService.create(request));
     }
 
