@@ -4,7 +4,6 @@
   "lastName": "Sidorov",
   "isActive": true,
   "trainingDate": "2023-11-15",
-  "duration": 1.5,
-  "actionType": "DELETE"
+  "duration": 1.5
 }
 

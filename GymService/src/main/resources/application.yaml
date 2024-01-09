@@ -10,6 +10,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    circuitbreaker:
+      hystrix:
+        enabled: true
 my-props:
   jwt:
     max-attempts: 3

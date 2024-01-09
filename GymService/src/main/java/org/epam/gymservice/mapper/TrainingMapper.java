@@ -58,10 +58,9 @@ public interface TrainingMapper {
     @Mapping(source = "trainer.user.active", target = "active")
     @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainingDate", target = "trainingDate")
-    @Mapping(target = "actionType", ignore = true)
     TrainerWorkloadRequest trainingToWorkloadRequest(Training training);
 
-    @Mapping(target = "map", ignore = true)
+    @Mapping(target = "trainingSessions", ignore = true)
     TrainerWorkloadResponse trainerWorkloadRequestToResponse(TrainerWorkloadRequest request);
 
     @Named("tNameToTrainingType")
