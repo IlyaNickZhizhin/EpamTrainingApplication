@@ -40,7 +40,7 @@
     <commons-dbcp.version>1.4</commons-dbcp.version>
     <jwt>0.11.5</jwt>
     <eureka>4.0.2</eureka>
-    <histrix>2.2.10.RELEASE</histrix>
+    <circutbreaker>3.0.2</circutbreaker>
   </properties>
 
   <dependencies>
@@ -168,8 +168,8 @@
 
     <dependency>
       <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-      <version>${histrix}</version>
+      <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+      <version>${circutbreaker}</version>
     </dependency>
   </dependencies>
 

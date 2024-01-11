@@ -11,8 +11,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   cloud:
-    circuitbreaker:
-      hystrix:
+    openfeign:
+      circuitbreaker:
         enabled: true
 my-props:
   jwt:
