@@ -1,0 +1,9 @@
+{
+  "username": "Pavel.Pavlov",
+  "firstName": "Pavel",
+  "lastName": "Pavlov",
+  "isActive": true,
+  "trainingDate": "2023-11-17",
+  "duration": 3.5,
+  "actionType": "ADD"
+}

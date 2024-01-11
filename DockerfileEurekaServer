@@ -1,0 +1,4 @@
+FROM openjdk:17-jdk-alpine
+WORKDIR /app
+COPY ./EurekaServer/target /app
+CMD ["java", "-jar", "EurekaServer*.jar"]
