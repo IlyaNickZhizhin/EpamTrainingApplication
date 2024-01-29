@@ -8,6 +8,7 @@ import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 import org.epam.gymservice.dto.trainingDto.GetTrainerTrainingsListRequest;
 import org.epam.gymservice.dto.trainingDto.TrainingDto;
 import org.epam.gymservice.service.TrainerService;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Queue;
 @RequiredArgsConstructor
 public class ReportFeignClientFallback implements ReportFeignClient {
 
+    private final JmsTemplate jmsTemplate;
     private final TrainerService trainerService;
 
     @Override

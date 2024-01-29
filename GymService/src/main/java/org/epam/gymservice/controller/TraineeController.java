@@ -21,7 +21,7 @@ import org.epam.gymservice.dto.trainingDto.GetTrainingsResponse;
 import org.epam.gymservice.exceptions.InvalidDataException;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.service.TraineeService;
-import org.epam.gymservice.service.feign.AsyncFeignClient;
+import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +38,7 @@ import java.time.LocalDate;
 public class TraineeController {
 
     private final TraineeService traineeService;
-    private final AsyncFeignClient feignClient;
+    private final ActiveMqService activeMqService;
 
     @PostMapping("/")
     @Operation(summary = "register trainee",
@@ -166,7 +166,7 @@ public class TraineeController {
         try {
             boolean result = traineeService.delete(username);
             if (result) {
-                feignClient.deleteAllWorkload(token, username);
+                activeMqService.deleteAllWorkload(token, username);
             }
             log.info("Trainee profile username: " + username.substring(0,0) + ". deleted successfully");
             return new ResponseEntity<>(result, HttpStatus.OK);

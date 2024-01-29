@@ -2,10 +2,11 @@ package org.epam.reportservice.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
-public class TrainerWorkloadRequest {
+public class TrainerWorkloadRequest implements Serializable{
     String username;
     String firstName;
     String lastName;
