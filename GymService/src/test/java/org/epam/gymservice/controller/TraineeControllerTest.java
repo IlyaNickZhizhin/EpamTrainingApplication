@@ -17,7 +17,7 @@ import org.epam.gymservice.model.User;
 import org.epam.gymservice.model.gymModel.Trainee;
 import org.epam.gymservice.model.gymModel.Training;
 import org.epam.gymservice.service.TraineeService;
-import org.epam.gymservice.service.feign.AsyncFeignClient;
+import org.epam.gymservice.service.asyncMessaging.AsyncFeignClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

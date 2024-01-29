@@ -1,4 +1,4 @@
-package org.epam.gymservice.service.feign;
+package org.epam.gymservice.service.asyncMessaging;
 
 import lombok.RequiredArgsConstructor;
 import org.epam.gymservice.config.feign.ReportFeignClient;

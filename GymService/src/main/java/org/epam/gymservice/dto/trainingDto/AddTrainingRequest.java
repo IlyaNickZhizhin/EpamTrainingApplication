@@ -7,11 +7,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.epam.gymservice.model.gymModel.TrainingType;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class AddTrainingRequest {
+public class AddTrainingRequest implements Serializable {
     @NotBlank
     private String traineeUsername;
     @NotBlank
