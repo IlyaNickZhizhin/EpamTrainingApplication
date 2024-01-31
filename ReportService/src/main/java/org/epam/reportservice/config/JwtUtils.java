@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtils extends OncePerRequestFilter {
 
-    @Value("${secret-key}")
+    @Value("${JWT.secret-key}")
     private String SECRET_KEY;
 
 

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @PropertySource("classpath:secretStore.yaml")
 public class JwtService {
-    @Value("${secret-key}")
+    @Value("${JWT.secret-key}")
     private String SECRET_KEY;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

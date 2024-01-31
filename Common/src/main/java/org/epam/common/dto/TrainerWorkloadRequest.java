@@ -1,4 +1,4 @@
-package org.epam.reportservice.dto;
+package org.epam.common.dto;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
-public class TrainerWorkloadRequest implements Serializable{
+public class TrainerWorkloadRequest implements Serializable {
     String username;
     String firstName;
     String lastName;
@@ -14,3 +14,4 @@ public class TrainerWorkloadRequest implements Serializable{
     LocalDate trainingDate;
     double duration;
 }
+
