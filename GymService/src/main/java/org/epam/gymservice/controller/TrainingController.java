@@ -42,16 +42,14 @@ public class TrainingController {
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class)))})
     public ResponseEntity<AddTrainingRequest> create(@RequestHeader("Authorization") String token,
                                                      @RequestBody AddTrainingRequest request) {
-        log.info("Creating " + request.getTrainingType().name() + " training with name: " + request.getTrainingName() +
-                " on " + request.getTrainingDate() + " at " + request.getTrainingDuration());
+        log.info("Creating {} training with name: {} on {} at {}", request.getTrainingType().name(), request.getTrainingName(), request.getTrainingDate(), request.getTrainingDuration());
         try {
             AddTrainingRequest response = trainingService.create(request);
-            activeMqService.addWorkload(token, request);
-            log.info(request.getTrainingType().name() + " training with name: " + request.getTrainingName() +
-            " on " + request.getTrainingDate() + " at " + request.getTrainingDuration() + " created successfully");
+            activeMqService.addWorkload(request);
+            log.info("{} training with name: {} on {} at {} created successfully", request.getTrainingType().name(), request.getTrainingName(), request.getTrainingDate(), request.getTrainingDuration());
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (InvalidDataException e) {
-            log.error("Error while creating " + request.getTrainingType().name() + " training with name: " + request.getTrainingName(), e);
+            log.error("Error while creating {} training with name: {}", request.getTrainingType().name(), request.getTrainingName(), e);
             return new ResponseEntity<>(new AddTrainingRequest(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -84,7 +82,7 @@ public class TrainingController {
     })
     public ResponseEntity<GetTrainersResponse> updateTrainersList(@RequestBody
                                                                       UpdateTraineeTrainerListRequest request) {
-        log.info("Updating trainee trainers list in" + getClass().getSimpleName());
+        log.info("Updating trainee trainers list in{}", getClass().getSimpleName());
         try {
             GetTrainersResponse response = trainingService.updateTrainersList(request);
             log.info("Trainee trainers list updated successfully");
