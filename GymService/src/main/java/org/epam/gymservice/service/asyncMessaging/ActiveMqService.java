@@ -25,11 +25,17 @@ public class ActiveMqService {
 
     public void addWorkload(AddTrainingRequest request) {
         TrainerProfileResponse trainer = trainerService.selectByUsername(request.getTrainerUsername());
-        jmsTemplate.convertAndSend("addTrainingRequestQueue",
-                GymTrainerWorkloadRequest.of(trainer, request),
-                message -> { message.setJMSReplyTo(new ActiveMQQueue("trainersWorkloads"));
-                            return message;
-        });
+        try {
+            jmsTemplate.convertAndSend("addTrainingRequestQueue",
+                    GymTrainerWorkloadRequest.of(trainer, request),
+                    message -> {
+                        message.setJMSReplyTo(new ActiveMQQueue("trainersWorkloads"));
+                        message.setJMSExpiration(5000);
+                        return message;
+                    });
+        } catch (Exception e) {
+            jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+        }
     }
 
     public void deleteAllWorkload(String deletingTraineeUsername) {
@@ -43,10 +49,15 @@ public class ActiveMqService {
     }
 
     public void deleteWorkload(TrainerWorkloadRequest request) {
+        try {
         jmsTemplate.convertAndSend("deleteTrainingRequestQueue", request,
                 message -> { message.setJMSReplyTo(new ActiveMQQueue("trainersWorkloads"));
+                    message.setJMSExpiration(5000);
                     return message;
                 });
+        } catch (Exception e) {
+            jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+        }
     }
 
 }

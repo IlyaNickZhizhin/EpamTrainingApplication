@@ -3,9 +3,10 @@ package org.epam.reportservice.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.common.dto.TrainerWorkloadRequest;
-import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
+import org.epam.common.dto.TrainerWorkloadResponse;
 import org.epam.reportservice.service.WorkloadService;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,24 +15,27 @@ import org.springframework.stereotype.Component;
 public class WorkloadReceiver {
 
     private final WorkloadService workloadService;
+    private final JmsTemplate jmsTemplate;
 
     @JmsListener(destination = "addTrainingRequestQueue", containerFactory = "defaultJmsListenerContainerFactory")
-    public ReportTrainerWorkloadResponse receiveAddMessage(TrainerWorkloadRequest request){
+    public TrainerWorkloadResponse receiveAddMessage(TrainerWorkloadRequest request){
         log.info("Adding workload of trainer{} {}***", request.getFirstName(), request.getLastName().charAt(0));
         try {
             return workloadService.addWorkload(request);
         } catch (Exception e){
-            return new ReportTrainerWorkloadResponse();
+            jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+            throw e;
         }
     }
 
     @JmsListener(destination = "deleteTrainingRequestQueue", containerFactory = "defaultJmsListenerContainerFactory")
-    public ReportTrainerWorkloadResponse receiveDeleteMessage(TrainerWorkloadRequest request){
+    public TrainerWorkloadResponse receiveDeleteMessage(TrainerWorkloadRequest request){
         log.info("Deleting workload of trainer{} {}***", request.getFirstName(), request.getLastName().charAt(0));
         try {
             return workloadService.deleteWorkload(request);
         } catch (Exception e){
-            return new ReportTrainerWorkloadResponse();
+            jmsTemplate.convertAndSend("DLQ.deleteTrainingRequestQueue", request);
+            throw e;
         }
     }
 
