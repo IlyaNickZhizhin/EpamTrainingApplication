@@ -1,14 +1,14 @@
 package org.epam.gymservice.config.feign;
 
 import lombok.RequiredArgsConstructor;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
-import org.epam.gymservice.dto.reportDto.TrainingSession;
+import org.epam.common.dto.TrainerWorkloadRequest;
+import org.epam.common.dto.TrainerWorkloadResponse;
+import org.epam.common.dto.TrainingSession;
+import org.epam.gymservice.dto.reportDto.GymTrainerWorkloadResponse;
 import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 import org.epam.gymservice.dto.trainingDto.GetTrainerTrainingsListRequest;
 import org.epam.gymservice.dto.trainingDto.TrainingDto;
 import org.epam.gymservice.service.TrainerService;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,7 +19,6 @@ import java.util.Queue;
 @RequiredArgsConstructor
 public class ReportFeignClientFallback implements ReportFeignClient {
 
-    private final JmsTemplate jmsTemplate;
     private final TrainerService trainerService;
 
     @Override
@@ -37,6 +36,6 @@ public class ReportFeignClientFallback implements ReportFeignClient {
         List<TrainingDto> trainings = trainerService.getTrainerTrainingsList(request.getUsername(), new GetTrainerTrainingsListRequest()).getTrainings();
         Queue<TrainingSession> sessions = new PriorityQueue<>();
         sessions.addAll(trainings.stream().map(training -> TrainingSession.of(training.getTrainingDate(), training.getDuration())).toList());
-        return TrainerWorkloadResponse.of(trainer, request.getUsername(), sessions);
+        return GymTrainerWorkloadResponse.of(trainer, request.getUsername(), sessions);
     }
 }

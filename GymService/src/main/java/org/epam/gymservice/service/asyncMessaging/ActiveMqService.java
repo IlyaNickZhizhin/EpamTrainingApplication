@@ -1,7 +1,9 @@
 package org.epam.gymservice.service.asyncMessaging;
 
 import lombok.RequiredArgsConstructor;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.epam.common.dto.TrainerWorkloadRequest;
+import org.epam.gymservice.dto.reportDto.GymTrainerWorkloadRequest;
 import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.gymservice.dto.trainingDto.GetTraineeTrainingsListRequest;
@@ -21,23 +23,30 @@ public class ActiveMqService {
     private final TrainerService trainerService;
     private final TraineeService traineeService;
 
-    public void addWorkload(String bearerToken, AddTrainingRequest request) {
+    public void addWorkload(AddTrainingRequest request) {
         TrainerProfileResponse trainer = trainerService.selectByUsername(request.getTrainerUsername());
-        jmsTemplate.convertAndSend("addTrainingRequestQueue", TrainerWorkloadRequest.of(trainer, request));
+        jmsTemplate.convertAndSend("addTrainingRequestQueue",
+                GymTrainerWorkloadRequest.of(trainer, request),
+                message -> { message.setJMSReplyTo(new ActiveMQQueue("trainersWorkloads"));
+                            return message;
+        });
     }
 
-    public void deleteAllWorkload(String bearerToken, String deletingTraineeUsername) {
+    public void deleteAllWorkload(String deletingTraineeUsername) {
         List<TrainingDto> trainingList = traineeService
                 .getTraineeTrainingsList(deletingTraineeUsername, GetTraineeTrainingsListRequest.of(LocalDate.now()))
                 .getTrainings();
         trainingList.forEach(training ->{
             TrainerProfileResponse trainer = trainerService.selectByUsername(training.getOpponentName());
-            deleteWorkload(bearerToken, TrainerWorkloadRequest.of(trainer, training));
+            deleteWorkload(GymTrainerWorkloadRequest.of(trainer, training));
         });
     }
 
-    public void deleteWorkload(String bearerToken, TrainerWorkloadRequest request) {
-        jmsTemplate.convertAndSend("deleteTrainingRequestQueue", request);
+    public void deleteWorkload(TrainerWorkloadRequest request) {
+        jmsTemplate.convertAndSend("deleteTrainingRequestQueue", request,
+                message -> { message.setJMSReplyTo(new ActiveMQQueue("trainersWorkloads"));
+                    return message;
+                });
     }
 
 }

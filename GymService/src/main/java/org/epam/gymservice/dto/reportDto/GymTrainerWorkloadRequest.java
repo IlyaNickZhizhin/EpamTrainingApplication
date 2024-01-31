@@ -1,26 +1,13 @@
 package org.epam.gymservice.dto.reportDto;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.gymservice.dto.trainingDto.TrainingDto;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 
-@Data
-public class TrainerWorkloadRequest {
-    @NotBlank
-    String username;
-    @NotBlank
-    String firstName;
-    @NotBlank
-    String lastName;
-    boolean isActive;
-    @NotBlank
-    LocalDate trainingDate;
-    @NotBlank
-    double duration;
+public class GymTrainerWorkloadRequest extends TrainerWorkloadRequest implements Serializable {
 
     public static TrainerWorkloadRequest of(TrainerProfileResponse trainer, AddTrainingRequest request) {
         TrainerWorkloadRequest request1 = new TrainerWorkloadRequest();
