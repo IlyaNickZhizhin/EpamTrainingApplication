@@ -49,10 +49,10 @@ services:
     depends_on:
       - eureka-server
   activemq:
-    image: webcenter/activemq:5.14.3
+    image: apache/activemq-artemis:latest-alpine
     environment:
-      ACTIVEMQ_ADMIN_LOGIN: epamtrainee
-      ACTIVEMQ_ADMIN_PASSWORD: epamtraineepassword
+      ARTEMIS_USER: epamtrainee
+      ARTEMIS_PASSWORD: epamtraineepassword
     ports:
       - "61616:61616"
       - "8161:8161"
