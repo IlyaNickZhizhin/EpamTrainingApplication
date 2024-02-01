@@ -48,3 +48,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       - eureka-server
+  activemq:
+    image: webcenter/activemq:5.14.3
+    environment:
+      ACTIVEMQ_ADMIN_LOGIN: epamtrainee
+      ACTIVEMQ_ADMIN_PASSWORD: epamtraineepassword
+    ports:
+      - "61616:61616"
+      - "8161:8161"
