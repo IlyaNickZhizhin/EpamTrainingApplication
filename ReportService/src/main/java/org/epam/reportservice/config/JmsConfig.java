@@ -7,10 +7,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Arrays;
 
+@EnableTransactionManagement
 @Configuration
 @PropertySource("classpath:secretStore.yaml")
 @Slf4j
@@ -28,6 +32,7 @@ public class JmsConfig {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(getActiveMqConnectionFactory());
         factory.setConcurrency("1-1");
+        factory.setTransactionManager(jmsTransactionManager());
         factory.setErrorHandler(
                 t -> log.error("Message was not received by {}, with cause {}",
                         t.getMessage(), t.getCause().getMessage()));
@@ -45,8 +50,16 @@ public class JmsConfig {
     }
 
     @Bean
+    public PlatformTransactionManager jmsTransactionManager(){
+        return new JmsTransactionManager(getActiveMqConnectionFactory());
+    }
+
+    @Bean
     public JmsTemplate jmsTemplate(){
-        return new JmsTemplate(getActiveMqConnectionFactory());
+        JmsTemplate jmsTemplate = new JmsTemplate(getActiveMqConnectionFactory());
+        jmsTemplate.setDeliveryPersistent(true);
+        jmsTemplate.setSessionTransacted(true);
+        return jmsTemplate;
     }
 
 }
