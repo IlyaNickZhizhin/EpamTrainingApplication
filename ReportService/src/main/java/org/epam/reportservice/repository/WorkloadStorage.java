@@ -1,8 +1,8 @@
 package org.epam.reportservice.repository;
 
 import lombok.Getter;
+import org.epam.common.dto.TrainingSession;
 import org.epam.reportservice.model.TrainerKey;
-import org.epam.reportservice.model.TrainingSession;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

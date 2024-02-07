@@ -1,14 +1,14 @@
-package org.epam.reportservice.model;
+package org.epam.common.dto;
 
 import lombok.Data;
-import org.epam.reportservice.dto.TrainerWorkloadRequest;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
 @Data
-public class TrainingSession implements Comparable<TrainingSession>{
+public class TrainingSession implements Comparable<TrainingSession>, Serializable {
     private Year year;
     private Month month;
     private double duration;
@@ -31,12 +31,9 @@ public class TrainingSession implements Comparable<TrainingSession>{
 
     @Override
     public int compareTo(TrainingSession trainingSession) {
-        if (trainingSession.getYear().isAfter(this.year)) {
-            return 1;
-        } else if (trainingSession.getMonth().equals(this.month)) {
-            return 0;
-        } else {
-            return -1;
+        if (trainingSession.getYear().isAfter(this.year)) return 1;
+        else { if (trainingSession.getMonth().equals(this.month)) return 0;
+        else return -1;
         }
     }
 }

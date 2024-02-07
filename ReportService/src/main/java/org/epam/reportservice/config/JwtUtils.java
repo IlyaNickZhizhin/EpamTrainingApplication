@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,12 +25,11 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@PropertySource("classpath:secretStore.yaml")
 @Slf4j
 @Component
 public class JwtUtils extends OncePerRequestFilter {
 
-    @Value("${secret-key}")
+    @Value("${JWT.secret-key}")
     private String SECRET_KEY;
 
 

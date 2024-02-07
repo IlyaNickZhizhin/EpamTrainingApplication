@@ -21,7 +21,7 @@ import org.epam.gymservice.dto.trainingDto.GetTrainingsResponse;
 import org.epam.gymservice.exceptions.InvalidDataException;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.service.TraineeService;
-import org.epam.gymservice.service.feign.AsyncFeignClient;
+import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +38,7 @@ import java.time.LocalDate;
 public class TraineeController {
 
     private final TraineeService traineeService;
-    private final AsyncFeignClient feignClient;
+    private final ActiveMqService activeMqService;
 
     @PostMapping("/")
     @Operation(summary = "register trainee",
@@ -50,7 +50,7 @@ public class TraineeController {
             })
     @SecurityRequirements
     public ResponseEntity<RegistrationResponse> register(@RequestBody TraineeRegistrationRequest request) {
-        log.info("Registering trainee in " + getClass().getSimpleName());
+        log.info("Registering trainee in {}", getClass().getSimpleName());
         try {
             RegistrationResponse response = traineeService.create(request);
             log.info("Trainee registered successfully");
@@ -72,10 +72,10 @@ public class TraineeController {
                     @ApiResponse(responseCode = "400", description = "Invalid username or password")
             })
     public ResponseEntity<Boolean> changePassword(@RequestBody ChangeLoginRequest request) {
-        log.info("request for change password of trainee in" + getClass().getSimpleName());
+        log.info("request for change password of trainee in{}", getClass().getSimpleName());
         try {
             boolean result = traineeService.changePassword(request);
-            log.info("Password of trainee changed successfully in" + getClass().getSimpleName());
+            log.info("Password of trainee changed successfully in{}", getClass().getSimpleName());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidDataException e) {
             log.error("Error changing password of trainee");
@@ -94,14 +94,13 @@ public class TraineeController {
                     @ApiResponse(responseCode = "400", description = "Invalid username")
             })
     public ResponseEntity<Boolean> setActive(@RequestBody ActivateDeactivateRequest request) {
-        log.info("request for change active status of trainee in" + getClass().getSimpleName());
+        log.info("request for change active status of trainee in{}", getClass().getSimpleName());
         try {
             boolean result = traineeService.setActive(request);
-            log.info("Trainee active status in requested condition: " + request.isActive()
-                    + " in " + getClass().getSimpleName());
+            log.info("Trainee active status in requested condition: {} in {}", request.isActive(), getClass().getSimpleName());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error changing active status of trainee in: " + request.isActive() + " " + e.getMessage());
+            log.error("Error changing active status of trainee in: {} {}", request.isActive(), e.getMessage());
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
@@ -118,13 +117,13 @@ public class TraineeController {
                             content = @Content(schema = @Schema(implementation = TraineeProfileResponse.class)))
             })
     public ResponseEntity<TraineeProfileResponse> update(@RequestBody UpdateTraineeProfileRequest request) {
-        log.info("request for update trainee profile in" + getClass().getSimpleName());
+        log.info("request for update trainee profile in{}", getClass().getSimpleName());
         try {
             TraineeProfileResponse response = traineeService.update(request);
-            log.info("Trainee profile updated successfully in" + getClass().getSimpleName());
+            log.info("Trainee profile updated successfully in{}", getClass().getSimpleName());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(InvalidDataException e){
-            log.error("Error updating trainee profile" + e.getMessage());
+            log.error("Error updating trainee profile{}", e.getMessage());
             return new ResponseEntity<>(new TraineeProfileResponse(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -139,13 +138,13 @@ public class TraineeController {
                             content = @Content(schema = @Schema(implementation = TraineeProfileResponse.class)))
             })
     public ResponseEntity<TraineeProfileResponse> selectByUsername(@PathVariable String username) {
-        log.info("request for select trainee profile by username:" + username.substring(0,0) + ".");
+        log.info("request for select trainee profile by username:{}.", username.substring(0, 0));
         try {
             TraineeProfileResponse response = traineeService.selectByUsername(username);
-            log.info("Trainee profile by username: " + username.substring(0,0) + ". retrieved successfully");
+            log.info("Trainee profile by username: {}. retrieved successfully", username.substring(0, 0));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error retrieving trainee profile by username: " + username.substring(0,0) + ". " + e.getMessage());
+            log.error("Error retrieving trainee profile by username: {}. {}", username.substring(0, 0), e.getMessage());
             return new ResponseEntity<>(new TraineeProfileResponse(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -162,16 +161,14 @@ public class TraineeController {
             })
     public ResponseEntity<Boolean> delete(@RequestHeader("Authorization") String token,
                                           @PathVariable String username) {
-        log.info("request for delete trainee profile username: " + username.substring(0,0) + ".");
+        log.info("request for delete trainee profile username: {}.", username.substring(0, 0));
         try {
+            activeMqService.deleteAllWorkload(username);
             boolean result = traineeService.delete(username);
-            if (result) {
-                feignClient.deleteAllWorkload(token, username);
-            }
-            log.info("Trainee profile username: " + username.substring(0,0) + ". deleted successfully");
+            log.info("Trainee profile username: {}. deleted successfully", username.substring(0, 0));
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidDataException e) {
-            log.error("Error deleting trainee profile username: " + username.substring(0,0) + ". " + e.getMessage());
+            log.error("Error deleting trainee profile username: {}. {}", username.substring(0, 0), e.getMessage());
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }

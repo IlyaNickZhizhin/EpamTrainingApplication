@@ -1,4 +1,6 @@
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
-COPY ./EurekaServer/target /app
-CMD ["java", "-jar", "EurekaServer*.jar"]
+COPY ./EurekaServer/target/EurekaServer*.jar /app/
+COPY run.sh /app/
+RUN chmod +x /app/run.sh
+CMD ["/app/run.sh"]

@@ -1,7 +1,7 @@
 package org.epam.gymservice.config.feign;
 
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
+import org.epam.common.dto.TrainerWorkloadRequest;
+import org.epam.common.dto.TrainerWorkloadResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Primary;
 import org.springframework.web.bind.annotation.DeleteMapping;

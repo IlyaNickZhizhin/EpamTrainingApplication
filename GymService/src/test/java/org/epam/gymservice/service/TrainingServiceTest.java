@@ -16,7 +16,7 @@ import org.epam.gymservice.repository.TraineeRepository;
 import org.epam.gymservice.repository.TrainerRepository;
 import org.epam.gymservice.repository.TrainingRepository;
 import org.epam.gymservice.repository.UserRepository;
-import org.epam.gymservice.service.feign.AsyncFeignClient;
+import org.epam.gymservice.service.asyncMessaging.AsyncFeignClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

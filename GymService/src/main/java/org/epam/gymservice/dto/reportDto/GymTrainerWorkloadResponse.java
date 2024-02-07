@@ -1,20 +1,15 @@
 package org.epam.gymservice.dto.reportDto;
 
-import lombok.Data;
+import org.epam.common.dto.TrainerWorkloadResponse;
+import org.epam.common.dto.TrainingSession;
 import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 
 import java.util.Queue;
 
-@Data
-public class TrainerWorkloadResponse {
-    String username;
-    String firstName;
-    String lastName;
-    boolean isActive;
-    Queue<TrainingSession> trainingSessions;
+public class GymTrainerWorkloadResponse extends TrainerWorkloadResponse {
 
     public static TrainerWorkloadResponse of(TrainerProfileResponse trainer, String username, Queue<TrainingSession> session){
-        TrainerWorkloadResponse response = new TrainerWorkloadResponse();
+        GymTrainerWorkloadResponse response = new GymTrainerWorkloadResponse();
         response.setUsername(username);
         response.setFirstName(trainer.getFirstName());
         response.setLastName(trainer.getLastName());
