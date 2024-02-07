@@ -1,8 +1,8 @@
 package org.epam.reportservice.controller;
 
 import org.epam.reportservice.Reader;
-import org.epam.reportservice.dto.TrainerWorkloadRequest;
-import org.epam.reportservice.dto.TrainerWorkloadResponse;
+import org.epam.reportservice.dto.ReportTrainerWorkloadRequest;
+import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
 import org.epam.reportservice.service.WorkloadService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,19 +25,19 @@ class WorkloadControllerTest {
     @Test
     void testAdd() {
         Reader reader = new Reader();
-        TrainerWorkloadRequest request = reader
-                .readEntity("src/test/resources/models/workloads/workload1.json", TrainerWorkloadRequest.class);
-        when(service.addWorkload(request)).thenReturn(new TrainerWorkloadResponse());
-        assertEquals(new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.OK),
+        ReportTrainerWorkloadRequest request = reader
+                .readEntity("src/test/resources/models/workloads/workload1.json", ReportTrainerWorkloadRequest.class);
+        when(service.addWorkload(request)).thenReturn(new ReportTrainerWorkloadResponse());
+        assertEquals(new ResponseEntity<>(new ReportTrainerWorkloadResponse(), HttpStatus.OK),
                 controller.add(request));
     }
     @Test
     void testDelete() {
         Reader reader = new Reader();
-        TrainerWorkloadRequest request = reader
-                .readEntity("src/test/resources/models/workloads/workload1.json", TrainerWorkloadRequest.class);
-        when(service.deleteWorkload(request)).thenReturn(new TrainerWorkloadResponse());
-        assertEquals(new ResponseEntity<>(new TrainerWorkloadResponse(), HttpStatus.OK),
+        ReportTrainerWorkloadRequest request = reader
+                .readEntity("src/test/resources/models/workloads/workload1.json", ReportTrainerWorkloadRequest.class);
+        when(service.deleteWorkload(request)).thenReturn(new ReportTrainerWorkloadResponse());
+        assertEquals(new ResponseEntity<>(new ReportTrainerWorkloadResponse(), HttpStatus.OK),
                 controller.delete(request));
     }
 }

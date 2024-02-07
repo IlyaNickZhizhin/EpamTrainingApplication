@@ -5,21 +5,25 @@ server:
   port: 8082
 ---
 spring:
-  profiles:
-    active: local
+  config:
+    activate:
+      on-profile: local
+    import: classpath:secretStoreLocal.yaml
 eureka:
   client:
-    serviceUrl:
-      defaultZone: http://eureka-server:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 ---
 spring:
-  profiles:
-    active: docker
+  config:
+    activate:
+      on-profile: docker
+    import: classpath:secretStoreDocker.yaml
 eureka:
   client:
-    serviceUrl:
-      defaultZone: http://eureka-server:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka

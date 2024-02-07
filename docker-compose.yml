@@ -48,3 +48,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       - eureka-server
+  activemq:
+    image: apache/activemq-artemis:latest-alpine
+    environment:
+      ARTEMIS_USER: epamtrainee
+      ARTEMIS_PASSWORD: epamtraineepassword
+    ports:
+      - "61616:61616"
+      - "8161:8161"

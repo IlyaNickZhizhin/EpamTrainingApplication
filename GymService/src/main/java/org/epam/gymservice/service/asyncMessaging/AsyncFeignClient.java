@@ -1,9 +1,10 @@
-package org.epam.gymservice.service.feign;
+package org.epam.gymservice.service.asyncMessaging;
 
 import lombok.RequiredArgsConstructor;
+import org.epam.common.dto.TrainerWorkloadRequest;
+import org.epam.common.dto.TrainerWorkloadResponse;
 import org.epam.gymservice.config.feign.ReportFeignClient;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
+import org.epam.gymservice.dto.reportDto.GymTrainerWorkloadRequest;
 import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.gymservice.dto.trainingDto.GetTraineeTrainingsListRequest;
@@ -28,7 +29,7 @@ public class AsyncFeignClient {
     public CompletableFuture<TrainerWorkloadResponse> addWorkload(String bearerToken, AddTrainingRequest request) {
         TrainerProfileResponse trainer = trainerService.selectByUsername(request.getTrainerUsername());
         return CompletableFuture
-                .supplyAsync(()->feignClient.addWorkload(bearerToken, TrainerWorkloadRequest.of(trainer, request)));
+                .supplyAsync(()->feignClient.addWorkload(bearerToken, GymTrainerWorkloadRequest.of(trainer, request)));
     }
 
     @Async
@@ -38,7 +39,7 @@ public class AsyncFeignClient {
                 .getTrainings();
         trainingList.forEach(training ->{
             TrainerProfileResponse trainer = trainerService.selectByUsername(training.getOpponentName());
-            deleteWorkload(bearerToken, TrainerWorkloadRequest.of(trainer, training));
+            deleteWorkload(bearerToken, GymTrainerWorkloadRequest.of(trainer, training));
         });
     }
 

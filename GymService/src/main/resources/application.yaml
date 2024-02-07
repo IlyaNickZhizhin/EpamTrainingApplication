@@ -23,7 +23,7 @@ spring:
   config:
     activate:
       on-profile: local
-
+    import: classpath:secretStoreLocal.yaml
   datasource:
     url: jdbc:postgresql://localhost:5432/epam_training_app
   jpa:
@@ -75,6 +75,7 @@ spring:
   config:
     activate:
       on-profile: docker
+    import: classpath:secretStoreDocker.yaml
   datasource:
     url: jdbc:postgresql://db:5432/epam_training_app
   jpa:

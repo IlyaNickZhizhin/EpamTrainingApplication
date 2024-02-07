@@ -1,4 +1,6 @@
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
-COPY ./GymService/target /app/
-CMD ["java", "-jar", "GymService*.jar"]
+COPY ./GymService/target/GymService*.jar /app
+COPY run.sh /app/
+RUN chmod +x /app/run.sh
+CMD ["/app/run.sh"]

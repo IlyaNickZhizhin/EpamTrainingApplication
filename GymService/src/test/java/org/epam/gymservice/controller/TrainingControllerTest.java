@@ -14,7 +14,7 @@ import org.epam.gymservice.model.gymModel.Trainer;
 import org.epam.gymservice.model.gymModel.Training;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.service.TrainingService;
-import org.epam.gymservice.service.feign.AsyncFeignClient;
+import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class TrainingControllerTest {
     TrainingService trainingService;
 
     @Mock
-    AsyncFeignClient feignClient;
+    ActiveMqService mqService;
 
     @InjectMocks
     TrainingController trainingController;

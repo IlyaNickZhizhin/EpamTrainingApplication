@@ -1,7 +1,7 @@
 package org.epam.gymservice.mapper;
 
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadRequest;
-import org.epam.gymservice.dto.reportDto.TrainerWorkloadResponse;
+import org.epam.gymservice.dto.reportDto.GymTrainerWorkloadRequest;
+import org.epam.gymservice.dto.reportDto.GymTrainerWorkloadResponse;
 import org.epam.gymservice.dto.trainerDto.TrainerDto;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
 import org.epam.gymservice.dto.trainingDto.GetTrainersResponse;
@@ -26,7 +26,7 @@ public interface TrainingMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingName")
-    @Mapping(source = "trainer.user.firstName", target = "opponentName")
+    @Mapping(source = "trainer.user.username", target = "opponentName")
     @Named("trainingForTrainee")
     TrainingDto traineeTrainingToShortDto(Training training);
 
@@ -58,10 +58,10 @@ public interface TrainingMapper {
     @Mapping(source = "trainer.user.active", target = "active")
     @Mapping(source = "duration", target = "duration")
     @Mapping(source = "trainingDate", target = "trainingDate")
-    TrainerWorkloadRequest trainingToWorkloadRequest(Training training);
+    GymTrainerWorkloadRequest trainingToWorkloadRequest(Training training);
 
     @Mapping(target = "trainingSessions", ignore = true)
-    TrainerWorkloadResponse trainerWorkloadRequestToResponse(TrainerWorkloadRequest request);
+    GymTrainerWorkloadResponse trainerWorkloadRequestToResponse(GymTrainerWorkloadRequest request);
 
     @Named("tNameToTrainingType")
     default TrainingType stringToTrainingType(TrainingType.TrainingName type) {
