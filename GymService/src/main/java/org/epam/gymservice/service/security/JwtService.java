@@ -6,7 +6,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-@PropertySource("classpath:secretStore.yaml")
 public class JwtService {
     @Value("${JWT.secret-key}")
     private String SECRET_KEY;
