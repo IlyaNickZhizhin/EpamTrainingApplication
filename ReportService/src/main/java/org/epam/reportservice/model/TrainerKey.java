@@ -2,8 +2,10 @@ package org.epam.reportservice.model;
 
 import lombok.Data;
 import org.epam.common.dto.TrainerWorkloadRequest;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Document
 public class TrainerKey {
     private String username;
     private String firstName;

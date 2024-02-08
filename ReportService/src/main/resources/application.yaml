@@ -9,6 +9,9 @@ spring:
     activate:
       on-profile: local
     import: classpath:secretStoreLocal.yaml
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/gymWorkloads
 eureka:
   client:
     register-with-eureka: true
