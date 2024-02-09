@@ -27,7 +27,7 @@ public class MonthDuration implements Comparable<MonthDuration>{
 
     public static Set<MonthDuration> setOf(Map<Month, Double> monthDoubleMap){
         if (monthDoubleMap==null || monthDoubleMap.isEmpty()) return new TreeSet<>();
-        return monthDoubleMap.entrySet().stream()
+        return MapUtils.emptyIfNull(monthDoubleMap).entrySet().stream()
                 .map(e-> MonthDuration.of(e.getKey(), e.getValue()))
                 .collect(Collectors.toCollection(TreeSet::new));
     }
