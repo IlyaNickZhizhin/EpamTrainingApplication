@@ -56,3 +56,7 @@ services:
     ports:
       - "61616:61616"
       - "8161:8161"
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"

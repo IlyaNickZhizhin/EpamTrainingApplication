@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.common.dto.TrainerWorkloadResponse;
-import org.epam.reportservice.service.WorkloadMongoService;
+import org.epam.reportservice.service.WorkloadService;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class WorkloadReceiver {
 
-    private final WorkloadMongoService workloadService;
+    private final WorkloadService workloadService;
     private final JmsTemplate jmsTemplate;
 
     @Transactional

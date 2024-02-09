@@ -1,57 +1,63 @@
 package org.epam.reportservice.service;
 
-import org.epam.common.dto.TrainingSession;
+import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.reportservice.Reader;
 import org.epam.reportservice.dto.ReportTrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
-import org.epam.reportservice.model.TrainerKey;
-import org.epam.reportservice.repository.WorkloadStorage;
+import org.epam.reportservice.model.TrainingSession;
+import org.epam.reportservice.model.Workload;
+import org.epam.reportservice.repository.WorkloadRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class WorkloadServiceTest {
+
     @Mock
-    WorkloadStorage storage;
+    private WorkloadRepository repository;
+
     @InjectMocks
-    WorkloadService service;
+    private WorkloadService service;
 
-    @Test
-    void testChangeAdd() {
-        Reader reader = new Reader();
-        ReportTrainerWorkloadRequest request = reader
+    private final Reader reader =  new Reader();
+    private TrainerWorkloadRequest request;
+    private Workload workload;
+
+
+    @BeforeEach
+    void setUp() {
+        request = reader
                 .readEntity("src/test/resources/models/workloads/workload1.json", ReportTrainerWorkloadRequest.class);
-        TrainerKey key = TrainerKey.of(request);
-        TrainingSession newSession = TrainingSession.of(request);
-        Queue<TrainingSession> queue = new PriorityQueue<>();
-        queue.add(newSession);
-        when(storage.addWorkload(key, newSession)).thenReturn(queue);
-        ReportTrainerWorkloadResponse response = ReportTrainerWorkloadResponse.of(key, queue);
-        assertEquals(response, service.addWorkload(request));
-    }
-    @Test
-    void testChangeDelete() {
-        Reader reader = new Reader();
-        ReportTrainerWorkloadRequest request = reader
-                .readEntity("src/test/resources/models/workloads/workload1.json", ReportTrainerWorkloadRequest.class);
-        TrainerKey key = TrainerKey.of(request);
-        TrainingSession newSession = TrainingSession.of(request);
-        Queue<TrainingSession> queue = new PriorityQueue<>();
-        queue.add(newSession);
-        Queue<TrainingSession> queue2 = new PriorityQueue<>(queue);
-        queue2.remove(newSession);
-        when(storage.deleteWorkload(key, newSession)).thenReturn(queue2);
-        ReportTrainerWorkloadResponse response = ReportTrainerWorkloadResponse.of(key, queue2);
-        assertEquals(response, service.deleteWorkload(request));
+        workload = Workload.of(request);
     }
 
+    @Test
+    void addWorkload() {
+        when(repository.findById(anyString())).thenReturn(Optional.empty());
+        when(repository.save(any(Workload.class))).thenReturn(workload);
+        assertEquals(ReportTrainerWorkloadResponse.of(workload), service.addWorkload(request));
+        verify(repository, times(1)).findById(anyString());
+        verify(repository, times(1)).save(any(Workload.class));
+    }
+
+    @Test
+    void deleteWorkload() {
+        workload.setTrainingSessions(new TreeSet<>(Arrays.asList(TrainingSession.of(request.getTrainingDate(), request.getDuration()))));
+        when(repository.findById(anyString())).thenReturn(Optional.of(workload));
+        when(repository.save(any(Workload.class))).thenReturn(workload);
+        assertEquals(ReportTrainerWorkloadResponse.of(workload), service.deleteWorkload(request));
+        verify(repository, times(1)).findById(anyString());
+        verify(repository, times(1)).save(any(Workload.class));
+    }
 }
