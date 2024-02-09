@@ -2,9 +2,14 @@ package org.epam.reportservice.config;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import org.bson.Document;
+import org.epam.reportservice.model.Workload;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,7 +19,6 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Value("${spring.data.mongodb.uri}")
     private String mongoUri;
-
 
     @Override
     protected String getDatabaseName() {
@@ -28,7 +32,16 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Override
     public Collection<String> getMappingBasePackages() {
-        return Arrays.asList("org.epam.common.dto");
+        return Arrays.asList("org.epam.reportservice.model");
+    }
+
+
+    @Bean
+    public MongoTemplate getMongoTemplate(){
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
+        mongoTemplate.indexOps(Workload.class).ensureIndex(new CompoundIndexDefinition(
+                new Document().append("trainingSessions.year", 1).append("trainingSessions.months.month",1)));
+        return mongoTemplate;
     }
 
 }
