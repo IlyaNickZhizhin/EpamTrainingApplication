@@ -10,10 +10,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  cloud:
-    openfeign:
-      circuitbreaker:
-        enabled: true
 my-props:
   jwt:
     max-attempts: 3
