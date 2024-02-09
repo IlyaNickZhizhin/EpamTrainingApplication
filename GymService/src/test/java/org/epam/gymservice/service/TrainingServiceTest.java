@@ -16,7 +16,6 @@ import org.epam.gymservice.repository.TraineeRepository;
 import org.epam.gymservice.repository.TrainerRepository;
 import org.epam.gymservice.repository.TrainingRepository;
 import org.epam.gymservice.repository.UserRepository;
-import org.epam.gymservice.service.asyncMessaging.AsyncFeignClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,8 +45,6 @@ class TrainingServiceTest {
     private TrainerRepository mockTrainerDaoImpl = mock(TrainerRepository.class);
     @Mock
     private UserRepository mockUserDao = mock(UserRepository.class);
-    @Mock
-    private AsyncFeignClient feignClient = mock(AsyncFeignClient.class);
     @Spy
     TrainerMapper trainerMapper = Mappers.getMapper(TrainerMapper.class);
     @Spy
