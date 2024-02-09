@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Data
@@ -19,6 +20,7 @@ public class TrainingSession implements Comparable<TrainingSession>{
     }
 
     public static Set<TrainingSession> setOf(Map<LocalDate, Double> trainingMap){
+        if (trainingMap==null || trainingMap.isEmpty()) return new TreeSet<>();
         Map<Integer, Map<Month, Double>> groupedByYear = trainingMap.entrySet().stream()
                 .collect(Collectors.groupingBy(
                         e -> e.getKey().getYear(),
