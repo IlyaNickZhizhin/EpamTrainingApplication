@@ -33,7 +33,7 @@ public class WorkloadReceiver {
     @Transactional
     @JmsListener(destination = "deleteTrainingRequestQueue", containerFactory = "defaultJmsListenerContainerFactory")
     public TrainerWorkloadResponse receiveDeleteMessage(TrainerWorkloadRequest request){
-        log.info("Deleting workload of trainer{} {}***", request.getFirstName(), request.getLastName().charAt(0));
+        log.info("Deleting workload of trainer {} {}***", request.getFirstName(), request.getLastName().charAt(0));
         try {
             return workloadService.deleteWorkload(request);
         } catch (Exception e){

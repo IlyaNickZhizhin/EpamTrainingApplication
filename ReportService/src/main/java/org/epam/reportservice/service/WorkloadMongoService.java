@@ -31,7 +31,7 @@ public class WorkloadMongoService {
 
 
     public ReportTrainerWorkloadResponse deleteWorkload(TrainerWorkloadRequest request) {
-        log.info("{}.{}starts DELETE workload of trainer {}{}*** training on {}",
+        log.info("{}.{} starts DELETE workload of trainer {} {}*** training on {}",
                 this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[2].getMethodName(),
                 request.getFirstName(), request.getLastName().charAt(0), request.getTrainingDate());
         Workload workload = repository.findById(request.getUsername()).orElseThrow(
@@ -39,7 +39,7 @@ public class WorkloadMongoService {
                         "Trainer " + request.getFirstName() + " " + request.getLastName().charAt(0) + "***" +
                 "has no training workload")
         );
-        workload.setTrainingSessions(getTrainingSession(workload.getTrainingSessions(), request.getTrainingDate(), request.getDuration()));
+        workload.setTrainingSessions(getAndDeleteFromTrainingSession(workload.getTrainingSessions(), request.getTrainingDate(), request.getDuration()));
         return ReportTrainerWorkloadResponse.of(repository.save(workload));
     }
 
@@ -54,7 +54,7 @@ public class WorkloadMongoService {
         monthDurations.add(MonthDuration.of(date, duration));
     }
 
-    private SortedSet<MonthDuration> getMonthDuration(SortedSet<MonthDuration> monthDurations, LocalDate date, double duration){
+    private SortedSet<MonthDuration> getAndDeleteMonthDuration(SortedSet<MonthDuration> monthDurations, LocalDate date, double duration){
         for (MonthDuration monthDuration : monthDurations){
             if (monthDuration.getMonth().equals(date.getMonth())) {
                 monthDuration.setDuration(monthDuration.getDuration()-duration);
@@ -74,12 +74,13 @@ public class WorkloadMongoService {
         trainingSessions.add(TrainingSession.of(date, duration));
     }
 
-    private SortedSet<TrainingSession> getTrainingSession(SortedSet<TrainingSession> trainingSessions, LocalDate date, double duration){
+    private SortedSet<TrainingSession> getAndDeleteFromTrainingSession(SortedSet<TrainingSession> trainingSessions, LocalDate date, double duration){
         for (TrainingSession trainingSession : trainingSessions){
             if (trainingSession.getYear()==(date.getYear())){
-                trainingSession.setMonths(getMonthDuration(trainingSession.getMonths(), date, duration));
+                trainingSession.setMonths(getAndDeleteMonthDuration(trainingSession.getMonths(), date, duration));
+                return trainingSessions;
             }
         }
-        throw new NoSuchElementException("There are no trainings at that month: " + date);
+        throw new NoSuchElementException("There are no trainings at that date: " + date);
     }
 }
