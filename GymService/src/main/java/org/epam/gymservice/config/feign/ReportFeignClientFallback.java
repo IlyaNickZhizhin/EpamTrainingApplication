@@ -11,9 +11,12 @@ import org.epam.gymservice.dto.trainingDto.TrainingDto;
 import org.epam.gymservice.service.TrainerService;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -34,8 +37,12 @@ public class ReportFeignClientFallback implements ReportFeignClient {
     private TrainerWorkloadResponse defaultFallback(TrainerWorkloadRequest request) {
         TrainerProfileResponse trainer = trainerService.selectByUsername(request.getUsername());
         List<TrainingDto> trainings = trainerService.getTrainerTrainingsList(request.getUsername(), new GetTrainerTrainingsListRequest()).getTrainings();
-        Queue<TrainingSession> sessions = new PriorityQueue<>();
-        sessions.addAll(trainings.stream().map(training -> TrainingSession.of(training.getTrainingDate(), training.getDuration())).toList());
-        return GymTrainerWorkloadResponse.of(trainer, request.getUsername(), sessions);
+        Map<LocalDate, Double> trainindMap = trainings.stream().collect(
+                Collectors.toMap(
+                        TrainingDto::getTrainingDate,
+                        TrainingDto::getDuration,
+                        Double::sum));
+        Set<TrainingSession> sessions = TrainingSession.setOf(trainindMap);
+        return GymTrainerWorkloadResponse.of(trainer, request.getUsername(), new ArrayList<>(sessions));
     }
 }

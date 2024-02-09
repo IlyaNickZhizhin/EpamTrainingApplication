@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class WorkloadController {
 
     private final WorkloadService workloadService;
+
     @PutMapping("/change")
     @Operation(summary = "Change trainer workload",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Add new workload to storage",

@@ -5,6 +5,7 @@ import org.epam.common.dto.TrainerWorkloadRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -16,7 +17,7 @@ public class Workload {
     private String firstName;
     private String lastName;
     private boolean isActive;
-    private SortedSet<TrainingSession> trainingSessions;
+    private Set<TrainingSession> trainingSessions;
 
     public static Workload of(TrainerWorkloadRequest request){
         Workload workload = new Workload();
