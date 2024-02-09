@@ -12,6 +12,7 @@ import java.util.TreeSet;
 @Data
 @Document(collection = "gymWorkloads")
 public class Workload {
+
     @Id
     private String username;
     private String firstName;
@@ -29,6 +30,4 @@ public class Workload {
         workload.setTrainingSessions(sessions);
         return workload;
     }
-
-
 }
