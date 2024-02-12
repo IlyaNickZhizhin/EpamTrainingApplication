@@ -1,6 +1,7 @@
 package org.epam.common.dto;
 
 import lombok.Data;
+import org.apache.commons.collections4.MapUtils;
 
 import java.time.Month;
 import java.util.Map;
@@ -26,7 +27,6 @@ public class MonthDuration implements Comparable<MonthDuration>{
     }
 
     public static Set<MonthDuration> setOf(Map<Month, Double> monthDoubleMap){
-        if (monthDoubleMap==null || monthDoubleMap.isEmpty()) return new TreeSet<>();
         return MapUtils.emptyIfNull(monthDoubleMap).entrySet().stream()
                 .map(e-> MonthDuration.of(e.getKey(), e.getValue()))
                 .collect(Collectors.toCollection(TreeSet::new));
