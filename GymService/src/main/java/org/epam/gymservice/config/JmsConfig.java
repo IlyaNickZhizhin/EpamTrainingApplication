@@ -17,11 +17,11 @@ import java.text.SimpleDateFormat;
 
 @Configuration
 public class JmsConfig {
-    @Value("${activemq.broker-url}")
+    @Value("${activemq.broker-url:defaultURL}")
     private String brokerUrl;
-    @Value("${activemq.user}")
+    @Value("${activemq.user:defaultUSERNAME}")
     private String username;
-    @Value("${activemq.password}")
+    @Value("${activemq.password:defaultPassword}")
     private String password;
 
     @Bean

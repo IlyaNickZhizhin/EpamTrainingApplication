@@ -25,6 +25,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -33,11 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TrainerControllerTest {
 
+    private static final Logger log = LoggerFactory.getLogger(TrainerControllerTest.class);
     @Mock
     private TrainerService trainerService;
 
@@ -81,7 +85,7 @@ class TrainerControllerTest {
         RegistrationResponse response = new RegistrationResponse();
         InvalidDataException ex = new InvalidDataException("1","2");
         when(trainerService.create(request)).thenThrow(ex);
-        assertEquals(response, trainerController.register(request).getBody());
+        assertThrows(InvalidDataException.class, ()->trainerController.register(request));
     }
 
     @Test

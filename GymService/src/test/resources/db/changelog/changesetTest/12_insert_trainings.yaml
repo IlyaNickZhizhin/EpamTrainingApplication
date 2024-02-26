@@ -1,0 +1,131 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-trainings
+      author: IlyaZhizhin
+      changes:
+        - insert:
+            tableName: trainings
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 1
+              - column:
+                  name: trainer_id
+                  value: 1
+              - column:
+                  name: training_name
+                  value: "BASIC 1"
+              - column:
+                  name: training_type_id
+                  value: 1
+              - column:
+                  name: training_date
+                  value: "2023-11-15"
+              - column:
+                  name: duration
+                  value: 1.0
+        - insert:
+            tableName: trainings
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 1
+              - column:
+                  name: trainer_id
+                  value: 2
+              - column:
+                  name: training_name
+                  value: "CARDIO 2"
+              - column:
+                  name: training_type_id
+                  value: 2
+              - column:
+                  name: training_date
+                  value: "2023-11-15"
+              - column:
+                  name: duration
+                  value: 1.5
+        - insert:
+            tableName: trainings
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 2
+              - column:
+                  name: trainer_id
+                  value: 1
+              - column:
+                  name: training_name
+                  value: "BASIC 3"
+              - column:
+                  name: training_type_id
+                  value: 1
+              - column:
+                  name: training_date
+                  value: "2023-11-16"
+              - column:
+                  name: duration
+                  value: 2.5
+        - insert:
+            tableName: trainings
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 2
+              - column:
+                  name: trainer_id
+                  value: 2
+              - column:
+                  name: training_name
+                  value: "CARDIO 4"
+              - column:
+                  name: training_type_id
+                  value: 2
+              - column:
+                  name: training_date
+                  value: "2023-11-16"
+              - column:
+                  name: duration
+                  value: 2.0
+        - insert:
+            tableName: trainings
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 3
+              - column:
+                  name: trainer_id
+                  value: 1
+              - column:
+                  name: training_name
+                  value: "BASIC 5"
+              - column:
+                  name: training_type_id
+                  value: 1
+              - column:
+                  name: training_date
+                  value: "2023-11-17"
+              - column:
+                  name: duration
+                  value: 3.0
+        - insert:
+            tableName: trainings
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 4
+              - column:
+                  name: trainer_id
+                  value: 2
+              - column:
+                  name: training_name
+                  value: "CARDIO 6"
+              - column:
+                  name: training_type_id
+                  value: 2
+              - column:
+                  name: training_date
+                  value: "2023-11-17"
+              - column:
+                  name: duration
+                  value: 3.5

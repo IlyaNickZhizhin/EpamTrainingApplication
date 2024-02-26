@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.gymservice.dto.ActivateDeactivateRequest;
@@ -18,10 +19,12 @@ import org.epam.gymservice.dto.trainerDto.UpdateTrainerProfileRequest;
 import org.epam.gymservice.dto.trainingDto.GetTrainerTrainingsListRequest;
 import org.epam.gymservice.dto.trainingDto.GetTrainingsResponse;
 import org.epam.gymservice.exceptions.InvalidDataException;
+import org.epam.gymservice.exceptions.ProhibitedActionException;
 import org.epam.gymservice.service.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -32,6 +35,7 @@ import java.time.LocalDate;
 @Tag(name="Trainer controller", description = "for registration, updating, deleting, selecting trainer")
 @Slf4j
 @CrossOrigin
+@Validated
 public class TrainerController {
 
     private final TrainerService trainerService;
@@ -45,15 +49,10 @@ public class TrainerController {
                             content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
             })
     @SecurityRequirements
-    public ResponseEntity<RegistrationResponse> register(@RequestBody TrainerRegistrationRequest request) {
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody TrainerRegistrationRequest request) {
         log.info("Registering trainer in " + getClass().getSimpleName());
-        try {
-            RegistrationResponse response = trainerService.create(request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (InvalidDataException e) {
-            log.error("Error while registering trainer in " + getClass().getSimpleName(), e);
-            return new ResponseEntity<>(new RegistrationResponse(), HttpStatus.BAD_REQUEST);
-        }
+        RegistrationResponse response = trainerService.create(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PatchMapping("/password")
@@ -66,13 +65,13 @@ public class TrainerController {
                             content = @Content(schema = @Schema(implementation = Boolean.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid username or password")
             })
-    public ResponseEntity<Boolean> changePassword(@RequestBody ChangeLoginRequest request) {
+    public ResponseEntity<Boolean> changePassword(@Valid @RequestBody ChangeLoginRequest request) {
         log.info("Changing password for trainer in " + getClass().getSimpleName());
         try {
             boolean result = trainerService.changePassword(request);
             log.info("Password changed successfully in " + getClass().getSimpleName());
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (InvalidDataException e) {
+        } catch (InvalidDataException | ProhibitedActionException e) {
             log.error("Error while changing password", e);
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
@@ -128,7 +127,7 @@ public class TrainerController {
                             content = @Content(schema = @Schema(implementation = TrainerProfileResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid username")
             })
-    public ResponseEntity<TrainerProfileResponse> update(@RequestBody UpdateTrainerProfileRequest request) {
+    public ResponseEntity<TrainerProfileResponse> update(@Valid @RequestBody UpdateTrainerProfileRequest request) {
         log.info("Updating trainer profile in " + getClass().getSimpleName());
         try {
             TrainerProfileResponse response = trainerService.update(request);

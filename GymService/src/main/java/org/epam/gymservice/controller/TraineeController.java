@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.gymservice.dto.ActivateDeactivateRequest;
@@ -19,12 +20,14 @@ import org.epam.gymservice.dto.traineeDto.UpdateTraineeProfileRequest;
 import org.epam.gymservice.dto.trainingDto.GetTraineeTrainingsListRequest;
 import org.epam.gymservice.dto.trainingDto.GetTrainingsResponse;
 import org.epam.gymservice.exceptions.InvalidDataException;
+import org.epam.gymservice.exceptions.ProhibitedActionException;
 import org.epam.gymservice.model.gymModel.TrainingType;
 import org.epam.gymservice.service.TraineeService;
 import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -35,6 +38,7 @@ import java.time.LocalDate;
 @Tag(name = "Trainee controller", description = "for registration, updating, deleting, selecting trainee")
 @Slf4j
 @CrossOrigin
+@Validated
 public class TraineeController {
 
     private final TraineeService traineeService;
@@ -49,7 +53,7 @@ public class TraineeController {
                             content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
             })
     @SecurityRequirements
-    public ResponseEntity<RegistrationResponse> register(@RequestBody TraineeRegistrationRequest request) {
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody TraineeRegistrationRequest request) {
         log.info("Registering trainee in {}", getClass().getSimpleName());
         try {
             RegistrationResponse response = traineeService.create(request);
@@ -77,7 +81,7 @@ public class TraineeController {
             boolean result = traineeService.changePassword(request);
             log.info("Password of trainee changed successfully in{}", getClass().getSimpleName());
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (InvalidDataException e) {
+        } catch (InvalidDataException | ProhibitedActionException e) {
             log.error("Error changing password of trainee");
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
@@ -116,7 +120,7 @@ public class TraineeController {
                     @ApiResponse(responseCode = "200", description = "Trainee profile updated successfully",
                             content = @Content(schema = @Schema(implementation = TraineeProfileResponse.class)))
             })
-    public ResponseEntity<TraineeProfileResponse> update(@RequestBody UpdateTraineeProfileRequest request) {
+    public ResponseEntity<TraineeProfileResponse> update(@Valid @RequestBody UpdateTraineeProfileRequest request) {
         log.info("request for update trainee profile in{}", getClass().getSimpleName());
         try {
             TraineeProfileResponse response = traineeService.update(request);
@@ -159,8 +163,7 @@ public class TraineeController {
                     @ApiResponse(responseCode = "200", description = "Trainee profile deleted successfully",
                             content = @Content(schema = @Schema(implementation = Boolean.class)))
             })
-    public ResponseEntity<Boolean> delete(@RequestHeader("Authorization") String token,
-                                          @PathVariable String username) {
+    public ResponseEntity<Boolean> delete(@PathVariable String username) {
         log.info("request for delete trainee profile username: {}.", username.substring(0, 0));
         try {
             activeMqService.deleteAllWorkload(username);

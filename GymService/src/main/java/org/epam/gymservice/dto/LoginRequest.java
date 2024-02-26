@@ -12,5 +12,12 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
+    public static LoginRequest of(String username, String password){
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername(username);
+        loginRequest.setPassword(password);
+        return loginRequest;
+    }
+
 }
 

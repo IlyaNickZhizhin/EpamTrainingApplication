@@ -1,21 +1,27 @@
 databaseChangeLog:
   - include:
-      file: changesetTest/1_create-users-table.yaml
+      file: classpath:db/changelog/changesetTest/1_create-users-table.yaml
   - include:
-      file: changesetTest/2_create-training_types-table.yaml
+      file: classpath:db/changelog/changesetTest/2_create-training_types-table.yaml
   - include:
-      file: changesetTest/3_create-trainee-table.yaml
+      file: classpath:db/changelog/changesetTest/3_create-trainee-table.yaml
   - include:
-      file: changesetTest/4_create-trainers-table.yaml
+      file: classpath:db/changelog/changesetTest/4_create-trainers-table.yaml
   - include:
-      file: changesetTest/5_create-trainings-table.yaml
+      file: classpath:db/changelog/changesetTest/5_create-trainings-table.yaml
   - include:
-      file: changesetTest/6_insert-training-types.yaml
+      file: classpath:db/changelog/changesetTest/6_insert-training-types.yaml
   - include:
-      file: changesetTest/7_create-trainee_trainers-table.yaml
+      file: classpath:db/changelog/changesetTest/7_create-trainee_trainers-table.yaml
   - include:
-      file: changesetTest/8_add-roles-to-user.yaml
+      file: classpath:db/changelog/changesetTest/8_add-roles-to-user.yaml
   - include:
-      file: changesetTest/9_create-users-roles-table.yaml
+      file: classpath:db/changelog/changesetTest/9_create-users-roles-table.yaml
   - include:
-      file: changesetTest/10_create-roles-table.yaml
+      file: classpath:db/changelog/changesetTest/10_create-roles-table.yaml
+  - include:
+      file: classpath:db/changelog/changesetTest/11_insert-users.yaml
+  - include:
+      file: classpath:db/changelog/changesetTest/12_insert_trainings.yaml
+  - include:
+      file: classpath:db/changelog/changesetTest/13_insert_trainee_trainer_associations.yaml

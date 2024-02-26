@@ -2,7 +2,7 @@
   "username": "Vasiliy.Vasiliev",
   "firstName": "Vasiliy",
   "lastName": "Vasiliev",
-  "isActive": true,
+  "active": true,
   "trainingDate": "2023-11-16",
   "duration": 2.5
 }

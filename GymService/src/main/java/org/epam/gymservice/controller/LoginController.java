@@ -14,6 +14,7 @@ import org.epam.gymservice.service.LoginService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Login controller", description = "for checking password adg getting principal entity")
 @Slf4j
 @CrossOrigin
+@Validated
 public class LoginController {
 
     private final LoginService loginService;
@@ -30,7 +32,7 @@ public class LoginController {
     @Operation(summary = "checks username and password")
     @SecurityRequirements
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        log.info("Checking username and password in" +getClass().getSimpleName());
+        log.info("Checking username and password in " +getClass().getSimpleName());
         try {
             return new ResponseEntity<>(loginService.login(request), HttpStatus.OK);
         } catch (VerificationException | InvalidDataException e) {

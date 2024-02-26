@@ -27,7 +27,6 @@
     <lombok.version>1.18.30</lombok.version>
     <jackson-databind.version>2.15.3</jackson-databind.version>
     <jackson-datatype-jsr310.version>2.15.3</jackson-datatype-jsr310.version>
-    <junit.version>5.9.3</junit.version>
     <mockito.version>5.3.1</mockito.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <slf4j-api.version>2.0.9</slf4j-api.version>
@@ -41,6 +40,9 @@
     <jwt>0.11.5</jwt>
     <eureka>4.0.2</eureka>
     <circutbreaker>3.0.2</circutbreaker>
+    <cucmber-java>7.15.0</cucmber-java>
+    <cucmber-spring>7.14.0</cucmber-spring>
+    <cucmber-junit>7.14.0</cucmber-junit>
   </properties>
 
   <dependencies>
@@ -57,6 +59,16 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
     </dependency>
 
     <dependency>
@@ -175,6 +187,33 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
       <version>${circutbreaker}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${cucmber-java}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-spring</artifactId>
+      <version>${cucmber-spring}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-junit</artifactId>
+      <version>${cucmber-junit}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

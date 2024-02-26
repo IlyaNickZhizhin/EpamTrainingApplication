@@ -85,6 +85,10 @@ public class TraineeService {
         if (encoder.matches(request.getNewPassword(), pair.left.getPassword())) {
             throw new ProhibitedActionException("New password is the same as old");
         }
+        if (!encoder.matches(request.getOldPassword(), pair.left.getPassword())) {
+            log.warn("Someone tries change password on trainee #{}", pair.right.getId());
+            throw new ProhibitedActionException("Old password is incorrect");
+        }
         pair.left.setPassword(encoder.encode(request.getNewPassword()));
         return encoder.matches(request.getNewPassword(), userService.update(pair.left.getId(), pair.left)
                 .orElseThrow(
@@ -151,7 +155,7 @@ public class TraineeService {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
         ImmutablePair<Optional<User>, String> userWithPass =
-                userService.setNewUser(request.getFirstname(), request.getLastname(), Role.of(Role.Authority.ROLE_TRAINEE));
+                userService.setNewUser(request.getFirstname(), request.getLastname(), Role.of(Role.Authority.TRAINEE));
         User user = userWithPass.left.orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstname().substring(0,0) + "." 
                     + request.getLastname().substring(0,0));

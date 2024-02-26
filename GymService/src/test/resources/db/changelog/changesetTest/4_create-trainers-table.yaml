@@ -1,15 +1,19 @@
 databaseChangeLog:
   - changeSet:
-      id: create-trainees
+      id: create-trainers
       author: IlyaZhizhin
       changes:
+        - createSequence:
+            sequenceName: seq_trainers_id
+            incrementBy: 1
+            startValue: 1
         - createTable:
             tableName: trainers
             columns:
               - column:
                   name: id
                   type: int
-                  autoIncrement: true
+                  defaultValueSequenceNext: seq_trainers_id
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -25,5 +29,8 @@ databaseChangeLog:
                     foreignKeyName: user_id
                     unique: true
                     nullable: false
-
+        - createSequence:
+            sequenceName: seq_trainers_id
+            incrementBy: 1
+            startValue: 1
 

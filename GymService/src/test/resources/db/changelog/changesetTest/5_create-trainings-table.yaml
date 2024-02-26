@@ -3,13 +3,17 @@ databaseChangeLog:
       id: create-trainings
       author: IlyaZhizhin
       changes:
+        - createSequence:
+            sequenceName: seq_trainings_id
+            incrementBy: 1
+            startValue: 1
         - createTable:
             tableName: trainings
             columns:
               - column:
                   name: id
                   type: int
-                  autoIncrement: true
+                  defaultValueSequenceNext: seq_trainings_id
                   constraints:
                     primaryKey: true
                     nullable: false
