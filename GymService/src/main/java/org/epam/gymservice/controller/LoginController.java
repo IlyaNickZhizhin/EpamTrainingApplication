@@ -30,7 +30,7 @@ public class LoginController {
     @Operation(summary = "checks username and password")
     @SecurityRequirements
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        log.info("Checking username and password in" +getClass().getSimpleName());
+        log.info("Checking username and password in " +getClass().getSimpleName());
         try {
             return new ResponseEntity<>(loginService.login(request), HttpStatus.OK);
         } catch (VerificationException | InvalidDataException e) {

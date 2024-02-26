@@ -1,0 +1,29 @@
+spring:
+  config:
+    import: classpath:secretStoreLocal.yaml
+  application:
+    name: main-service
+  datasource:
+    username: epamtrainee
+    password: epamtraineepassword
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test_epam_training_app
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: db/changelog/db.test-changelog-master.yaml
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+my-props:
+  jwt:
+    max-attempts: 3
+    cold-pause-min: 5
+server:
+  port: 8081

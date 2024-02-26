@@ -27,7 +27,7 @@ public class LoginService {
 
     @Transactional(readOnly = true)
     public String login(LoginRequest request) throws VerificationException, InvalidDataException {
-        log.info("Checking username and password in" + getClass().getSimpleName());
+        log.info("Checking username and password in " + getClass().getSimpleName());
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new InvalidDataException(LoginService.class
                 .getSimpleName()+".login", "username" + request.getUsername() + "was incorrect"));
         log.info("User with id: " + user.getId() + " found");
@@ -42,7 +42,7 @@ public class LoginService {
         } catch (BadCredentialsException e) {
             log.error("Password for user with id: " + user.getId() + " was incorrect");
             loginAttemptService.loginFailed(user.getUsername());
-            return e.getMessage();
+            throw new VerificationException(e.getMessage());
         }
     }
 }

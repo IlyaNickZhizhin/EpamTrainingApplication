@@ -103,5 +103,3 @@ spring:
   liquibase:
     change-log: db/changelog/db.test-changelog-master.xml
     enabled: false
-
-
