@@ -35,8 +35,13 @@ public class Role implements GrantedAuthority {
         return new Role(Authority.idOf(authority), Authority.valueOf(authority));
     }
 
+    @Override
+    public String toString() {
+        return  authority.toString();
+    }
+
     public enum Authority {
-        ROLE_ADMIN, ROLE_TRAINER, ROLE_TRAINEE;
+        ADMIN, TRAINER, TRAINEE;
 
         public static int idOf(String name) {
             return getAuthorities().indexOf(Authority.valueOf(name))+1;

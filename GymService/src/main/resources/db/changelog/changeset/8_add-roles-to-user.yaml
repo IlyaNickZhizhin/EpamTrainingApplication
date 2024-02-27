@@ -6,7 +6,7 @@ databaseChangeLog:
         - sql:
             dbms: postgresql
             sql: |
-              CREATE TYPE authorities AS ENUM ('ROLE_ADMIN', 'ROLE_TRAINER', 'ROLE_TRAINEE');
+              CREATE TYPE authorities AS ENUM ('ADMIN', 'TRAINER', 'TRAINEE');
         - createTable:
             tableName: roles
             columns:

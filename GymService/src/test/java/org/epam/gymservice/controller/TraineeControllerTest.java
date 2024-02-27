@@ -149,13 +149,13 @@ public class TraineeControllerTest {
     @Test
     void testTraineeDelete() {
         when(traineeService.delete(trainee3.getUser().getUsername())).thenReturn(true);
-        assertEquals(true, traineeController.delete("token", trainee3.getUser().getUsername()).getBody());
+        assertEquals(true, traineeController.delete(trainee3.getUser().getUsername()).getBody());
     }
 
     @Test
     void testTraineeDeleteEx() {
         when(traineeService.delete(trainee3.getUser().getUsername())).thenThrow(new InvalidDataException("1","2"));
-        assertEquals(false, traineeController.delete("token", trainee3.getUser().getUsername()).getBody());
+        assertEquals(false, traineeController.delete(trainee3.getUser().getUsername()).getBody());
     }
 
     @Test

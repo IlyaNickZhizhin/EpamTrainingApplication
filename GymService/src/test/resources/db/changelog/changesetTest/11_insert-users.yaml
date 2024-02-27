@@ -194,7 +194,7 @@ databaseChangeLog:
                   value: "$2a$12$WDFWkhMOWIbJiH7F7IL.YuXLDofuvbrfZxSWZk.SE2yW7m95TanAe"
               - column:
                   name: is_active
-                  value: true
+                  value: false
         - insert:
             tableName: trainees
             columns:

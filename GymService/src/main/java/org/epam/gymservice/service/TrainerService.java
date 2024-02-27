@@ -41,7 +41,7 @@ public class TrainerService {
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
-        ImmutablePair<Optional<User>, String> userWithPass = userService.setNewUser(request.getFirstName(), request.getLastName(), Role.of(Role.Authority.ROLE_TRAINER));
+        ImmutablePair<Optional<User>, String> userWithPass = userService.setNewUser(request.getFirstName(), request.getLastName(), Role.of(Role.Authority.TRAINER));
         User user = userWithPass.left.orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstName().substring(0,0) + "."
                     + request.getLastName().substring(0,0));
@@ -96,6 +96,10 @@ public class TrainerService {
         ImmutablePair<User, Trainer> pair = getUserTrainer(request.getUsername());
         if (encoder.matches(request.getNewPassword(), pair.left.getPassword())) {
             throw new ProhibitedActionException("New password is the same as old");
+        }
+        if (!encoder.matches(request.getOldPassword(), pair.left.getPassword())) {
+            log.warn("Someone tries change password on trainee #{}", pair.right.getId());
+            throw new ProhibitedActionException("Old password is incorrect");
         }
         pair.left.setPassword(encoder.encode(request.getNewPassword()));
         User user = userService.update(pair.left.getId(), pair.left)
