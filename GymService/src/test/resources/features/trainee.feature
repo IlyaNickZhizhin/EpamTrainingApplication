@@ -38,12 +38,12 @@ Feature: Trainee
   Scenario: Successful trainee profile update
     Given a registered trainee with username from previous test
     When the trainee tries to update their profile
-    Then the profile update should be successful
+    Then the trainee profile update should be successful
 
   Scenario: Successful trainee profile selection by username
     Given a registered trainee with username from previous test
     When the trainee tries to select their profile by username
-    Then the profile selection should be successful
+    Then the trainee profile selection should be successful
 
   Scenario: Successful trainee trainings list retrieval
     Given a registered trainee with username from previous test

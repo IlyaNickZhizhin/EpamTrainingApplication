@@ -3,13 +3,17 @@ databaseChangeLog:
       id: create-users
       author: IlyaZhizhin
       changes:
+        - createSequence:
+            sequenceName: seq_users_id
+            incrementBy: 1
+            startValue: 1
         - createTable:
             tableName: users
             columns:
               - column:
                   name: id
                   type: int
-                  autoIncrement: true
+                  defaultValueSequenceNext: seq_users_id
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -39,3 +43,4 @@ databaseChangeLog:
                   type: boolean
                   constraints:
                     nullable: false
+

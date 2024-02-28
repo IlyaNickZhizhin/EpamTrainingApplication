@@ -21,5 +21,3 @@ databaseChangeLog:
       file: classpath:db/changelog/changesetTest/10_create-roles-table.yaml
   - include:
       file: classpath:db/changelog/changesetTest/11_insert-users.yaml
-  - include:
-      file: classpath:db/changelog/changesetTest/12_update-auto-increment.yaml

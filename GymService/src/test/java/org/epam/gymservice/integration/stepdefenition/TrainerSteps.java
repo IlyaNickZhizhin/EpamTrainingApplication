@@ -9,8 +9,8 @@ import org.epam.gymservice.dto.RegistrationResponse;
 import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 import org.epam.gymservice.dto.trainerDto.TrainerRegistrationRequest;
 import org.epam.gymservice.dto.trainerDto.UpdateTrainerProfileRequest;
-import org.epam.gymservice.dto.trainingDto.GetTrainingsResponse;
 import org.epam.gymservice.model.Role;
+import org.epam.gymservice.model.gymModel.TrainingType;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +27,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -35,14 +34,13 @@ public class TrainerSteps {
     
     @Autowired
     private TrainerController trainerController;
-
+    @Autowired
+    private SharedData sharedData;
     @MockBean
     private static JmsTemplate jmsTemplate;
 
     private ResponseEntity<RegistrationResponse> registrationResponse;
-    private ResponseEntity<Boolean> passwordChangeResponse;
     private ResponseEntity<TrainerProfileResponse> profileResponse;
-    private ResponseEntity<GetTrainingsResponse> trainingsResponse;
     private TrainerRegistrationRequest registrationRequest;
     private static String username1, password1;
 
@@ -51,11 +49,12 @@ public class TrainerSteps {
         doNothing().when(jmsTemplate).convertAndSend(anyString(), any(), any(MessagePostProcessor.class));
     }
 
-    @Given("a user with name {string}, surname {string}, going to register as trainer")
-    public void registerTrainer(String name, String surname) {
+    @Given("a user with name {string}, surname {string}, specialization {string}")
+    public void registerTrainer(String name, String surname, String trainingName) {
         registrationRequest = new TrainerRegistrationRequest();
         registrationRequest.setFirstName(name);
         registrationRequest.setLastName(surname);
+        registrationRequest.setSpecialization(TrainingType.TrainingName.valueOf(trainingName));
     }
 
     @When("the user tries to register as a trainer")
@@ -83,27 +82,25 @@ public class TrainerSteps {
         passwordChangeRequest.setOldPassword(password1);
         authSimulation(username1, password1);
         passwordChangeRequest.setNewPassword(newPassword);
-        if(trainerController.changePassword(passwordChangeRequest).getBody().booleanValue()) password1 = newPassword;
-    }
-
-    @Then("the password change should be successful")
-    public void thenPasswordChangeSuccessful() {
-        assertEquals(HttpStatus.OK, passwordChangeResponse.getStatusCode());
-        assertEquals(Boolean.TRUE, passwordChangeResponse.getBody());
+        sharedData.passwordChangeResponse = trainerController.changePassword(passwordChangeRequest);
+        if(sharedData.passwordChangeResponse.getBody().booleanValue()) password1 = newPassword;
     }
 
     @When("the trainer tries to update their profile")
     public void whenTrainerTriesToUpdateProfile() {
         UpdateTrainerProfileRequest updateRequest = new UpdateTrainerProfileRequest();
         updateRequest.setUsername(username1);
+        updateRequest.setFirstName(username1.split("\\.")[0]);
+        updateRequest.setLastName(username1.split("\\.")[1]+"2");
+        updateRequest.setSpecialization(TrainingType.TrainingName.BASIC);
         authSimulation(username1, password1);
         profileResponse = trainerController.update(updateRequest);
     }
 
-    @Then("the profile update should be successful")
+    @Then("the trainer profile update should be successful")
     public void thenProfileUpdateSuccessful() {
         assertEquals(HttpStatus.OK, profileResponse.getStatusCode());
-        assertEquals(username1.split("\\.")[0], Objects.requireNonNull(profileResponse.getBody().getFirstName()));
+        assertEquals(username1.split("\\.")[1]+"2", profileResponse.getBody().getLastName());
     }
 
     @When("the trainer tries to select their profile by username")
@@ -112,7 +109,7 @@ public class TrainerSteps {
         profileResponse = trainerController.selectByUsername(username1);
     }
 
-    @Then("the profile selection should be successful")
+    @Then("the trainer profile selection should be successful")
     public void thenProfileSelectionSuccessful() {
         assertEquals(HttpStatus.OK, profileResponse.getStatusCode());
         assertEquals(username1.split("\\.")[0], Objects.requireNonNull(profileResponse.getBody().getFirstName()));
@@ -121,13 +118,7 @@ public class TrainerSteps {
     @When("the trainer tries to get their trainings list")
     public void whenTrainerTriesToGetTrainingsList() {
         authSimulation(username1, password1);
-        trainingsResponse = trainerController.getTrainerTrainingsList(username1, null, null, null);
-    }
-
-    @Then("the trainings list retrieval should be successful")
-    public void thenTrainingsListRetrievalSuccessful() {
-        assertEquals(HttpStatus.OK, trainingsResponse.getStatusCode());
-        assertNotNull(trainingsResponse.getBody().getTrainings());
+        sharedData.trainingsResponse = trainerController.getTrainerTrainingsList(username1, null, null, null);
     }
 
     private void authSimulation(String username, String password) {

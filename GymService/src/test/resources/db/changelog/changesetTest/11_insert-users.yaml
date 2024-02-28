@@ -7,9 +7,6 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: id
-                  value: 1
-              - column:
                   name: first_name
                   value: "Petr"
               - column:
@@ -28,9 +25,6 @@ databaseChangeLog:
             tableName: trainers
             columns:
               - column:
-                  name: id
-                  value: 1
-              - column:
                   name: specialization
                   value: 1
               - column:
@@ -39,9 +33,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: 2
               - column:
                   name: first_name
                   value: "Ivan"
@@ -61,9 +52,6 @@ databaseChangeLog:
             tableName: trainers
             columns:
               - column:
-                  name: id
-                  value: 2
-              - column:
                   name: specialization
                   value: 2
               - column:
@@ -72,9 +60,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: 3
               - column:
                   name: first_name
                   value: "Sidor"
@@ -94,9 +79,6 @@ databaseChangeLog:
             tableName: trainees
             columns:
               - column:
-                  name: id
-                  value: 1
-              - column:
                   name: date_of_birth
                   value: "2000-01-01"
               - column:
@@ -108,9 +90,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: 4
               - column:
                   name: first_name
                   value: "Vasiliy"
@@ -130,9 +109,6 @@ databaseChangeLog:
             tableName: trainees
             columns:
               - column:
-                  name: id
-                  value: 2
-              - column:
                   name: date_of_birth
                   value: "2000-02-02"
               - column:
@@ -144,9 +120,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: 5
               - column:
                   name: first_name
                   value: "Semen"
@@ -166,9 +139,6 @@ databaseChangeLog:
             tableName: trainees
             columns:
               - column:
-                  name: id
-                  value: 3
-              - column:
                   name: date_of_birth
                   value: "2000-03-03"
               - column:
@@ -177,9 +147,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: 6
               - column:
                   name: first_name
                   value: "Pavel"
@@ -198,9 +165,6 @@ databaseChangeLog:
         - insert:
             tableName: trainees
             columns:
-              - column:
-                  name: id
-                  value: 4
               - column:
                   name: address
                   value: "Bukhara"
