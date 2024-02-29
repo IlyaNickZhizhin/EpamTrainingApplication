@@ -4,11 +4,11 @@ import org.epam.common.dto.TrainerWorkloadResponse;
 import org.epam.common.dto.TrainingSession;
 import org.epam.gymservice.dto.trainerDto.TrainerProfileResponse;
 
-import java.util.Queue;
+import java.util.List;
 
 public class GymTrainerWorkloadResponse extends TrainerWorkloadResponse {
 
-    public static TrainerWorkloadResponse of(TrainerProfileResponse trainer, String username, Queue<TrainingSession> session){
+    public static TrainerWorkloadResponse of(TrainerProfileResponse trainer, String username, List<TrainingSession> session){
         GymTrainerWorkloadResponse response = new GymTrainerWorkloadResponse();
         response.setUsername(username);
         response.setFirstName(trainer.getFirstName());

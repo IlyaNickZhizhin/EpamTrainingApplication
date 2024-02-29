@@ -1,39 +1,42 @@
 package org.epam.common.dto;
 
 import lombok.Data;
+import org.apache.commons.collections4.MapUtils;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.Year;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
-public class TrainingSession implements Comparable<TrainingSession>, Serializable {
-    private Year year;
-    private Month month;
-    private double duration;
-
-    public static TrainingSession of(LocalDate date, double duration) {
-        TrainingSession trainingSession = new TrainingSession();
-        trainingSession.year = Year.of(date.getYear());
-        trainingSession.month = date.getMonth();
-        trainingSession.duration = duration;
-        return trainingSession;
-    }
-
-    public static TrainingSession of(TrainerWorkloadRequest request) {
-        TrainingSession trainingSession = new TrainingSession();
-        trainingSession.year = Year.of(request.getTrainingDate().getYear());
-        trainingSession.month = request.getTrainingDate().getMonth();
-        trainingSession.duration = request.getDuration();
-        return trainingSession;
-    }
+public class TrainingSession implements Comparable<TrainingSession>{
+    private int year;
+    private Set<MonthDuration> months;
 
     @Override
     public int compareTo(TrainingSession trainingSession) {
-        if (trainingSession.getYear().isAfter(this.year)) return 1;
-        else { if (trainingSession.getMonth().equals(this.month)) return 0;
-        else return -1;
-        }
+        return -this.getYear()-trainingSession.getYear();
     }
+
+    public static Set<TrainingSession> setOf(Map<LocalDate, Double> trainingMap){
+        Map<Integer, Map<Month, Double>> groupedByYear = MapUtils.emptyIfNull(trainingMap).entrySet().stream()
+                .collect(Collectors.groupingBy(
+                        e -> e.getKey().getYear(),
+                        Collectors.toMap(
+                                e -> e.getKey().getMonth(),
+                                Map.Entry::getValue,
+                                Double::sum
+                        )
+                ));
+        return MapUtils.emptyIfNull(groupedByYear).entrySet().stream()
+                .map(e -> {
+                        TrainingSession session = new TrainingSession();
+                        session.setYear(e.getKey());
+                        session.setMonths(MonthDuration.setOf(e.getValue()));
+                        return session;
+                    }
+                ).collect(Collectors.toSet());
+    }
+
 }

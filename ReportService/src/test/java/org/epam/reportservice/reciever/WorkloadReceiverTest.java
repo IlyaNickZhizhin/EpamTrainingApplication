@@ -1,4 +1,4 @@
-package org.epam.reportservice.controller;
+package org.epam.reportservice.reciever;
 
 import org.epam.common.dto.TrainerWorkloadResponse;
 import org.epam.reportservice.Reader;

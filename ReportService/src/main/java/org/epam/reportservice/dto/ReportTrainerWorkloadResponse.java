@@ -1,20 +1,18 @@
 package org.epam.reportservice.dto;
 
 import org.epam.common.dto.TrainerWorkloadResponse;
-import org.epam.common.dto.TrainingSession;
-import org.epam.reportservice.model.TrainerKey;
+import org.epam.reportservice.model.Workload;
 
-import java.util.Queue;
-
+import java.util.ArrayList;
 public class ReportTrainerWorkloadResponse extends TrainerWorkloadResponse {
 
-    public static ReportTrainerWorkloadResponse of(TrainerKey key, Queue<TrainingSession> session){
+    public static ReportTrainerWorkloadResponse of(Workload workload){
         ReportTrainerWorkloadResponse response = new ReportTrainerWorkloadResponse();
-        response.setUsername(key.getUsername());
-        response.setFirstName(key.getFirstName());
-        response.setLastName(key.getLastName());
-        response.setActive(key.isActive());
-        response.setTrainingSessions(session);
+        response.setUsername(workload.getUsername());
+        response.setFirstName(workload.getFirstName());
+        response.setLastName(workload.getLastName());
+        response.setActive(workload.isActive());
+        response.setTrainingSessions(new ArrayList<>(workload.getTrainingSessions()));
         return response;
     }
 }

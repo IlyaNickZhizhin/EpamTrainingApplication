@@ -3,7 +3,7 @@ package org.epam.common.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Queue;
+import java.util.List;
 
 @Data
 public class TrainerWorkloadResponse implements Serializable {
@@ -11,5 +11,5 @@ public class TrainerWorkloadResponse implements Serializable {
     String firstName;
     String lastName;
     boolean isActive;
-    Queue<TrainingSession> trainingSessions;
+    private List<TrainingSession> trainingSessions;
 }
