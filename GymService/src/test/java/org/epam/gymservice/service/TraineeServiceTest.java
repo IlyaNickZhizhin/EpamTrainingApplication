@@ -73,6 +73,7 @@ class TraineeServiceTest {
         user3 = reader.readEntity("users/user3", User.class);
         user4 = reader.readEntity("users/user4", User.class);
         user5 = reader.readEntity("users/user5", User.class);
+        user4.setPassword(encoder.encode(user4.getPassword()));
     }
 
     @Test
@@ -118,10 +119,10 @@ class TraineeServiceTest {
         ChangeLoginRequest request
                 = reader.readDto("trainees/trainee4", Trainee.class, traineeMapper::traineeToChangeLoginRequest);
         request.setNewPassword("newPassword");
-        User userNew = reader.readEntity("users/user5", User.class);
+        User userNew = reader.readEntity("users/user4", User.class);
         userNew.setPassword(encoder.encode("newPassword"));
-        when(mockUserDao.findByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user5));
-        when(mockTraineeDaoImpl.findByUser(user5)).thenReturn(Optional.ofNullable(trainee5));
+        when(mockUserDao.findByUsername(request.getUsername())).thenReturn(Optional.ofNullable(user4));
+        when(mockTraineeDaoImpl.findByUser(user4)).thenReturn(Optional.ofNullable(trainee4));
         when(mockUserDao.update(any(Integer.class), any(User.class))).thenReturn(Optional.of(userNew));
         assertTrue(traineeService.changePassword(request));
     }

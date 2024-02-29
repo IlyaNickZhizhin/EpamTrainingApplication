@@ -80,6 +80,7 @@ class TrainerServiceTest {
         trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
         user1 = reader.readEntity("users/user1", User.class);
         user2 = reader.readEntity("users/user2", User.class);
+        user2.setPassword(encoder.encode(user2.getPassword()));
     }
 
     @Test

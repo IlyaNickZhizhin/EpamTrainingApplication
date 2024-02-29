@@ -83,7 +83,7 @@ class TrainingControllerTest {
     void testTrainingCreate() {
         AddTrainingRequest request = trainingMapper.trainingToAddTrainingRequest(training1);
         when(trainingService.create(request)).thenReturn(request);
-        assertEquals(request, trainingController.create("token", request).getBody());
+        assertEquals(request, trainingController.create(request).getBody());
     }
 
     @Test
@@ -139,7 +139,7 @@ class TrainingControllerTest {
         when(trainingService.create(request)).thenThrow(ex);
         assertEquals(new ResponseEntity<>(
                 new AddTrainingRequest(), HttpStatus.BAD_REQUEST),
-                trainingController.create("token", request));
+                trainingController.create(request));
     }
 
     @Test

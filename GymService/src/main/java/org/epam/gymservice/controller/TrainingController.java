@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.epam.gymservice.dto.trainingDto.AddTrainingRequest;
@@ -17,6 +18,7 @@ import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
         " entities related to trainings")
 @Slf4j
 @CrossOrigin
+@Validated
 public class TrainingController {
 
     private final TrainingService trainingService;
@@ -40,8 +43,7 @@ public class TrainingController {
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class))),
         responses = {@ApiResponse(responseCode = "201", description = "Training created",
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class)))})
-    public ResponseEntity<AddTrainingRequest> create(@RequestHeader("Authorization") String token,
-                                                     @RequestBody AddTrainingRequest request) {
+    public ResponseEntity<AddTrainingRequest> create(@Valid @RequestBody AddTrainingRequest request) {
         log.info("Creating {} training with name: {} on {} at {}", request.getTrainingType().name(), request.getTrainingName(), request.getTrainingDate(), request.getTrainingDuration());
         try {
             AddTrainingRequest response = trainingService.create(request);
@@ -80,9 +82,9 @@ public class TrainingController {
                     content = @Content(schema = @Schema(implementation = GetTrainersResponse.class))),
                 @ApiResponse(responseCode = "400", description = "Invalid username or trainer username")
     })
-    public ResponseEntity<GetTrainersResponse> updateTrainersList(@RequestBody
+    public ResponseEntity<GetTrainersResponse> updateTrainersList(@Valid @RequestBody
                                                                       UpdateTraineeTrainerListRequest request) {
-        log.info("Updating trainee trainers list in{}", getClass().getSimpleName());
+        log.info("Updating trainee trainers list in {}", getClass().getSimpleName());
         try {
             GetTrainersResponse response = trainingService.updateTrainersList(request);
             log.info("Trainee trainers list updated successfully");

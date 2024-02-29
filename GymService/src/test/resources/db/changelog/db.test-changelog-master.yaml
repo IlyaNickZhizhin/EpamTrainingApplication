@@ -21,3 +21,7 @@ databaseChangeLog:
       file: classpath:db/changelog/changesetTest/10_create-roles-table.yaml
   - include:
       file: classpath:db/changelog/changesetTest/11_insert-users.yaml
+  - include:
+      file: classpath:db/changelog/changesetTest/12_insert_trainings.yaml
+  - include:
+      file: classpath:db/changelog/changesetTest/13_insert_trainee_trainer_associations.yaml

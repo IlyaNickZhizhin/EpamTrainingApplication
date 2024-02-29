@@ -1,24 +1,24 @@
 Feature: Trainee
 
   Scenario: Successful trainee registration
-    Given a user with name "Ee", surname "eE, going to register as trainee"
+    Given a user with name "Ee", surname "eE"
     When the user tries to register
     Then the registration should be successful, trainee with username "Ee.eE" with generated password of length 10 was added to database
 
   Scenario: Successful trainee registration with existing username
-    Given a user with name "Ee", surname "eE", going to register as trainee
+    Given a user with name "Ee", surname "eE"
     When the user tries to register
     Then the registration should be successful, trainee with username "Ee.eE1" with generated password of length 10 was added to database
 
   Scenario: Successful trainee password change
     Given a registered trainee with username from previous test
     When the trainee tries to change their password to "newpassword"
-    Then the password change should be successful
+    Then trainees password change should be successful
 
   Scenario: Unsuccessful trainee password change due to wrong old password
     Given a registered trainee with username from previous test
     When the trainee tries to change their password to "wrongpassword" using wrong old password
-    Then the password change should be unsuccessful
+    Then trainees password change should be unsuccessful
 
   Scenario: Successful trainee deactivation
     Given an active trainee with username from previous test
@@ -48,7 +48,7 @@ Feature: Trainee
   Scenario: Successful trainee trainings list retrieval
     Given a registered trainee with username from previous test
     When the trainee tries to get their trainings list
-    Then the trainings list retrieval should be successful
+    Then trainees trainings list retrieval should be successful
 
   Scenario: Unsuccessful trainee profile update with invalid username
     Given a registered trainee with username from previous test
@@ -63,7 +63,7 @@ Feature: Trainee
   Scenario: Unsuccessful trainee trainings list retrieval with invalid username
     Given a registered trainee with username from previous test
     When the trainee tries to get their trainings list with invalid username
-    Then the trainings list retrieval should be unsuccessful
+    Then trainees trainings list retrieval should be unsuccessful
 
   Scenario: Successful trainee profile deletion
     Given a registered trainee with username from previous test

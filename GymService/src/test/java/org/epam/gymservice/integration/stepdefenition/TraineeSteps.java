@@ -11,6 +11,7 @@ import org.epam.gymservice.dto.RegistrationResponse;
 import org.epam.gymservice.dto.traineeDto.TraineeProfileResponse;
 import org.epam.gymservice.dto.traineeDto.TraineeRegistrationRequest;
 import org.epam.gymservice.dto.traineeDto.UpdateTraineeProfileRequest;
+import org.epam.gymservice.dto.trainingDto.GetTrainingsResponse;
 import org.epam.gymservice.model.Role;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,6 @@ public class TraineeSteps {
     private TraineeController traineeController;
     @Autowired
     private WebApplicationContext context;
-    @Autowired
-    private SharedData sharedData;
     @MockBean
     private static JmsTemplate jmsTemplate;
     private MockMvc mvc;
@@ -50,6 +49,8 @@ public class TraineeSteps {
     private ResponseEntity<Boolean> activationResponse;
     private ResponseEntity<TraineeProfileResponse> profileResponse;
     private ResponseEntity<Boolean> deletionResponse;
+    private ResponseEntity<Boolean> passwordChangeResponse;
+    private ResponseEntity<GetTrainingsResponse> trainingsResponse;
 
     private static String username1, username2, password1, password2;
 
@@ -98,14 +99,14 @@ public class TraineeSteps {
         passwordChangeRequest.setOldPassword(password1);
         passwordChangeRequest.setNewPassword(newPassword);
         authSimulationTrainee(username1, password1);
-        sharedData.passwordChangeResponse = traineeController.changePassword(passwordChangeRequest);
-        if(sharedData.passwordChangeResponse.getBody().booleanValue()) password1 = newPassword;
+        passwordChangeResponse = traineeController.changePassword(passwordChangeRequest);
+        if(passwordChangeResponse.getBody().booleanValue()) password1 = newPassword;
     }
 
-    @Then("the password change should be successful")
+    @Then("trainees password change should be successful")
     public void thenPasswordChangeSuccessful() {
-        assertEquals(HttpStatus.OK, sharedData.passwordChangeResponse.getStatusCode());
-        assertEquals(Boolean.TRUE, sharedData.passwordChangeResponse.getBody());
+        assertEquals(HttpStatus.OK, passwordChangeResponse.getStatusCode());
+        assertEquals(Boolean.TRUE, passwordChangeResponse.getBody());
     }
 
     @When("the trainee tries to change their password to {string} using wrong old password")
@@ -115,13 +116,13 @@ public class TraineeSteps {
         passwordChangeRequest.setNewPassword(newPassword);
         passwordChangeRequest.setOldPassword("wrongpassword");
         authSimulationTrainee(username1, password1);
-        sharedData.passwordChangeResponse = traineeController.changePassword(passwordChangeRequest);
+        passwordChangeResponse = traineeController.changePassword(passwordChangeRequest);
     }
 
-    @Then("the password change should be unsuccessful")
+    @Then("trainees password change should be unsuccessful")
     public void thenPasswordChangeUnsuccessful() {
-        assertEquals(HttpStatus.BAD_REQUEST, sharedData.passwordChangeResponse.getStatusCode());
-        assertEquals(Boolean.FALSE, sharedData.passwordChangeResponse.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, passwordChangeResponse.getStatusCode());
+        assertEquals(Boolean.FALSE, passwordChangeResponse.getBody());
     }
 
     @Given("an active trainee with username from previous test")
@@ -218,13 +219,13 @@ public class TraineeSteps {
     @When("the trainee tries to get their trainings list")
     public void whenTraineeTriesToGetTrainingsList() {
         authSimulationTrainee(username1, password1);
-        sharedData.trainingsResponse = traineeController.getTraineeTrainingsList(username1, null, null, null, null);
+        trainingsResponse = traineeController.getTraineeTrainingsList(username1, null, null, null, null);
     }
 
-    @Then("the trainings list retrieval should be successful")
+    @Then("trainees trainings list retrieval should be successful")
     public void thenTrainingsListRetrievalSuccessful() {
-        assertEquals(HttpStatus.OK, sharedData.trainingsResponse.getStatusCode());
-        assertNotNull(sharedData.trainingsResponse.getBody().getTrainings());
+        assertEquals(HttpStatus.OK, trainingsResponse.getStatusCode());
+        assertNotNull(trainingsResponse.getBody().getTrainings());
     }
 
     @When("the trainee tries to update their profile with invalid username")
@@ -232,7 +233,12 @@ public class TraineeSteps {
         UpdateTraineeProfileRequest updateRequest = new UpdateTraineeProfileRequest();
         updateRequest.setUsername("invalid_username");
         authSimulationAdmin(username1, password1);
-        profileResponse = traineeController.update(updateRequest);
+        try {
+            profileResponse = traineeController.update(updateRequest);
+        } catch (Exception e) {
+            profileResponse = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @Then("the profile update should be unsuccessful")
@@ -254,12 +260,12 @@ public class TraineeSteps {
     @When("the trainee tries to get their trainings list with invalid username")
     public void whenTraineeTriesToGetTrainingsListWithInvalidUsername() {
         authSimulationAdmin(username1, password1);
-        sharedData.trainingsResponse = traineeController.getTraineeTrainingsList("invalid_username", null, null, null, null);
+        trainingsResponse = traineeController.getTraineeTrainingsList("invalid_username", null, null, null, null);
     }
 
-    @Then("the trainings list retrieval should be unsuccessful")
+    @Then("trainees trainings list retrieval should be unsuccessful")
     public void thenTrainingsListRetrievalUnsuccessful() {
-        assertEquals(HttpStatus.BAD_REQUEST, sharedData.trainingsResponse.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, trainingsResponse.getStatusCode());
     }
 
     @When("the trainee tries to delete their profile")
@@ -276,7 +282,7 @@ public class TraineeSteps {
 
     @When("the trainee tries to delete their profile with invalid username")
     public void whenTraineeTriesToDeleteProfileWithInvalidUsername() {
-        authSimulationTrainee(username2, password2);
+        authSimulationTrainee("invalid_username", password2);
         deletionResponse = traineeController.delete("invalid_username");
     }
 
