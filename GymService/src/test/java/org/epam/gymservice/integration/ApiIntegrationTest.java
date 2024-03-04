@@ -1,4 +1,4 @@
-package org.epam.gymservice.integration.runner;
+package org.epam.gymservice.integration;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
