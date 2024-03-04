@@ -5,6 +5,8 @@ target/
 !**/src/test/**/target/
 !**/src/main/resources/secretStoreDocker.yaml
 !**/src/main/resources/secretStoreLocal.yaml
+!**/src/test/resources/secretStoreDocker.yaml
+!**/src/test/resources/secretStoreLocal.yaml
 
 ### STS ###
 .apt_generated

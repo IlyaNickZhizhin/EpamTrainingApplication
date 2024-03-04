@@ -2,7 +2,7 @@
   "username": "Sidor.Sidorov",
   "firstName": "Sidor",
   "lastName": "Sidorov",
-  "isActive": true,
+  "active": true,
   "trainingDate": "2023-11-15",
   "duration": 1.5
 }
