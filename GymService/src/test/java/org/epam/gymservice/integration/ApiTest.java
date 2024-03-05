@@ -6,11 +6,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@ActiveProfiles("test")
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = {
@@ -21,8 +18,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
         glue = "org.epam.gymservice.integration.stepdefenition",
         plugin = {"pretty", "html:target/cucumber-reports.html"}
 )
-@TestPropertySource(locations = "classpath:application.yaml")
-public class ApiIntegrationTest {
+public class ApiTest {
 
     private static JdbcTemplate jdbcTemplate;
     public static final PostgreSQLContainer POSTGRE_SQL_CONTAINER_LOGIN

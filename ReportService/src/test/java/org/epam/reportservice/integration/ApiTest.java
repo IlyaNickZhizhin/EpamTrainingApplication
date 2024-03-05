@@ -13,7 +13,7 @@ import org.testcontainers.containers.GenericContainer;
         features = "src/test/resources/features/workload.feature",
         glue = "org.epam.reportservice.integration",
         plugin = {"pretty", "html:target/cucumber-reports.html"})
-public class ApiIntegrationTest {
+public class ApiTest {
     public static final GenericContainer container =
             new GenericContainer("mongo").withExposedPorts(27017);
 
@@ -22,7 +22,7 @@ public class ApiIntegrationTest {
         container.start();
         String ip = container.getContainerIpAddress();
         String port = container.getMappedPort(27017).toString();
-        String dbConnect = "mongodb://" +ip+ ":" +port+ "/gymWorkloads";
+        String dbConnect = "mongodb://" + ip + ":" + port + "/gymWorkloads";
         System.setProperty(
                 "spring.data.mongodb.uri",
                 dbConnect

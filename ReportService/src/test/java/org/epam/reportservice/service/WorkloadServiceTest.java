@@ -15,10 +15,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,6 +53,7 @@ class WorkloadServiceTest {
         verify(repository, times(1)).save(any(Workload.class));
     }
 
+
     @Test
     void deleteWorkload() {
         workload.setTrainingSessions(new TreeSet<>(Arrays.asList(TrainingSession.of(request.getTrainingDate(), request.getDuration()))));
@@ -59,5 +62,21 @@ class WorkloadServiceTest {
         assertEquals(ReportTrainerWorkloadResponse.of(workload), service.deleteWorkload(request));
         verify(repository, times(1)).findById(anyString());
         verify(repository, times(1)).save(any(Workload.class));
+    }
+
+    @Test
+    void deleteWorkloadException() {
+        workload.setTrainingSessions(new TreeSet<>(Arrays.asList(TrainingSession.of(request.getTrainingDate(), request.getDuration()))));
+        when(repository.findById(request.getUsername())).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> service.deleteWorkload(request));
+    }
+
+    @Test
+    void deleteWorkloadExceptionTwo() {
+        workload.setTrainingSessions(new TreeSet<>(Arrays.asList(TrainingSession.of(request.getTrainingDate(), request.getDuration()))));
+        when(repository.findById(request.getUsername())).thenReturn(Optional.of(workload));
+        TrainerWorkloadRequest request2 = reader
+                .readEntity("src/test/resources/models/workloads/workload2.json", ReportTrainerWorkloadRequest.class);
+        assertThrows(NoSuchElementException.class, () -> service.deleteWorkload(request2));
     }
 }
