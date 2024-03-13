@@ -80,6 +80,7 @@ class TrainerServiceTest {
         trainer2 = reader.readEntity("trainers/trainer2", Trainer.class);
         user1 = reader.readEntity("users/user1", User.class);
         user2 = reader.readEntity("users/user2", User.class);
+        user2.setPassword(encoder.encode(user2.getPassword()));
     }
 
     @Test
@@ -90,7 +91,7 @@ class TrainerServiceTest {
                 = reader.readDto("users/user1", User.class, traineeMapper::userToRegistrationResponce);
         Trainer trainer = trainer1;
         trainer.setId(0);
-        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName(), Role.of(Role.Authority.ROLE_TRAINER)))
+        when(mockUserDao.setNewUser(user1.getFirstName(),user1.getLastName(), Role.of(Role.Authority.TRAINER)))
                 .thenReturn(ImmutablePair.of(Optional.ofNullable(user1), Objects.requireNonNull(user1).getPassword()));
         assertEquals(response, trainerService.create(request));
     }

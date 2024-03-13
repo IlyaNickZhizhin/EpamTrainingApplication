@@ -21,6 +21,13 @@ public class Reader {
         Reader.endPath = endPath;
     }
 
+    public Reader(String startPath, String endPath) {
+        setStartPath(startPath);
+        setEndPath(endPath);
+    }
+
+    public Reader() {
+    }
 
     public<M> M readEntity(String path, Class<M> clazz) {
         ObjectMapper objectMapper = new ObjectMapper();

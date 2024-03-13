@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    @Value("${JWT.secret-key}")
+    @Value("${JWT.secret-key:defaultSecretKey}")
     private String SECRET_KEY;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

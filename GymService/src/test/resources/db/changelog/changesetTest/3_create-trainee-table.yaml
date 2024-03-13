@@ -3,13 +3,17 @@ databaseChangeLog:
       id: create-trainees
       author: IlyaZhizhin
       changes:
+        - createSequence:
+            sequenceName: seq_trainees_id
+            incrementBy: 1
+            startValue: 1
         - createTable:
             tableName: trainees
             columns:
               - column:
                   name: id
                   type: int
-                  autoIncrement: true
+                  defaultValueSequenceNext: seq_trainees_id
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -27,4 +31,3 @@ databaseChangeLog:
                     references: users(id)
                     unique: true
                     nullable: false
-

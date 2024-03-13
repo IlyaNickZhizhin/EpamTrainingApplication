@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-trainee-trainer-associations
+      author: IlyaZhizhin
+      changes:
+        - insert:
+            tableName: trainees_trainers
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 1
+              - column:
+                  name: trainer_id
+                  value: 1
+        - insert:
+            tableName: trainees_trainers
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 1
+              - column:
+                  name: trainer_id
+                  value: 2
+        - insert:
+            tableName: trainees_trainers
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 2
+              - column:
+                  name: trainer_id
+                  value: 1
+        - insert:
+            tableName: trainees_trainers
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 2
+              - column:
+                  name: trainer_id
+                  value: 2
+        - insert:
+            tableName: trainees_trainers
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 3
+              - column:
+                  name: trainer_id
+                  value: 1
+        - insert:
+            tableName: trainees_trainers
+            columns:
+              - column:
+                  name: trainee_id
+                  value: 4
+              - column:
+                  name: trainer_id
+                  value: 2
