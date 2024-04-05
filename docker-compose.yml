@@ -1,12 +1,5 @@
 version: '1'
 services:
-  eureka-server:
-    build:
-      context: .
-      dockerfile: DockerfileEurekaServer
-    image: eureka-server-image
-    ports:
-      - "8761:8761"
   db:
     image: postgres
     environment:
@@ -35,7 +28,6 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - eureka-server
       - db
   report-service:
     build:
@@ -45,9 +37,7 @@ services:
     ports:
       - "8082:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - eureka-server
+      - SPRING_PROFILES_ACTIVE=dockerg
   activemq:
     image: apache/activemq-artemis:latest-alpine
     environment:
