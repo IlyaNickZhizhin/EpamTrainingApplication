@@ -38,8 +38,6 @@
     <postgres.version>42.6.0</postgres.version>
     <commons-dbcp.version>1.4</commons-dbcp.version>
     <jwt>0.11.5</jwt>
-    <eureka>4.0.2</eureka>
-    <circutbreaker>3.0.2</circutbreaker>
     <cucmber-java>7.15.0</cucmber-java>
     <cucmber-spring>7.14.0</cucmber-spring>
     <cucmber-junit>7.14.0</cucmber-junit>
@@ -175,18 +173,6 @@
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
       <version>0.11.5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-      <version>${eureka}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-      <version>${circutbreaker}</version>
     </dependency>
 
     <dependency>

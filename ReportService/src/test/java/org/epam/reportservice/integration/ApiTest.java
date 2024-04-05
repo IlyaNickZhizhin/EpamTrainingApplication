@@ -14,24 +14,37 @@ import org.testcontainers.containers.GenericContainer;
         glue = "org.epam.reportservice.integration",
         plugin = {"pretty", "html:target/cucumber-reports.html"})
 public class ApiTest {
-    public static final GenericContainer container =
+
+    public static final GenericContainer containerMongo =
             new GenericContainer("mongo").withExposedPorts(27017);
+    public static final GenericContainer containerAMQ =
+            new GenericContainer("apache/activemq-artemis:latest-alpine")
+                    .withExposedPorts(61616, 8161)
+                    .withEnv("ANONYMOUS_LOGIN", "true");
 
     @BeforeClass
     public static void setUp(){
-        container.start();
-        String ip = container.getContainerIpAddress();
-        String port = container.getMappedPort(27017).toString();
-        String dbConnect = "mongodb://" + ip + ":" + port + "/gymWorkloads";
+        containerMongo.start();
+        String ipMongo = containerMongo.getContainerIpAddress();
+        String portMongo = containerMongo.getMappedPort(27017).toString();
+        String dbConnect = "mongodb://" + ipMongo + ":" + portMongo + "/gymWorkloads";
         System.setProperty(
                 "spring.data.mongodb.uri",
                 dbConnect
+        );
+        containerAMQ.start();
+        String ipAMQ = containerAMQ.getContainerIpAddress();
+        String portAMQ = containerAMQ.getMappedPort(61616).toString();
+        String brokerUrl = "tcp://"+ipAMQ+":" + portAMQ;
+        System.setProperty(
+                "activemq.broker-url",
+                brokerUrl
         );
     }
 
 
     @AfterClass
     public static void destroy(){
-        container.stop();
+        containerMongo.stop(); containerAMQ.stop();
     }
 }
