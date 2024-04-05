@@ -37,7 +37,7 @@ services:
     ports:
       - "8082:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=dockerg
+      - SPRING_PROFILES_ACTIVE=docker
   activemq:
     image: apache/activemq-artemis:latest-alpine
     environment:
