@@ -206,19 +206,19 @@ public class TrainingSteps {
     }
 
     private void authSimulationAsTrainer(String username, String password) {
-        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.TRAINER).toString()).build();
+        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.ROLE_TRAINER).toString()).build();
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     private void authSimulationAsTrainee(String username, String password) {
-        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.TRAINEE).toString()).build();
+        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.ROLE_TRAINEE).toString()).build();
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     private void authSimulationAsAdmin(String username, String password) {
-        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.ADMIN).toString()).build();
+        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.ROLE_ADMIN).toString()).build();
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }

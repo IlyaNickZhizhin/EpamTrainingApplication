@@ -41,7 +41,7 @@ public class Role implements GrantedAuthority {
     }
 
     public enum Authority {
-        ADMIN, TRAINER, TRAINEE;
+        ROLE_ADMIN, ROLE_TRAINER, ROLE_TRAINEE;
 
         public static int idOf(String name) {
             return getAuthorities().indexOf(Authority.valueOf(name))+1;

@@ -84,7 +84,7 @@ class TraineeServiceTest {
                 = reader.readDto("users/user3", User.class, traineeMapper::userToRegistrationResponce);
         Trainee trainee = trainee3;
         trainee.setId(0);
-        when(mockUserDao.setNewUser(user3.getFirstName(),user3.getLastName(), Role.of(Role.Authority.TRAINEE)))
+        when(mockUserDao.setNewUser(user3.getFirstName(),user3.getLastName(), Role.of(Role.Authority.ROLE_TRAINEE)))
                 .thenReturn(ImmutablePair.of(Optional.ofNullable(user3), Objects.requireNonNull(user3).getPassword()));
         assertEquals(response, traineeService.create(request));
     }
