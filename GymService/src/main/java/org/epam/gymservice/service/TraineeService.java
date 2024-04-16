@@ -155,7 +155,7 @@ public class TraineeService {
         log.info("Creating " + getModelName());
         Trainee trainee = new Trainee();
         ImmutablePair<Optional<User>, String> userWithPass =
-                userService.setNewUser(request.getFirstname(), request.getLastname(), Role.of(Role.Authority.ROLE_TRAINEE));
+                userService.setNewUser(request.getFirstname(), request.getLastname(), Role.of(Role.Authority.TRAINEE));
         User user = userWithPass.left.orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstname().substring(0,0) + "." 
                     + request.getLastname().substring(0,0));

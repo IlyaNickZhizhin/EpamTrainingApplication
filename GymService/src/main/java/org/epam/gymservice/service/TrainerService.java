@@ -41,7 +41,7 @@ public class TrainerService {
     @Transactional
     public RegistrationResponse create(TrainerRegistrationRequest request) {
         log.info("Creating " + getModelName());
-        ImmutablePair<Optional<User>, String> userWithPass = userService.setNewUser(request.getFirstName(), request.getLastName(), Role.of(Role.Authority.ROLE_TRAINER));
+        ImmutablePair<Optional<User>, String> userWithPass = userService.setNewUser(request.getFirstName(), request.getLastName(), Role.of(Role.Authority.TRAINER));
         User user = userWithPass.left.orElseThrow(() -> {
             log.error("Troubles with creating user: " + request.getFirstName().substring(0,0) + "."
                     + request.getLastName().substring(0,0));

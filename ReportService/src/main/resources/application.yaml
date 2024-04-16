@@ -21,3 +21,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://mongo:27017/gymWorkloads
+---
+spring:
+  config:
+    activate:
+      on-profile: without
+server:
+  port: 8081

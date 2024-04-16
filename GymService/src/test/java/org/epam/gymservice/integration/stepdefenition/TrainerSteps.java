@@ -255,13 +255,13 @@ public class TrainerSteps {
 
 
     private void authSimulation(String username, String password) {
-        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.ROLE_TRAINER).toString()).build();
+        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.TRAINER).toString()).build();
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     private void authSimulationAsAdmin(String username, String password) {
-        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.ROLE_ADMIN).toString()).build();
+        UserDetails userDetails = User.withUsername(username).password(password).roles(Role.of(Role.Authority.ADMIN).toString()).build();
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }

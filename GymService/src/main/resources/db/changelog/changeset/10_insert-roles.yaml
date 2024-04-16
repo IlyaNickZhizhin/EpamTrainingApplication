@@ -8,16 +8,16 @@ databaseChangeLog:
             columns:
               - column:
                   name: authority
-                  value: ROLE_ADMIN
+                  value: ADMIN
         - insert:
             tableName: roles
             columns:
               - column:
                   name: authority
-                  value: ROLE_TRAINER
+                  value: TRAINER
         - insert:
             tableName: roles
             columns:
               - column:
                   name: authority
-                  value: ROLE_TRAINEE
+                  value: TRAINEE

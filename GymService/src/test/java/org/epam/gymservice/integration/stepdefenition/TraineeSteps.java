@@ -295,7 +295,7 @@ public class TraineeSteps {
         UserDetails userDetails = User
                 .withUsername(username)
                 .password(password)
-                .roles(Role.of(Role.Authority.ROLE_TRAINEE).toString())
+                .roles(Role.of(Role.Authority.TRAINEE).toString())
                 .build();
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(
@@ -307,7 +307,7 @@ public class TraineeSteps {
         UserDetails userDetails = User
                 .withUsername(username)
                 .password(password)
-                .roles(Role.of(Role.Authority.ROLE_ADMIN).toString())
+                .roles(Role.of(Role.Authority.ADMIN).toString())
                 .build();
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(
