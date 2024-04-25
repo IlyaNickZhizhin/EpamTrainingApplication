@@ -24,7 +24,7 @@ class WorkloadReceiverTest {
     @Mock
     private JmsTemplate jmsTemplate;
     @InjectMocks
-    private WorkloadReceiver workloadReceiver;
+    private JmsWorkloadReceiver workloadReceiver;
 
     Reader reader = new Reader();
     ReportTrainerWorkloadRequest request;

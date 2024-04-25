@@ -1,0 +1,6 @@
+#!/bin/bash
+name=$1
+port=$2
+profile=$3
+image=$4
+docker run --name $name -p $port -e SPRING_PROFILES_ACTIVE=$profile -d $image

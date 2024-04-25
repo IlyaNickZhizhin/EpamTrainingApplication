@@ -1,5 +1,5 @@
 #!/bin/bash
-groupId=$1
+groupId=sg-080679fa4f6fdd058
 profile=FullAccessUserEC2
 region=eu-north-1
 ipAddress=$(dig @resolver1.opendns.com ANY myip.opendns.com +short)

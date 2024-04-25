@@ -6,7 +6,7 @@ import org.epam.reportservice.dto.ReportTrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
 import org.epam.reportservice.model.TrainingSession;
 import org.epam.reportservice.model.Workload;
-import org.epam.reportservice.repository.WorkloadRepository;
+import org.epam.reportservice.repository.mongo.WorkloadRepositoryMongo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 class WorkloadServiceTest {
 
     @Mock
-    private WorkloadRepository repository;
+    private WorkloadRepositoryMongo repository;
 
     @InjectMocks
     private WorkloadService service;

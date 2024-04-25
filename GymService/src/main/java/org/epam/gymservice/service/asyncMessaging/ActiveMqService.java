@@ -10,6 +10,7 @@ import org.epam.gymservice.dto.trainingDto.GetTraineeTrainingsListRequest;
 import org.epam.gymservice.dto.trainingDto.TrainingDto;
 import org.epam.gymservice.service.TraineeService;
 import org.epam.gymservice.service.TrainerService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ActiveMqService {
+@Profile("!cloud")
+public class ActiveMqService implements WorkloadsSender {
     private final JmsTemplate jmsTemplate;
     private final TrainerService trainerService;
     private final TraineeService traineeService;

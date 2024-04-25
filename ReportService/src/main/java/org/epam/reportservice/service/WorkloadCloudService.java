@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.epam.common.dto.MonthDuration;
 import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
+import org.epam.reportservice.mapper.MongoToDynamoMapper;
 import org.epam.reportservice.model.TrainingSession;
 import org.epam.reportservice.model.Workload;
-import org.epam.reportservice.repository.mongo.WorkloadRepositoryMongo;
+import org.epam.reportservice.model.WorkloadDynamo;
+import org.epam.reportservice.repository.dynamo.WorkloadRepositoryDynamo;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +20,21 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Profile("!cloud")
-public class WorkloadService {
+@Profile("cloud")
+public class WorkloadCloudService {
 
-    private final WorkloadRepositoryMongo repository;
+    private final WorkloadRepositoryDynamo repository;
+    private final MongoToDynamoMapper mapper;
 
 
     public ReportTrainerWorkloadResponse addWorkload(TrainerWorkloadRequest request) {
         log.info("WorkloadService.change(ReportTrainerWorkloadRequest request) starts ADD workload for trainer {} {}***" +
                 " training on{}", request.getFirstName(), request.getLastName().charAt(0), request.getTrainingDate());
-        Workload workload = repository.findById(request.getUsername()).orElseGet(()-> Workload.of(request));
+        WorkloadDynamo workload = repository
+                .findById(request.getUsername(), String.valueOf(request.isActive()))
+                .orElseGet(()-> mapper.mongoToDynamo(Workload.of(request)));
         getOrAddTrainingSession(workload.getTrainingSessions(), request.getTrainingDate(), request.getDuration());
-        return ReportTrainerWorkloadResponse.of(repository.save(workload));
+        return ReportTrainerWorkloadResponse.of(mapper.dynamoToMongo(repository.save(workload)));
     }
 
 
@@ -37,13 +42,13 @@ public class WorkloadService {
         log.info("{}.{} starts DELETE workload of trainer {} {}*** training on {}",
                 this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[2].getMethodName(),
                 request.getFirstName(), request.getLastName().charAt(0), request.getTrainingDate());
-        Workload workload = repository.findById(request.getUsername()).orElseThrow(
+        WorkloadDynamo workload = repository.findById(request.getUsername(), String.valueOf(request.isActive())).orElseThrow(
                 () -> new NoSuchElementException(
                         "Trainer " + request.getFirstName() + " " + request.getLastName().charAt(0) + "***" +
-                "has no training workload")
+                                "has no training workload")
         );
         workload.setTrainingSessions(getAndDeleteFromTrainingSession(workload.getTrainingSessions(), request.getTrainingDate(), request.getDuration()));
-        return ReportTrainerWorkloadResponse.of(repository.save(workload));
+        return ReportTrainerWorkloadResponse.of(mapper.dynamoToMongo(repository.save(workload)));
     }
 
 

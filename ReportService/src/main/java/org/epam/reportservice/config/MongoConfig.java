@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 @Configuration
-@Profile("!without")
+@Profile("!cloud")
+@EnableMongoRepositories
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Value("${spring.data.mongodb.uri}")

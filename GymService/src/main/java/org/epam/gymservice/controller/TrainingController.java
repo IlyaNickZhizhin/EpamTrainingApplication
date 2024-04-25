@@ -14,7 +14,7 @@ import org.epam.gymservice.dto.trainingDto.GetTrainingTypesResponse;
 import org.epam.gymservice.dto.trainingDto.UpdateTraineeTrainerListRequest;
 import org.epam.gymservice.exceptions.InvalidDataException;
 import org.epam.gymservice.service.TrainingService;
-import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
+import org.epam.gymservice.service.asyncMessaging.WorkloadsSender;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 public class TrainingController {
 
     private final TrainingService trainingService;
-    private final ActiveMqService activeMqService;
+    private final WorkloadsSender sender;
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or " +
@@ -47,7 +47,7 @@ public class TrainingController {
         log.info("Creating {} training with name: {} on {} at {}", request.getTrainingType().name(), request.getTrainingName(), request.getTrainingDate(), request.getTrainingDuration());
         try {
             AddTrainingRequest response = trainingService.create(request);
-            activeMqService.addWorkload(request);
+            sender.addWorkload(request);
             log.info("{} training with name: {} on {} at {} created successfully", request.getTrainingType().name(), request.getTrainingName(), request.getTrainingDate(), request.getTrainingDuration());
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (InvalidDataException e) {

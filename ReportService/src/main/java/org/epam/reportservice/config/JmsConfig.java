@@ -24,7 +24,7 @@ import java.util.Arrays;
 @EnableTransactionManagement
 @Slf4j
 @Configuration
-@Profile("!without")
+@Profile("!cloud")
 public class JmsConfig {
 
     @Value("${activemq.broker-url}")

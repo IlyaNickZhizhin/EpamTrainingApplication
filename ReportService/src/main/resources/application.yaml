@@ -28,3 +28,14 @@ spring:
       on-profile: without
 server:
   port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: cloud
+    import: classpath:secretStoreCloud.yaml
+  aws:
+    brokerUrl: https://sqs.eu-north-1.vpce.amazonaws.com/767397684799/Gym-to-Report-Queue
+server:
+  port: 8081
