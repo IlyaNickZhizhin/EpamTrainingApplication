@@ -7,7 +7,7 @@ import org.epam.common.dto.TrainerWorkloadResponse;
 import org.epam.reportservice.Reader;
 import org.epam.reportservice.dto.ReportTrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
-import org.epam.reportservice.service.WorkloadService;
+import org.epam.reportservice.service.WorkloadCloudService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 class SqsWorkloadReceiverTest {
 
     @Mock
-    private WorkloadService workloadService;
+    private WorkloadCloudService workloadService;
     @Mock
     private SqsClient sqsClient;
     @Mock

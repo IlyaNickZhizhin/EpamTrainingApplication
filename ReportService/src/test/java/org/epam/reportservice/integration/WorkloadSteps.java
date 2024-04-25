@@ -10,7 +10,7 @@ import org.epam.reportservice.Reader;
 import org.epam.reportservice.dto.ReportTrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
 import org.epam.reportservice.receiver.JmsWorkloadReceiver;
-import org.epam.reportservice.repository.mongo.WorkloadRepositoryMongo;
+import org.epam.reportservice.repository.WorkloadRepositoryMongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;

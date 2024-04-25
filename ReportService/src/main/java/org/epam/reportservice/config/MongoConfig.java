@@ -18,7 +18,7 @@ import java.util.Collection;
 
 @Configuration
 @Profile("!cloud")
-@EnableMongoRepositories
+@EnableMongoRepositories(basePackages = "org.epam.reportservice.repository")
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Value("${spring.data.mongodb.uri}")

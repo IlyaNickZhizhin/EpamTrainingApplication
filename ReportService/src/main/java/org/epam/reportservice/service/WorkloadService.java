@@ -7,7 +7,7 @@ import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
 import org.epam.reportservice.model.TrainingSession;
 import org.epam.reportservice.model.Workload;
-import org.epam.reportservice.repository.mongo.WorkloadRepositoryMongo;
+import org.epam.reportservice.repository.WorkloadRepositoryMongo;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,6 @@ import java.util.Set;
 public class WorkloadService {
 
     private final WorkloadRepositoryMongo repository;
-
 
     public ReportTrainerWorkloadResponse addWorkload(TrainerWorkloadRequest request) {
         log.info("WorkloadService.change(ReportTrainerWorkloadRequest request) starts ADD workload for trainer {} {}***" +

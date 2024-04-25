@@ -75,8 +75,8 @@ public class SqsWorkloadReceiver{
             sqsClient.deleteMessage(DeleteMessageRequest.builder()
                     .queueUrl(brokerURL).receiptHandle(message.receiptHandle())
                     .build());
-            log.info("Workload of trainer: " + (response==null ? "NONAME" : response.getFirstName())
-                    + (isAdd ? "ADDED":"DELETED"));
+            log.info("Workload of trainer : " + (response==null ? "NONAME" : response.getFirstName())
+                    + (isAdd ? " ADDED":" DELETED"));
             return response;
         } catch (JsonProcessingException e) {
             log.error("Exception in parsing of message#" + message.messageId());
