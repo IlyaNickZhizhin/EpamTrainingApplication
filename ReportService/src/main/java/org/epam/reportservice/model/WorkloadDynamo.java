@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@DynamoDBTable(tableName = "gymWorkloads")
+@DynamoDBTable(tableName = "")
 @Data
 public class WorkloadDynamo {
 

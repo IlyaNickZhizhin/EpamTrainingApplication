@@ -1,0 +1,439 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Epam Training Application'
+Resources:
+    WorkloadStorage:
+        Type: 'AWS::S3::Bucket'
+        Properties:
+            BucketName: 'ilyazhizhin-workloadstorage'
+    EpamTrainingApplicationNetwork:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: 10.0.0.0/16
+            EnableDnsSupport: true
+            EnableDnsHostnames: true
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplicationNetwork
+    EpamTrainingApplicationPublicSubnetMain:
+        Type: AWS::EC2::Subnet
+        Properties:
+            AvailabilityZone: eu-north-1a
+            CidrBlock: 10.0.1.0/24
+            MapPublicIpOnLaunch: true
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplication-PublicSubnet-Main
+    EpamTrainingApplicationPrivateSubnetReport:
+        Type: AWS::EC2::Subnet
+        Properties:
+            AvailabilityZone: eu-north-1a
+            CidrBlock: 10.0.2.0/24
+            MapPublicIpOnLaunch: false
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplication-PrivateSubnet-Report
+    EpamTrainingApplicationDBSubnetRDS:
+        Type: AWS::EC2::Subnet
+        Properties:
+            AvailabilityZone: eu-north-1a
+            CidrBlock: 10.0.13.0/24
+            MapPublicIpOnLaunch: false
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplication-DBSubnet-Main
+    EpamTrainingApplicationDBSubnetRDSnoNeeded:
+        Type: AWS::EC2::Subnet
+        Properties:
+            AvailabilityZone: eu-north-1b
+            CidrBlock: 10.0.14.0/24
+            MapPublicIpOnLaunch: false
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplication-DBSubnet-Main-NO
+    EpamTrainingApplicationDBSubnetGroup:
+        Type: AWS::RDS::DBSubnetGroup
+        Properties:
+            DBSubnetGroupDescription: EpamTrainingApplicationDBSubnetGroup
+            SubnetIds:
+                - !Ref EpamTrainingApplicationDBSubnetRDS
+                - !Ref EpamTrainingApplicationDBSubnetRDSnoNeeded
+    EpamTrainingApplicationVPCSQSEndpoint:
+        Type: AWS::EC2::VPCEndpoint
+        Properties:
+            VpcEndpointType: Interface
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            ServiceName: com.amazonaws.eu-north-1.sqs
+            PrivateDnsEnabled: true
+            SubnetIds:
+                - !Ref EpamTrainingApplicationPrivateSubnetReport
+            SecurityGroupIds:
+                - !Ref SecurityGroupPrivate
+    EpamTrainingApplicationVPCDynamoDbEndpoint:
+        Type: AWS::EC2::VPCEndpoint
+        Properties:
+            VpcEndpointType: Gateway
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            ServiceName: com.amazonaws.eu-north-1.dynamodb
+            RouteTableIds:
+                - !Ref EpamTrainingApplicationPrivateRouteTable
+    EpamTrainingApplicationInternetGateway:
+        Type: AWS::EC2::InternetGateway
+    EpamTrainingApplicationIGWAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            InternetGatewayId: !Ref EpamTrainingApplicationInternetGateway
+            VpcId: !Ref EpamTrainingApplicationNetwork
+    EpamTrainingApplicationPublicRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplication-PublicRouteTable
+    EpamTrainingApplicationPrivateRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplication-PrivateRouteTable
+    EpamTrainingApplicationRdsRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            Tags:
+                - Key: Name
+                  Value: EpamTrainingApplication-RdsRouteTable
+    EpamTrainingApplicationPublicSubnetRouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            SubnetId: !Ref EpamTrainingApplicationPublicSubnetMain
+            RouteTableId: !Ref EpamTrainingApplicationPublicRouteTable
+
+    EpamTrainingApplicationPrivateSubnetRouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            SubnetId: !Ref EpamTrainingApplicationPrivateSubnetReport
+            RouteTableId: !Ref EpamTrainingApplicationPrivateRouteTable
+
+    EpamTrainingApplicationPublicRouteToInternetGateway:
+        Type: AWS::EC2::Route
+        Properties:
+            RouteTableId: !Ref EpamTrainingApplicationPublicRouteTable
+            DestinationCidrBlock: 0.0.0.0/0
+            GatewayId: !Ref EpamTrainingApplicationInternetGateway
+
+    EpamTrainingApplicationRdsRouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            SubnetId: !Ref EpamTrainingApplicationDBSubnetRDS
+            RouteTableId: !Ref EpamTrainingApplicationRdsRouteTable
+
+    GymInstance:
+        Type: AWS::EC2::Instance
+        DependsOn: RDSInstance
+        Properties:
+            ImageId: ami-065a85a656bd3036c
+            InstanceType: t3.micro
+            SubnetId:  !Ref EpamTrainingApplicationPublicSubnetMain
+            SecurityGroupIds:
+                - !Ref SecurityGroupPublic
+                - !Ref SecurityGroupEcTwoRDS
+                - !Ref SecurityGroupPrivate
+            Tags:
+                - Key: Name
+                  Value: GymInstance
+            IamInstanceProfile: !Ref InstanceProfile
+            UserData:
+                Fn::Base64: |
+                    #!/bin/bash
+                    RDS_ENDPOINT_ADDRESS=$(aws rds describe-db-instances --query 'DBInstances[?starts_with(DBInstanceIdentifier, `epamtrainingapplication-`)].Endpoint.Address' --output text)
+                    ~/runProfileDbHostAndName gym 8080:8080 cloud main-service-cloud-db2-sqs $RDS_ENDPOINT_ADDRESS cloud_epam_training_app
+    InstanceProfile:
+        Type: AWS::IAM::InstanceProfile
+        Properties:
+            Path: /
+            Roles:
+                - !Ref EpamTrainingApplicationEcTwoDataAccessRole
+
+    ReportInstance:
+        Type: AWS::EC2::Instance
+        Properties:
+            ImageId: ami-0c109a4cdfcec72b0
+            InstanceType: t3.micro
+            SubnetId:  !Ref EpamTrainingApplicationPrivateSubnetReport
+            Tags:
+                - Key: Name
+                  Value: ReportInstance
+            SecurityGroupIds:
+                - !Ref SecurityGroupPrivate
+            UserData:
+                Fn::Base64: |
+                    #!/bin/bash
+                    docker run -d -e TABLE_NAME=gymWorkload -e SPRING_PROFILES_ACTIVE=cloud -p 8081:8081 --name report report-service-cloud-sqs-dynamo2
+            IamInstanceProfile: !Ref InstanceProfile
+    RDSInstance:
+        Type: AWS::RDS::DBInstance
+        DeletionPolicy: Delete
+        Properties:
+            AllocatedStorage: 20
+            StorageType: gp2
+            StorageEncrypted: true
+            MultiAZ: false
+            DBInstanceClass: db.t3.micro
+            DBName: cloud_epam_training_app
+            LicenseModel: postgresql-license
+            OptionGroupName: default:postgres-16
+            DBParameterGroupName: default.postgres16
+            Engine: postgres
+            EngineVersion: 16.1
+            MasterUsername: epamtrainee
+            MasterUserPassword: epamtraineepassword
+            DBSubnetGroupName: !Ref EpamTrainingApplicationDBSubnetGroup
+            VPCSecurityGroups:
+                - !Ref SecurityGroupRDSEcTwo
+    DynamoDBTable:
+        Type: AWS::DynamoDB::Table
+        Properties:
+            TableName: gymWorkload
+            AttributeDefinitions:
+                - AttributeName: username
+                  AttributeType: S
+                - AttributeName: isActive
+                  AttributeType: S
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+              - AttributeName: isActive
+                KeyType: RANGE
+            ProvisionedThroughput:
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
+    SecurityGroupPublic:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow all traffic inside group
+            VpcId: !Ref EpamTrainingApplicationNetwork
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 8080
+                  ToPort: 8080
+                  CidrIp: 0.0.0.0/0
+            SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 8080
+                  ToPort: 8080
+                  CidrIp: 0.0.0.0/0
+    SecurityGroupPrivate:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow SSH access
+            VpcId: !Ref EpamTrainingApplicationNetwork
+    IngressRulePrivate:
+        Type: AWS::EC2::SecurityGroupIngress
+        Properties:
+            GroupId: !Ref SecurityGroupPrivate
+            IpProtocol: -1
+            FromPort: -1
+            ToPort: -1
+            SourceSecurityGroupId: !Ref SecurityGroupPrivate
+    EgressRulePrivate:
+        Type: AWS::EC2::SecurityGroupEgress
+        Properties:
+            GroupId: !Ref SecurityGroupPrivate
+            IpProtocol: -1
+            FromPort: -1
+            ToPort: -1
+            DestinationSecurityGroupId : !Ref SecurityGroupPrivate
+    IngressRulePrivateDynamo:
+        Type: AWS::EC2::SecurityGroupIngress
+        Properties:
+            GroupId: !Ref SecurityGroupPrivate
+            IpProtocol: tcp
+            FromPort: 443
+            ToPort: 443
+            SourcePrefixListId: pl-adae4bc4
+    EgressRulePrivateDynamo:
+        Type: AWS::EC2::SecurityGroupEgress
+        Properties:
+            GroupId: !Ref SecurityGroupPrivate
+            IpProtocol: tcp
+            FromPort: 443
+            ToPort: 443
+            DestinationPrefixListId: pl-adae4bc4
+    SecurityGroupRDSEcTwo:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow SSH access
+            VpcId: !Ref EpamTrainingApplicationNetwork
+    SecurityGroupEcTwoRDS:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow SSH access
+            VpcId: !Ref EpamTrainingApplicationNetwork
+    IngressRuleRDSEcTwo:
+        Type: AWS::EC2::SecurityGroupIngress
+        Properties:
+            GroupId: !Ref SecurityGroupRDSEcTwo
+            IpProtocol: tcp
+            FromPort: 5432
+            ToPort: 5432
+            SourceSecurityGroupId: !Ref SecurityGroupEcTwoRDS
+    IngressRuleEcTwoRDS:
+        Type: AWS::EC2::SecurityGroupIngress
+        Properties:
+            GroupId: !Ref SecurityGroupEcTwoRDS
+            IpProtocol: tcp
+            FromPort: 5432
+            ToPort: 5432
+            SourceSecurityGroupId: !Ref SecurityGroupRDSEcTwo
+    EpamTrainingApplicationLambdaMonthlyCsvReport:
+        Type: AWS::Lambda::Function
+        DependsOn: EpamTrainingApplicationLambdaMonthlyCsvReportRole
+        Properties:
+            Code:
+                S3Bucket: ilyazhizhin
+                S3Key: lambda/ReportHandler-1.jar
+            Description: Lambda function to create monthly csv report
+            FunctionName: lambda-monthly-csv-report
+            Runtime: java11
+            Handler: org.epam.GenerateCSVReport::handleRequest
+            MemorySize: 512
+            Architectures:
+                - x86_64
+            Role: !GetAtt EpamTrainingApplicationLambdaMonthlyCsvReportRole.Arn
+            Timeout: 60
+            Environment:
+                Variables:
+                    DATABASE: !Ref DynamoDBTable
+                    BUCKET: !Ref WorkloadStorage
+    MonthlyRule:
+        Type: AWS::Events::Rule
+        DependsOn: EpamTrainingApplicationLambdaMonthlyCsvReportRole
+        Properties:
+            Description: 'Event rule to create monthly report'
+            ScheduleExpression: cron(50 18 L * ? *)
+            State: ENABLED
+            Targets:
+                - Arn: !GetAtt EpamTrainingApplicationLambdaMonthlyCsvReport.Arn
+                  Id: EpamTrainingApplicationLambdaMonthlyCsvReport
+    AWSLambdaBasicExecutionRole:
+        Type: AWS::IAM::ManagedPolicy
+        Properties:
+            Description: 'Basic execution role for Lambda'
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Action: logs:CreateLogGroup
+                      Resource: 'arn:aws:logs:eu-north-1:767397684799:*'
+                    - Effect: Allow
+                      Action:
+                          - logs:CreateLogStream
+                          - logs:PutLogEvents
+                      Resource: 'arn:aws:logs:eu-north-1:767397684799:log-group:/aws/lambda/EpamTrainingApplication-CSV-Report:*'
+    EpamTrainingApplicationLambdaMonthlyCsvReportRole:
+        Type: AWS::IAM::Role
+        DependsOn:
+            - AWSLambdaBasicExecutionRole
+            - AWSLambdaVPCAccessExecutionRole
+            - AWSDynamoDBReadAccess
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service:
+                              - lambda.amazonaws.com
+                      Action:
+                          - sts:AssumeRole
+            ManagedPolicyArns:
+                - !Ref AWSLambdaBasicExecutionRole
+                - !Ref AWSLambdaVPCAccessExecutionRole
+                - !Ref AWSDynamoDBReadAccess
+    AWSLambdaVPCAccessExecutionRole:
+        Type: AWS::IAM::ManagedPolicy
+        Properties:
+            Description: 'VPC access execution role for Lambda'
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Action:
+                          - s3:*
+                      Resource: '*'
+
+    AWSDynamoDBReadAccess:
+        Type: AWS::IAM::ManagedPolicy
+        Properties:
+            Description: 'Read access to DynamoDB for Lambda'
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Action:
+                          - dynamodb:BatchGetItem
+                          - dynamodb:Describe*
+                          - dynamodb:List*
+                          - dynamodb:GetItem
+                          - dynamodb:GetResourcePolicy
+                          - dynamodb:Query
+                          - dynamodb:Scan
+                          - dynamodb:PartiQLSelect
+                      Resource: '*'
+    EpamTrainingApplicationEcTwoDataAccessRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service:
+                              - ec2.amazonaws.com
+                      Action:
+                          - sts:AssumeRole
+    EpamTrainingApplicationEcTwoTagsAccessPolicy:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: Ec2TagsAccess
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Action:
+                          - ec2:DescribeTags
+                      Resource: '*'
+            Roles:
+                - !Ref EpamTrainingApplicationEcTwoDataAccessRole
+    EpamTrainingApplicationEcTwoDBInstancesAccessPolicy:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: Ec2DBInstancesAccess
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Action:
+                          - rds:DescribeDBInstances
+                      Resource: '*'
+            Roles:
+                - !Ref EpamTrainingApplicationEcTwoDataAccessRole
+    EpamTrainingApplicationEcTwoSQSAccessPolicy:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: Ec2SQSAccess
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Action:
+                          - sqs:*
+                      Resource: '*'
+            Roles:
+                - !Ref EpamTrainingApplicationEcTwoDataAccessRole

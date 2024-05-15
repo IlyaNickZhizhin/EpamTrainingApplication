@@ -1,0 +1,8 @@
+#!/bin/bash
+name=$1
+port=$2
+profile=$3
+image=$4
+dbhost=$5
+dbname=$6
+docker run --name $name -p $port -e SPRING_PROFILES_ACTIVE=$profile -e DATABASE_HOST=$dbhost -e DATABASE_NAME=$dbname -d $image
