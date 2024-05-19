@@ -1,0 +1,9 @@
+#!/bin/bash
+
+dockerfile=$1
+dockerimage=$2
+profile=FullAccessUserS3
+
+docker build -t $dockerimage -f $dockerfile .
+docker save -o $dockerimage.tar $dockerimage
+aws s3 cp ./$dockerimage.tar s3://ilyazhizhin/epam-app/$dockerimage.tar --profile $profile

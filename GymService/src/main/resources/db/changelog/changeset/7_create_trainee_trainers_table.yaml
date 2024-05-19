@@ -10,13 +10,13 @@ databaseChangeLog:
                   name: trainer_id
                   type: int
                   constraints:
-                    foreignKeyName: fk_trainer_id
+                    foreignKeyName: fk_trainer_connect_id
                     references: trainers(id)
                     nullable: false
               - column:
                   name: trainee_id
                   type: int
                   constraints:
-                    foreignKeyName: fk_trainee_id
+                    foreignKeyName: fk_trainee_connect_id
                     references: trainees(id)
                     nullable: false

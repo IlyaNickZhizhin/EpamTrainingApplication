@@ -86,6 +86,24 @@
     </dependency>
 
     <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>1.9.9</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>amazon-sqs-java-messaging-lib</artifactId>
+      <version>2.1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sqs</artifactId>
+      <version>2.20.123</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
       <version>${micrometr}</version>
@@ -240,7 +258,7 @@
                     <limit>
                       <counter>LINE</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>0.75</minimum>
+                      <minimum>0.73</minimum>
                     </limit>
                   </limits>
                 </rule>

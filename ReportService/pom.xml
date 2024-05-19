@@ -27,10 +27,20 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-dynamodb</artifactId>
+            <version>1.12.707</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <version>5.7.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.bwaldvogel</groupId>
+            <artifactId>mongo-java-server</artifactId>
+            <version>1.45.0</version>
         </dependency>
     </dependencies>
 

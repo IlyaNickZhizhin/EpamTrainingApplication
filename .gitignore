@@ -6,7 +6,10 @@ target/
 !**/src/main/resources/secretStoreLocal.yaml
 !**/src/test/resources/secretStoreDocker.yaml
 !**/src/test/resources/secretStoreLocal.yaml
-Task_Testing.pdf
+*.tar
+*.pdf
+sonar-project.properties
+jenkinsfile
 
 ### IntelliJ IDEA ###
 .idea/

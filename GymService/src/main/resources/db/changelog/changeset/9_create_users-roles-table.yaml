@@ -10,13 +10,13 @@ databaseChangeLog:
                   name: user_id
                   type: int
                   constraints:
-                    foreignKeyName: fk_user_id
+                    foreignKeyName: fk_user_role_id
                     references: users(id)
                     nullable: false
               - column:
                   name: role_id
                   type: int
                   constraints:
-                    foreignKeyName: fk_role_id
+                    foreignKeyName: fk_role_role_id
                     references: roles(id)
                     nullable: false

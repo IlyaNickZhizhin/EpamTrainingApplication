@@ -1,0 +1,7 @@
+#!/bin/bash
+imageNameS3=$1
+imageNameEC2=$2
+
+aws s3 cp s3://ilyazhizhin/epam-app/$imageNameS3.tar ~/app/$imageNameEC2.tar
+docker load -i ~/app/$imageNameEC2.tar
+

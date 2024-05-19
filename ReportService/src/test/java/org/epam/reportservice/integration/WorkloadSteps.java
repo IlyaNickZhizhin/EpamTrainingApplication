@@ -9,8 +9,8 @@ import org.epam.common.dto.MonthDuration;
 import org.epam.reportservice.Reader;
 import org.epam.reportservice.dto.ReportTrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
-import org.epam.reportservice.receiver.WorkloadReceiver;
-import org.epam.reportservice.repository.WorkloadRepository;
+import org.epam.reportservice.receiver.JmsWorkloadReceiver;
+import org.epam.reportservice.repository.WorkloadRepositoryMongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
@@ -27,9 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class WorkloadSteps {
 
     @Autowired
-    private WorkloadReceiver receiver;
+    private JmsWorkloadReceiver receiver;
     @Autowired
-    private WorkloadRepository repository;
+    private WorkloadRepositoryMongo repository;
     @Autowired
     private JmsTemplate jmsTemplate;
 

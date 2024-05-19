@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-roles-to-user
+      author: IlyaZhizhin
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: authority
+                  type: varchar(255)
+
+

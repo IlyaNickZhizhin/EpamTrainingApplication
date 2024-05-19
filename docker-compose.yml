@@ -8,14 +8,6 @@ services:
       POSTGRES_DB: epam_training_app
     ports:
       - "5433:5432"
-  test-db:
-    image: postgres
-    environment:
-      POSTGRES_USER: epamtrainee
-      POSTGRES_PASSWORD: epamtraineepassword
-      POSTGRES_DB: test_epam_training_app
-    ports:
-      - "5434:5434"
   gym-service:
     build:
       context: .

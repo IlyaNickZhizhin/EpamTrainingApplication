@@ -1,28 +1,29 @@
-package org.epam.gymservice.config;
+package org.epam.gymservice.config.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.RequiredArgsConstructor;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.RedeliveryPolicy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
-import java.text.SimpleDateFormat;
-
 @Configuration
-public class JmsConfig {
+@Profile("!cloud")
+@RequiredArgsConstructor
+public class JmsConfigActiveMQ {
     @Value("${activemq.broker-url:defaultURL}")
     private String brokerUrl;
     @Value("${activemq.user:defaultUSERNAME}")
     private String username;
     @Value("${activemq.password:defaultPassword}")
     private String password;
+    private final ObjectMapper mapper;
 
     @Bean
     public ActiveMQConnectionFactory getActiveMqConnectionFactory(){
@@ -47,10 +48,6 @@ public class JmsConfig {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         converter.setObjectMapper(mapper);
         return converter;
     }

@@ -3,11 +3,6 @@ databaseChangeLog:
       id: create-training-types
       author: IlyaZhizhin
       changes:
-        - sql:
-            dbms: postgresql
-            sql: |
-              CREATE TYPE training_type AS ENUM ('BASIC', 'CARDIO', 'STRENGTH', 'WORKOUT', 'YOGA', 'PILATES',
-                  'DANCE', 'BOXING', 'BODYBUILDING', 'CROSSFIT', 'AEROBICS', 'ZUMBA');
         - createTable:
             tableName: training_types
             columns:
@@ -20,8 +15,9 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: training_name
-                  type: training_type
+                  type: varchar(255)
                   constraints:
                     nullable: false
+
 
 

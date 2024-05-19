@@ -1,10 +1,14 @@
 package org.epam.reportservice.model;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+
 import java.time.LocalDate;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+@DynamoDBDocument
 public class TrainingSession extends org.epam.common.dto.TrainingSession {
+
     public static TrainingSession of(LocalDate date, double duration){
         TrainingSession trainingSession = new TrainingSession();
         trainingSession.setYear(date.getYear());

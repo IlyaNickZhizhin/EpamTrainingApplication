@@ -27,11 +27,11 @@ public class Role implements GrantedAuthority {
         return authority.toString();
     }
 
-    public static Role of(Authority authority){
+    public static Role of(Authority authority) {
         return new Role(Authority.idOf(authority), authority);
     }
 
-    public static Role of(String authority){
+    public static Role of(String authority) {
         return new Role(Authority.idOf(authority), Authority.valueOf(authority));
     }
 
