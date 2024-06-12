@@ -18,7 +18,7 @@ jobs:
         run: mvn clean install
         working-directory: ./Common
       - name: Build GYM
-        run: mvn clean install
+        run: mvn clean test -Dspring.profiles.active=GitHubActions
         working-directory: ./GymService
       - name: Build REPORT
         run: mvn clean install
