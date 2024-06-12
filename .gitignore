@@ -17,6 +17,8 @@ Task_Testing.pdf
 *.iws
 *.iml
 *.ipr
+*.tar
+*.pdf
 
 ### Eclipse ###
 .apt_generated
