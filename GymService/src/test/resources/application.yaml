@@ -1,0 +1,47 @@
+spring:
+  profiles:
+    active: local
+  config:
+    import: classpath:secretStoreLocal.yaml
+  application:
+    name: main-service
+  datasource:
+    username: epamtrainee
+    password: epamtraineepassword
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test_epam_training_app
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: db/changelog/db.test-changelog-master.yaml
+my-props:
+  jwt:
+    max-attempts: 3
+    cold-pause-min: 5
+server:
+  port: 8081
+---
+spring:
+  profiles:
+    active: GitHubActions
+  activemq:
+    broker-url: \${ACTIVEMQ_URL}
+    user: \${ACTIVEMQ_USERNAME}
+    password: \${ACTIVEMQ_PASSWORD}
+  JWT.secret-key: \${JWT_SECRET_KEY}
+  datasource:
+    username: \${DATABASE_USERNAME}
+    password: \${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://\${DATABASE_HOST}:\${DATABASE_PORT}/\${DATABASE_NAME}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: db/changelog/db.test-changelog-master.xml
+    enabled: false

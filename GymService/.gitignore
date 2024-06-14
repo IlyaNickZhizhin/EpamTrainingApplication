@@ -4,7 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 !**/src/main/resources/application.yaml
-**/src/test/resources/application.yaml
+!**/src/test/resources/application.yaml
 !**/src/main/resources/secretStoreDocker.yaml
 !**/src/main/resources/secretStoreLocal.yaml
 !**/src/test/resources/secretStoreDocker.yaml
