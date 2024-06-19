@@ -20,6 +20,14 @@ jobs:
       - name: Build GYM
         run: mvn clean test -Dspring.profiles.active=GitHubActions
         working-directory: ./GymService
+        env:
+          ACTIVATED_DASHBOARD: ${{ secrets.ACTIVATED_DASHBOARD }}
+          ACTIVATED_USER: ${{ secrets.ACTIVATED_USER }}
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
       - name: Build REPORT
         run: mvn clean install
         working-directory: ./ReportService
