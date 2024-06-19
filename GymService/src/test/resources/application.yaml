@@ -28,15 +28,15 @@ spring:
   profiles:
     active: GitHubActions
   activemq:
-    broker-url: \${ACTIVEMQ_URL}
-    user: \${ACTIVEMQ_USERNAME}
-    password: \${ACTIVEMQ_PASSWORD}
-  JWT.secret-key: \${JWT_SECRET_KEY}
+    broker-url: ${ACTIVEMQ_URL}
+    user: ${ACTIVEMQ_USERNAME}
+    password: ${ACTIVEMQ_PASSWORD}
+  JWT.secret-key: ${JWT_SECRET_KEY}
   datasource:
-    username: \${DATABASE_USERNAME}
-    password: \${DATABASE_PASSWORD}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://\${DATABASE_HOST}:\${DATABASE_PORT}/\${DATABASE_NAME}
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
   jpa:
     hibernate:
       ddl-auto: validate
