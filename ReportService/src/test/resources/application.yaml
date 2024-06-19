@@ -10,8 +10,8 @@ server:
 spring:
   profiles:
     active: GitHubActions
-  activemq:
-    broker-url: ${ACTIVEMQ_URL}
-    user: ${ACTIVEMQ_USERNAME}
-    password: ${ACTIVEMQ_PASSWORD}
-  JWT.secret-key: ${JWT_SECRET_KEY}
+activemq:
+  broker-url: ${ACTIVEMQ_URL}
+  user: ${ACTIVEMQ_USERNAME}
+  password: ${ACTIVEMQ_PASSWORD}
+JWT.secret-key: ${JWT_SECRET_KEY}
