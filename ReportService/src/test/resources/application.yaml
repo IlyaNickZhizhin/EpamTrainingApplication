@@ -1,11 +1,17 @@
 spring:
   application:
     name: report-service
-  config:
-    import: classpath:secretStoreLocal.yaml
   data:
     mongodb:
       uri: mongodb://localhost:27017/gymWorkloads
 server:
   port: 8082
-
+---
+spring:
+  profiles:
+    active: GitHubActions
+  activemq:
+    broker-url: ${ACTIVEMQ_URL}
+    user: ${ACTIVEMQ_USERNAME}
+    password: ${ACTIVEMQ_PASSWORD}
+  JWT.secret-key: ${JWT_SECRET_KEY}

@@ -33,4 +33,9 @@ jobs:
       - name: Build REPORT
         run: mvn clean install
         working-directory: ./ReportService
+        env:
+          ACTIVEMQ_PASSWORD: ${{ secrets.ACTIVEMQ_PASSWORD }}
+          ACTIVEMQ_URL: ${{ secrets.ACTIVEMQ_URL }}
+          ACTIVEMQ_USERNAME: ${{ secrets.ACTIVEMQ_USERNAME }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY}}
 
