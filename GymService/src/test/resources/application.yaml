@@ -41,4 +41,5 @@ spring:
     hibernate:
       ddl-auto: validate
   liquibase:
-    change-log: db/changelog/db.test-changelog-master.xml
+    change-log: db/changelog/db.test-changelog-master.yaml
+    enabled: false
