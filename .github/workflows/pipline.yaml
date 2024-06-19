@@ -21,13 +21,15 @@ jobs:
         run: mvn clean test -Dspring.profiles.active=GitHubActions
         working-directory: ./GymService
         env:
-          ACTIVATED_DASHBOARD: ${{ secrets.ACTIVATED_DASHBOARD }}
-          ACTIVATED_USER: ${{ secrets.ACTIVATED_USER }}
+          ACTIVEMQ_PASSWORD: ${{ secrets.ACTIVEMQ_PASSWORD }}
+          ACTIVEMQ_URL: ${{ secrets.ACTIVEMQ_URL }}
+          ACTIVEMQ_USERNAME: ${{ secrets.ACTIVEMQ_USERNAME }}
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY}}
       - name: Build REPORT
         run: mvn clean install
         working-directory: ./ReportService
