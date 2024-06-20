@@ -3,30 +3,20 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_USER: epamtrainee
-      POSTGRES_PASSWORD: epamtraineepassword
-      POSTGRES_DB: epam_training_app
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
-      - "5433:5432"
-  test-db:
-    image: postgres
-    environment:
-      POSTGRES_USER: epamtrainee
-      POSTGRES_PASSWORD: epamtraineepassword
-      POSTGRES_DB: test_epam_training_app
-    ports:
-      - "5434:5434"
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
   gym-service:
     build:
       context: .
       dockerfile: DockerfileGymService
-      args:
-        - BUILD_PROFILE=docker-test
     image: gym-service-image
     ports:
-      - "8081:8081"
+      - "${GYM_PORT}:${GYM_PORT}"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=GitHubActions
     depends_on:
       - db
   report-service:
@@ -35,18 +25,18 @@ services:
       dockerfile: DockerfileReportService
     image: report-service-image
     ports:
-      - "8082:8080"
+      - "${REPORT_PORT}:${REPORT_PORT}"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=GitHubActions
   activemq:
     image: apache/activemq-artemis:latest-alpine
     environment:
-      ARTEMIS_USER: epamtrainee
-      ARTEMIS_PASSWORD: epamtraineepassword
+      ARTEMIS_USER: ${ACTIVEMQ_USERNAME}
+      ARTEMIS_PASSWORD: ${ACTIVEMQ_PASSWORD}
     ports:
-      - "61616:61616"
-      - "8161:8161"
+      - "${ACTIVEMQ_PORT_JMS}:${ACTIVEMQ_PORT_JMS}"
+      - "${ACTIVEMQ_PORT}:${ACTIVEMQ_PORT}"
   mongo:
     image: mongo
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:${MONGO_PORT}"

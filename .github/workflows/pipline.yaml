@@ -38,4 +38,26 @@ jobs:
           ACTIVEMQ_URL: ${{ secrets.ACTIVEMQ_URL }}
           ACTIVEMQ_USERNAME: ${{ secrets.ACTIVEMQ_USERNAME }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY}}
-
+      - name: Copy files to DigitalOcean
+        run: |
+          scp -r -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ./GymService/target/GymService*.jar ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ./ReportService/target/ReportService*.jar ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ./run.sh ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ./docker-compose.yml ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ./DockerfileGymService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ./DockerfileReportService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+      - name: Set environment variables on DigitalOcean
+        run: |
+          ssh -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} 
+          "export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }};
+          export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }};
+          export DATABASE_NAME=${{ secrets.DATABASE_NAME }};
+          export DATABASE_PORT=${{ secrets.DATABASE_PORT }};
+          export GYM_PORT=${{ secrets.GYM_PORT }};
+          export REPORT_PORT=${{ secrets.REPORT_PORT }};
+          export ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }};
+          export ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }};
+          export MONGO_PORT=${{ secrets.MONGO_PORT }}"
+      - name: Start application
+        run: |
+          ssh -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} "docker-compose build && docker-compose up -d"

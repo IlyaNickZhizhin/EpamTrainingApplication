@@ -21,3 +21,15 @@ spring:
   data:
     mongodb:
       uri: mongodb://mongo:27017/gymWorkloads
+---
+spring:
+  config:
+    activate:
+      on-profile: GitHubActions
+activemq:
+  broker-url: ${ACTIVEMQ_URL}
+  user: ${ACTIVEMQ_USERNAME}
+  password: ${ACTIVEMQ_PASSWORD}
+JWT.secret-key: ${JWT_SECRET_KEY}
+server:
+  port: ${REPORT_PORT}

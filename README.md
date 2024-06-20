@@ -32,6 +32,13 @@ The application has two versions:
 - Swagger for API documentation
 
 ## Setup Instructions
+In general, you don't need to do anything. This branch will be automatically uploaded to the DIginal Ocean server, but if you want to repeat the steps, then:
+1. run the script on the droplet docker_install.sh with the UBUNTU_VERSION and ARCH arguments. For example:
+```
+./docker_install.sh noble amd64
+#(replace noble and amd64 with your ubuntu version and processor architecture)
+```
+
 For the local version, use the `docker-compose.yml` file. For the cloud version, create two microservice images using the `DockerfileGymService` and `DockerfileReportService` Dockerfiles to create tar files. Then, deploy them on EC2 instances, create images from them, and set them in the lines of `EAT.yaml`, which is a CloudFormation template that deploys all the necessary infrastructure for the application.
 
 ## License

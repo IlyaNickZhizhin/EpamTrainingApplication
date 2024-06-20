@@ -42,3 +42,5 @@ spring:
       ddl-auto: validate
   liquibase:
     change-log: db/changelog/db.test-changelog-master.yaml
+server:
+  port: ${GYM_PORT}
