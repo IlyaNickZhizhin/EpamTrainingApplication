@@ -48,6 +48,8 @@ jobs:
           ssh-keyscan -H $IP >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
+          mkdir -p ./GymService/target/
+          mkdir -p ./ReportService/target/
           scp -r ./GymService/target/GymService*.jar $USER@$IP:~/app
           scp -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
           scp -r ./run.sh $USER@$IP:~/app
