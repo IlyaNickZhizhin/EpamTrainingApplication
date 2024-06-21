@@ -46,13 +46,12 @@ jobs:
           echo "$SSH" > ../private.key
           sudo chmod 600 ../private.key
           echo "$IP" > ~/.ssh/known_hosts
-          chmod 600 id_rsa
-          scp -r -i id_rsa ./GymService/target/GymService*.jar $USER@$IP:~/app
-          scp -r -i id_rsa ./ReportService/target/ReportService*.jar ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./run.sh ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./docker-compose.yml ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./DockerfileGymService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./DockerfileReportService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ../private.key ./GymService/target/GymService*.jar $USER@$IP:~/app
+          scp -r -i ../private.key ./ReportService/target/ReportService*.jar ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ../private.key ./run.sh ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ../private.key ./docker-compose.yml ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ../private.key ./DockerfileGymService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i ../private.key ./DockerfileReportService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
         shell: bash
         env:
           SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
