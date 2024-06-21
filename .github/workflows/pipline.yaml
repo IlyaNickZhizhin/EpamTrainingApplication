@@ -44,14 +44,13 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH" > ~/.ssh/private.key
-          echo "~/.ssh/private.key" | tr -d '\r' | sed 's/\\n/\n/g' > id_rsa
-          sudo chmod 600 id_rsa
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./GymService/target/GymService*.jar $USER@$IP:~/app
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./run.sh $USER@$IP:~/app
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./docker-compose.yml $USER@$IP:~/app
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./DockerfileGymService $USER@$IP:~/app
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./DockerfileReportService $USER@$IP:~/app
+          sudo chmod 600 ~/.ssh/private.key
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/private.key -r ./GymService/target/GymService*.jar $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/private.key -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/private.key -r ./run.sh $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/private.key -r ./docker-compose.yml $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/private.key -r ./DockerfileGymService $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/private.key -r ./DockerfileReportService $USER@$IP:~/app
         shell: bash
         env:
           SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
