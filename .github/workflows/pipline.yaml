@@ -72,6 +72,8 @@ jobs:
           ssh $USER@$IP "echo REPORT_PORT=${{ secrets.REPORT_PORT }} >> ~/app/.env"
           ssh $USER@$IP "echo ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }} >> ~/app/.env"
           ssh $USER@$IP "echo ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }} >> ~/app/.env"
+          ssh $USER@$IP "echo ACTIVEMQ_USERNAME=${{ secrets.ACTIVEMQ_USERNAME }} >> ~/app/.env"
+          ssh $USER@$IP "echo ACTIVEMQ_PASSWORD=${{ secrets.ACTIVEMQ_PASSWORD }} >> ~/app/.env"
           ssh $USER@$IP "echo MONGO_PORT=${{ secrets.MONGO_PORT }} >> ~/app/.env"
       - name: Start application
         run: |
