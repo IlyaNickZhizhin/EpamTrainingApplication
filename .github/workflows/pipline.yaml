@@ -7,6 +7,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
+      USER: ${{ secrets.DIGITALOCEAN_DROPLET_USER }}
+      IP: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -55,10 +59,6 @@ jobs:
           scp -r ./DockerfileGymService $USER@$IP:~/app
           scp -r ./DockerfileReportService $USER@$IP:~/app
         shell: bash
-        env:
-          SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
-          USER: ${{ secrets.DIGITALOCEAN_DROPLET_USER }}
-          IP: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
       - name: Set environment variables on DigitalOcean
         run: |
           ssh $USER@$IP 
