@@ -11,6 +11,7 @@ jobs:
       SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
       USER: ${{ secrets.DIGITALOCEAN_DROPLET_USER }}
       IP: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -63,15 +64,15 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
-          ssh $USER@$IP "export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}"
-          ssh $USER@$IP "export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}"
-          ssh $USER@$IP "export DATABASE_NAME=${{ secrets.DATABASE_NAME }}"
-          ssh $USER@$IP "export DATABASE_PORT=${{ secrets.DATABASE_PORT }}"
-          ssh $USER@$IP "export GYM_PORT=${{ secrets.GYM_PORT }}"
-          ssh $USER@$IP "export REPORT_PORT=${{ secrets.REPORT_PORT }}"
-          ssh $USER@$IP "export ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }}"
-          ssh $USER@$IP "export ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }}"
-          ssh $USER@$IP "export MONGO_PORT=${{ secrets.MONGO_PORT }}"
+          ssh $USER@$IP "echo 'export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export DATABASE_NAME=${{ secrets.DATABASE_NAME }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export DATABASE_PORT=${{ secrets.DATABASE_PORT }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export GYM_PORT=${{ secrets.GYM_PORT }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export REPORT_PORT=${{ secrets.REPORT_PORT }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }}' >> ~/.bashrc"
+          ssh $USER@$IP "echo 'export MONGO_PORT=${{ secrets.MONGO_PORT }}' >> ~/.bashrc"
       - name: Start application
         run: |
           eval "$(ssh-agent -s)"
