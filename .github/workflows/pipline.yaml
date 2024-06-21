@@ -46,12 +46,14 @@ jobs:
           echo "$SSH" > ~/.ssh/private.key
           sudo chmod 600 ~/.ssh/private.key
           ssh-keyscan -H $IP >> ~/.ssh/known_hosts
-          scp -i ~/.ssh/private.key -r ./GymService/target/GymService*.jar $USER@$IP:~/app
-          scp -i ~/.ssh/private.key -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
-          scp -i ~/.ssh/private.key -r ./run.sh $USER@$IP:~/app
-          scp -i ~/.ssh/private.key -r ./docker-compose.yml $USER@$IP:~/app
-          scp -i ~/.ssh/private.key -r ./DockerfileGymService $USER@$IP:~/app
-          scp -i ~/.ssh/private.key -r ./DockerfileReportService $USER@$IP:~/app
+          eval "@$(ssh-agent -s)"
+          ssh-add ~/.ssh/private.key
+          scp -r ./GymService/target/GymService*.jar $USER@$IP:~/app
+          scp -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
+          scp -r ./run.sh $USER@$IP:~/app
+          scp -r ./docker-compose.yml $USER@$IP:~/app
+          scp -r ./DockerfileGymService $USER@$IP:~/app
+          scp -r ./DockerfileReportService $USER@$IP:~/app
         shell: bash
         env:
           SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
