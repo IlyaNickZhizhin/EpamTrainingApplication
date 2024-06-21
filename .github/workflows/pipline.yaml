@@ -46,13 +46,12 @@ jobs:
           echo "$SSH" > ~/.ssh/private.key
           echo "~/.ssh/private.key" | tr -d '\r' | sed 's/\\n/\n/g' > id_rsa
           sudo chmod 600 id_rsa
-          echo "$IP" > ~/.ssh/known_hosts
-          scp -r -i id_rsa ./GymService/target/GymService*.jar $USER@$IP:~/app
-          scp -r -i id_rsa ./ReportService/target/ReportService*.jar ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./run.sh ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./docker-compose.yml ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./DockerfileGymService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
-          scp -r -i id_rsa ./DockerfileReportService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./GymService/target/GymService*.jar $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./run.sh $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./docker-compose.yml $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./DockerfileGymService $USER@$IP:~/app
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./DockerfileReportService $USER@$IP:~/app
         shell: bash
         env:
           SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
