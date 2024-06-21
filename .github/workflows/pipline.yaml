@@ -61,10 +61,6 @@ jobs:
         shell: bash
       - name: Set environment variables on DigitalOcean
         run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH" > ~/.ssh/private.key
-          sudo chmod 600 ~/.ssh/private.key
-          ssh-keyscan -H $IP >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
           ssh $USER@$IP 
@@ -79,9 +75,6 @@ jobs:
           export MONGO_PORT=${{ secrets.MONGO_PORT }}"
       - name: Start application
         run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH" > ~/.ssh/private.key
-          sudo chmod 600 ~/.ssh/private.key
-          ssh-keyscan -H $IP >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/private.key
           ssh $USER@$IP "docker-compose build && docker-compose up -d"
