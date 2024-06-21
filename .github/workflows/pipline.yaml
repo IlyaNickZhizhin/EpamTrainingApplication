@@ -62,7 +62,7 @@ jobs:
           IP: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
       - name: Set environment variables on DigitalOcean
         run: |
-          ssh -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} 
+          ssh -i ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} 
           "export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }};
           export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }};
           export DATABASE_NAME=${{ secrets.DATABASE_NAME }};
@@ -74,4 +74,4 @@ jobs:
           export MONGO_PORT=${{ secrets.MONGO_PORT }}"
       - name: Start application
         run: |
-          ssh -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} "docker-compose build && docker-compose up -d"
+          ssh -i ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} "docker-compose build && docker-compose up -d"
