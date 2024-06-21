@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
-COPY ./ReportService/target/ReportService*.jar /app
+COPY ./ReportService*.jar /app
 COPY run.sh /app/
 RUN chmod +x /app/run.sh
 CMD ["/app/run.sh"]
