@@ -63,16 +63,15 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
-          ssh $USER@$IP 
-          "export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }};
-          export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }};
-          export DATABASE_NAME=${{ secrets.DATABASE_NAME }};
-          export DATABASE_PORT=${{ secrets.DATABASE_PORT }};
-          export GYM_PORT=${{ secrets.GYM_PORT }};
-          export REPORT_PORT=${{ secrets.REPORT_PORT }};
-          export ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }};
-          export ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }};
-          export MONGO_PORT=${{ secrets.MONGO_PORT }}"
+          ssh $USER@$IP "export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}"
+          ssh $USER@$IP "export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}"
+          ssh $USER@$IP "export DATABASE_NAME=${{ secrets.DATABASE_NAME }}"
+          ssh $USER@$IP "export DATABASE_PORT=${{ secrets.DATABASE_PORT }}"
+          ssh $USER@$IP "export GYM_PORT=${{ secrets.GYM_PORT }}"
+          ssh $USER@$IP "export REPORT_PORT=${{ secrets.REPORT_PORT }}"
+          ssh $USER@$IP "export ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }}"
+          ssh $USER@$IP "export ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }}"
+          ssh $USER@$IP "export MONGO_PORT=${{ secrets.MONGO_PORT }}"
       - name: Start application
         run: |
           eval "$(ssh-agent -s)"
