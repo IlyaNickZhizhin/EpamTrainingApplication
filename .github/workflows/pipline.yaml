@@ -48,7 +48,6 @@ jobs:
           ssh-keyscan -H $IP >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
-          ls ./GymService/target/
           scp -r ./GymService/target/GymService*.jar $USER@$IP:~/app
           scp -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
           scp -r ./run.sh $USER@$IP:~/app
@@ -62,7 +61,7 @@ jobs:
           IP: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
       - name: Set environment variables on DigitalOcean
         run: |
-          ssh -i ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} 
+          ssh $USER@$IP 
           "export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }};
           export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }};
           export DATABASE_NAME=${{ secrets.DATABASE_NAME }};
