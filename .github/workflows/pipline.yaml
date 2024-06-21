@@ -18,7 +18,7 @@ jobs:
         run: mvn clean install
         working-directory: ./Common
       - name: Build GYM
-        run: mvn clean test -Dspring.profiles.active=GitHubActions
+        run: mvn clean install -Dspring.profiles.active=GitHubActions
         working-directory: ./GymService
         env:
           ACTIVEMQ_PASSWORD: ${{ secrets.ACTIVEMQ_PASSWORD }}
