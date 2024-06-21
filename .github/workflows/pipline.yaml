@@ -42,14 +42,22 @@ jobs:
           REPORT_PORT: ${{ secrets.REPORT_PORT}}
       - name: Copy files to DigitalOcean
         run: |
-          echo "${{ secrets.DIGITALOCEAN_SSH_KEY}}" | tr -d '\r' | sed 's/\\n/\n/g' > id_rsa
+          mkdir -p ~/.ssh/
+          echo "$SSH" > ../private.key
+          sudo chmod 600 ../private.key
+          echo "$IP" > ~/.ssh/known_hosts
           chmod 600 id_rsa
-          scp -r -i id_rsa ./GymService/target/GymService*.jar ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+          scp -r -i id_rsa ./GymService/target/GymService*.jar $USER@$IP:~/app
           scp -r -i id_rsa ./ReportService/target/ReportService*.jar ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
           scp -r -i id_rsa ./run.sh ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
           scp -r -i id_rsa ./docker-compose.yml ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
           scp -r -i id_rsa ./DockerfileGymService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
           scp -r -i id_rsa ./DockerfileReportService ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }}:~/app
+        shell: bash
+        env:
+          SSH: ${{ secrets.DIGITALOCEAN_SSH_KEY}}
+          USER: ${{ secrets.DIGITALOCEAN_DROPLET_USER }}
+          IP: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
       - name: Set environment variables on DigitalOcean
         run: |
           ssh -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} ${{ secrets.DIGITALOCEAN_DROPLET_USER }}@${{ secrets.DIGITALOCEAN_DROPLET_IP }} 
