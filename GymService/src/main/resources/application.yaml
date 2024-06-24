@@ -1,0 +1,156 @@
+spring:
+  application:
+    name: main-service
+  datasource:
+    username: epamtrainee
+    password: epamtraineepassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+my-props:
+  jwt:
+    max-attempts: 3
+    cold-pause-min: 5
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: classpath:secretStoreLocal.yaml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/epam_training_app
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /actuator/
+      path-mapping:
+        prometheus: prometheus
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import: classpath:secretStoreLocal.yaml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test_epam_training_app
+  jpa:
+    hibernate:
+      ddl-auto: create
+  liquibase:
+    change-log: db/changelog/db.test-changelog-master.xml
+    enabled: false
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+    import: classpath:secretStoreDocker.yaml
+  datasource:
+    url: jdbc:postgresql://db:5432/epam_training_app
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+server:
+  port: 8081
+---
+spring:
+  config:
+    activate:
+      on-profile: docker-test
+    import: classpath:secretStoreDocker.yaml
+  datasource:
+    url: jdbc:postgresql://db-test:5434/test_epam_training_app
+  jpa:
+    hibernate:
+      ddl-auto: create
+  liquibase:
+    change-log: db/changelog/db.test-changelog-master.xml
+    enabled: false
+---
+spring:
+  config:
+    activate:
+      on-profile: without
+    import: classpath:secretStoreLocal.yaml
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: db/changelog/db.changelog-master-h2.yaml
+    enabled: true
+---
+spring:
+  config:
+    activate:
+      on-profile: cloud
+    import: classpath:secretStoreLocal.yaml
+  aws:
+    brokerUrl: https://sqs.eu-north-1.amazonaws.com/767397684799/Gym-to-Report-Queue
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:5432/${DATABASE_NAME}
+    username: epamtrainee
+    password: epamtraineepassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+---
+spring:
+  profiles:
+    active: GitHubActions
+  activemq:
+    broker-url: ${ACTIVEMQ_URL}
+    user: ${ACTIVEMQ_USERNAME}
+    password: ${ACTIVEMQ_PASSWORD}
+  JWT.secret-key: ${JWT_SECRET_KEY}
+  datasource:
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://app-db-1:5432/${DATABASE_NAME}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: db/changelog/db.test-changelog-master.yaml
+server:
+  port: ${GYM_PORT}
+
