@@ -6,6 +6,7 @@ networks:
         - subnet: 172.20.0.0/16
 services:
   db:
+    container_name: db
     image: postgres
     environment:
       POSTGRES_USER: ${DATABASE_USERNAME}
@@ -23,6 +24,7 @@ services:
       gymnetwork:
         ipv4_address: 172.20.0.2
   gym-service:
+    container_name: gym
     build:
       context: .
       dockerfile: DockerfileGymService
