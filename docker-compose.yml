@@ -1,4 +1,6 @@
 version: '1'
+networks:
+  gymnetwork:
 services:
   db:
     image: postgres
@@ -8,6 +10,8 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
+    networks:
+      - gymnetwork
   gym-service:
     build:
       context: .
@@ -23,3 +27,5 @@ services:
       - DATABASE_NAME=${DATABASE_NAME}
     depends_on:
       - db
+    networks:
+      - gymnetwork
