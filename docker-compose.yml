@@ -14,12 +14,6 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
-    command: >-
-      bash -c "
-      echo 'host all all 172.20.0.0/16 trust' > /var/lib/postgresql/data/pg_hba.conf &&
-      echo 'listen_addresses = ''*''' >> /var/lib/postgresql/data/postgresql.conf &&
-      postgres -c config_file=/var/lib/postgresql/data/postgresql.conf
-      "
     networks:
       gymnetwork:
         ipv4_address: 172.20.0.2
@@ -29,6 +23,8 @@ services:
       context: .
       dockerfile: DockerfileGymService
     image: gym-service-image
+    volumes:
+      - ./db.test-changelog-master.yaml:/app/db/changelog/db.test-changelog-master.yaml
     ports:
       - "${GYM_PORT}:${GYM_PORT}"
     environment:
