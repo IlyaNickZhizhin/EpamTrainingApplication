@@ -17,5 +17,6 @@ services:
       - "${GYM_PORT}:${GYM_PORT}"
     environment:
       - SPRING_PROFILES_ACTIVE=GitHubActions
+      - GYM_PORT=${GYM_PORT}
     depends_on:
       - db
