@@ -69,6 +69,7 @@ jobs:
           DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
           DATABASE_NAME=${{ secrets.DATABASE_NAME }}
           DATABASE_PORT=${{ secrets.DATABASE_PORT }}
+          DATABASE_HOST=${{ secrets.DATABASE_HOST }}
           GYM_PORT=${{ secrets.GYM_PORT }}
           REPORT_PORT=${{ secrets.REPORT_PORT }}
           ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }}
