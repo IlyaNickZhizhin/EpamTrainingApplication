@@ -59,6 +59,7 @@ jobs:
           scp -r ./docker-compose.yml $USER@$IP:~/app
           scp -r ./DockerfileGymService $USER@$IP:~/app
           scp -r ./DockerfileReportService $USER@$IP:~/app
+          scp -r ./GymService/src/main/resources/db/changelog/db.changelog-master.yaml $USER@$IP:~/app
         shell: bash
       - name: Set environment variables on DigitalOcean
         run: |

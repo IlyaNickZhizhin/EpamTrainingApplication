@@ -150,7 +150,7 @@ spring:
     hibernate:
       ddl-auto: validate
   liquibase:
-    change-log: db/changelog/db.test-changelog-master.yaml
+    change-log: db/changelog/db.changelog-master.yaml
 server:
   port: ${GYM_PORT}
 
