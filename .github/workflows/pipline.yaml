@@ -80,6 +80,7 @@ jobs:
           ACTIVEMQ_PORT_JMS=${{ secrets.ACTIVEMQ_PORT_JMS }}
           ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }}
           MONGO_PORT=${{ secrets.MONGO_PORT }}
+          JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
           ' > ~/app/.env"
       - name: Start application
         run: |
