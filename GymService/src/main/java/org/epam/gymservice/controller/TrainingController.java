@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Training controller", description = "for creating trainings, and other operations with" +
         " entities related to trainings")
 @Slf4j
-@CrossOrigin
 @Validated
 public class TrainingController {
 
