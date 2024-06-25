@@ -30,7 +30,7 @@ public class SwaggerConfiguration {
                         .title("EpamTrainingApplication Rest API")
                         .description("created by the intern of Epam Training Center")
                         .version("0.0.1-SNAPSHOT")
-                        .contact(new Contact().name("Ilya Zhizhin").email("ilya.zhizhin@epam.mainservice.com").url("github"))
+                        .contact(new Contact().name("Ilya Zhizhin").email("ilya_zhizhin@epam.com").url("https://github.com/IlyaNickZhizhin"))
                         .license(new License().name("none").url("none")));
     }
 

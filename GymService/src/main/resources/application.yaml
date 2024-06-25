@@ -153,4 +153,6 @@ spring:
     change-log: db/changelog/db.changelog-master.yaml
 server:
   port: ${GYM_PORT}
-
+springdoc:
+  swagger-ui:
+    url: /v3/api-docs
