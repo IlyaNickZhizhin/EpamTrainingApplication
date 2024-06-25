@@ -9,7 +9,7 @@ public class HalloController {
 
     @GetMapping("/")
     public ResponseEntity<String> home() {
-        String html = "<html><body><p>Frontend part has not been finished, please use swagger UI on this <a href=\"http://64.225.100.214/:2052/swagger-ui/index.html\">link</a></p></body></html>";
+        String html = "<html><body><p>Frontend part has not been finished, please use swagger UI on this <a href=\"http://64.225.100.214:2052/swagger-ui/index.html\">link</a></p></body></html>";
         return ResponseEntity.ok(html);
     }
 }
