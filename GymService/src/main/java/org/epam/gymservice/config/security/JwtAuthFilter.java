@@ -56,7 +56,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
         log.info("Request name " + request.getCookies());
-        log.info("Principal Name: " + request.getUserPrincipal().getName());
+        try {
+            log.info("Principal Name: " + request.getUserPrincipal().getName());
+        } catch (NullPointerException e) {
+            log.info("Principal Name: " + "null");
+            try {
+                log.info("Principal: " + request.getUserPrincipal());
+            } catch (NullPointerException e1) {
+                log.info("Principal: " + "null");
+                log.error(request.getRequestURI());
+            }
+        }
         log.info("Responce: " + response.getStatus());
         filterChain.doFilter(request, response);
     }
