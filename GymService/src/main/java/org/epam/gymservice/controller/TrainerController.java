@@ -56,7 +56,7 @@ public class TrainerController {
     }
 
     @PatchMapping("/password")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == authentication.principal.username")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN') or #request.username == authentication.principal.username")
     @Operation(summary = "Change password",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Change password details",
                     content = @Content(schema = @Schema(implementation = ChangeLoginRequest.class))),
@@ -78,7 +78,7 @@ public class TrainerController {
     }
 
     @PatchMapping("/active")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == authentication.principal.username")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN') or #request.username == authentication.principal.username")
     @Operation(summary = "Activate or deactivate trainer",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Activate or deactivate trainer details",
                     content = @Content(schema = @Schema(implementation = ActivateDeactivateRequest.class))),
@@ -118,7 +118,7 @@ public class TrainerController {
     }
 
     @PutMapping("/{username}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == authentication.principal.username")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN') or #request.username == authentication.principal.username")
     @Operation(summary = "Update trainer profile",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Update trainer profile details",
                     content = @Content(schema = @Schema(implementation = UpdateTrainerProfileRequest.class))),
@@ -140,7 +140,7 @@ public class TrainerController {
     }
 
     @GetMapping("/{username}/trainings")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #username == authentication.principal.username")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN') or #username == authentication.principal.username")
     @Operation(summary = "get trainings list for trainer", description = "get trainings list for trainer",
             parameters = {
                     @Parameter(name = "username", required = true, description = "The username"),

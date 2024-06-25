@@ -36,8 +36,8 @@ public class TrainingController {
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or " +
-            "hasAuthority('ROLE_TRAINER') and #request.trainerUsername == principal.username " +
-            "or hasAuthority('ROLE_TRAINEE') and #request.traineeUsername == principal.username")
+            "hasAnyAuthority('ROLE_TRAINER', 'TRAINER') and #request.trainerUsername == principal.username " +
+            "or hasAnyAuthority('ROLE_TRAINEE', 'TRAINEE') and #request.traineeUsername == principal.username")
     @Operation(summary = "create training", description = "create training and assign trainee and trainer to it",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Training details",
             content = @Content(schema = @Schema(implementation = AddTrainingRequest.class))),
@@ -73,7 +73,7 @@ public class TrainingController {
     }
 
     @PutMapping("/update-trainers")
-    @PreAuthorize("#request.traineeUsername == principal.username or hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("#request.traineeUsername == principal.username or hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     @Operation(summary = "update trainee trainers list", description = "add new trainers to Trainee trainers list",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "list of trainers usernames",
             content = @Content(schema = @Schema(implementation = UpdateTraineeTrainerListRequest.class))),
@@ -96,7 +96,7 @@ public class TrainingController {
     }
 
     @GetMapping("/{username}/trainers")
-    @PreAuthorize("#username == principal.username or hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("#username == principal.username or hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     @Operation(summary = "get trainee trainers list", description = "get trainee trainers list",
         responses = {@ApiResponse(responseCode = "200", description = "Trainers list received",
             content = @Content(schema = @Schema(implementation = GetTrainersResponse.class)))})
@@ -113,7 +113,7 @@ public class TrainingController {
     }
 
     @GetMapping("/{username}/available-trainers")
-    @PreAuthorize("#username == principal.username or hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("#username == principal.username or hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     @Operation(summary = "get trainee available trainers list", description = "get trainee available trainers list",
         responses = {@ApiResponse(responseCode = "200", description = "Available trainers list received",
             content = @Content(schema = @Schema(implementation = GetTrainersResponse.class)))})

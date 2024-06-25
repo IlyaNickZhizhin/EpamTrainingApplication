@@ -88,7 +88,7 @@ public class TraineeController {
     }
 
     @PatchMapping("/active")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == principal.username")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN') or #request.username == principal.username")
     @Operation(summary = "Activate or deactivate trainee",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Activation or deactivation details",
                     content = @Content(schema = @Schema(implementation = ActivateDeactivateRequest.class))),
@@ -110,7 +110,7 @@ public class TraineeController {
     }
 
     @PutMapping("/{username}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #request.username == principal.username")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN') or #request.username == principal.username")
     @Operation(summary = "Update trainee profile",
             parameters = {
                     @Parameter(name = "username", in = ParameterIn.PATH, description = "Username of the trainee", required = true)
@@ -177,7 +177,7 @@ public class TraineeController {
     }
 
     @GetMapping("/{username}/trainings")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or #username == principal.username")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN') or #username == principal.username")
     @Operation(summary = "get trainings list for trainee", description = "get trainings list for trainee",
             parameters = {
                     @Parameter(name = "username", required = true, description = "The username"),
