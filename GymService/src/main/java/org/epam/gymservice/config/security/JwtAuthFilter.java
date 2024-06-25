@@ -39,12 +39,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         jwt = authHeader.substring(7);
         username = jwtService.extractUsername(jwt);
-        log.info("JWT Token: " + jwt);
-        log.info("Username: " + username);
+        log.info("Username: " + username.substring(1, 2) + "***");
         if(username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            log.info("User found: " + userDetails.getUsername());
+            log.info("User found: " + userDetails.getUsername().substring(1, 2) + "***");
             log.info("Role of user: " + userDetails.getAuthorities());
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -53,18 +52,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-        }
-        log.info("Request name " + request.getCookies());
-        try {
-            log.info("Principal Name: " + request.getUserPrincipal().getName());
-        } catch (NullPointerException e) {
-            log.info("Principal Name: " + "null");
-            try {
-                log.info("Principal: " + request.getUserPrincipal());
-            } catch (NullPointerException e1) {
-                log.info("Principal: " + "null");
-                log.error(request.getRequestURI());
             }
         }
         log.info("Responce: " + response.getStatus());

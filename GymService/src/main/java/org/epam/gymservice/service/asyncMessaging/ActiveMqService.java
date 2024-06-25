@@ -1,6 +1,8 @@
 package org.epam.gymservice.service.asyncMessaging;
 
+import jakarta.jms.JMSException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.gymservice.dto.reportDto.GymTrainerWorkloadRequest;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ActiveMqService {
     private final JmsTemplate jmsTemplate;
     private final TrainerService trainerService;
@@ -34,7 +37,11 @@ public class ActiveMqService {
                         return message;
                     });
         } catch (Exception e) {
-            jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+            try {
+                jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+            } catch (Exception ex) {
+                log.warn("Adding training was not send to JMS with cause:\n"  + ex.getMessage());
+            }
         }
     }
 
@@ -56,7 +63,11 @@ public class ActiveMqService {
                     return message;
                 });
         } catch (Exception e) {
-            jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+            try {
+                jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+            } catch (Exception ex) {
+                log.warn("deleting training was not send to JMS with cause:\n"  + ex.getMessage());
+            }
         }
     }
 
