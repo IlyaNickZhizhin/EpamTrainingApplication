@@ -100,7 +100,7 @@ public class TrainingService {
         List<Trainer> onTrainee = trainee.getTrainers();
         log.info("Trainee already has " + onTrainee.size() + "trainers");
         existingTrainers.removeAll(onTrainee);
-        log.info("Possible trainers for trainee #: " +trainee.getId() + "size" + existingTrainers.size());
+        log.info("Possible trainers for trainee #:" +trainee.getId() + " size " + existingTrainers.size());
         GetTrainersResponse response = new GetTrainersResponse();
         response.setTrainers(trainingMapper.trainersToShortTrainersDto(existingTrainers));
         return response;

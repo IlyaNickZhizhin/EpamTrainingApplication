@@ -57,7 +57,7 @@ public class TrainingController {
     }
 
     @GetMapping("/types")
-    @PreAuthorize("hasAuthority('ROLE_TRAINER') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_TRAINER', 'ROLE_TRAINEE', 'ROLE_ADMIN', 'TRAINER', 'TRAINEE', 'ADMIN')")
     @Operation(summary = "get all training types", description = "get all training types",
         responses = {@ApiResponse(responseCode = "200", description = "Training types received",
             content = @Content(schema = @Schema(implementation = GetTrainingTypesResponse.class)))})
