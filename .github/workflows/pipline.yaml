@@ -45,6 +45,16 @@ jobs:
           ACTIVEMQ_USERNAME: ${{ secrets.ACTIVEMQ_USERNAME }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY}}
           REPORT_PORT: ${{ secrets.REPORT_PORT}}
+      - name: Prepare packeges for DigitalOcean
+        run: |
+          mkdir -p ~/app/
+          cp -r ./GymService/target/GymService*.jar ~/app
+          cp -r ./ReportService/target/ReportService*.jar ~/app
+          cp -r ./run.sh ~/app
+          cp -r ./docker-compose.yml ~/app
+          cp -r ./DockerfileGymService ~/app
+          cp -r ./DockerfileReportService ~/app
+          cp -r ./GymService/src/main/resources/db/changelog/db.changelog-master.yaml ~/app
       - name: Copy files to DigitalOcean
         run: |
           mkdir -p ~/.ssh/
@@ -53,13 +63,7 @@ jobs:
           ssh-keyscan -H $IP >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
-          scp -r ./GymService/target/GymService*.jar $USER@$IP:~/app
-          scp -r ./ReportService/target/ReportService*.jar $USER@$IP:~/app
-          scp -r ./run.sh $USER@$IP:~/app
-          scp -r ./docker-compose.yml $USER@$IP:~/app
-          scp -r ./DockerfileGymService $USER@$IP:~/app
-          scp -r ./DockerfileReportService $USER@$IP:~/app
-          scp -r ./GymService/src/main/resources/db/changelog/db.changelog-master.yaml $USER@$IP:~/app
+          scp -r ~/app $USER@$IP:~/
         shell: bash
       - name: Set environment variables on DigitalOcean
         run: |
