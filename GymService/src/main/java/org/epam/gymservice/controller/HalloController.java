@@ -12,7 +12,7 @@ public class HalloController {
         String html =
                 "<html>" +
                         "<body>" +
-                        "<p>Frontend part has not been finished</p>," +
+                        "<p>Frontend part has not been finished,</p>" +
                         "<p>please use swagger UI on this <a href=\"http://64.225.100.214:2052/swagger-ui/index.html\">link</a></p>" +
                         "<p>1) enter /v3/api-docs in the Swagger UI page</p>" +
                         "<p>2) push \"Explore\" button</p>" +
