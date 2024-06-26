@@ -1,4 +1,5 @@
 # Gym Management System
+## [>>>LINK TO TRY API<<<](https://ilya.zhizhin.xyz/swagger-ui/index.html)
 
 ## Overview
 This is a RESTful backend application for managing a gym. It allows the registration of trainers and trainees, booking of training sessions, viewing available trainers, and the trainings that trainees have signed up for.
@@ -12,7 +13,7 @@ This is a RESTful backend application for managing a gym. It allows the registra
 ## Versions
 The application has two versions:
 - **Local Version**: Uses PostgreSQL and MongoDB databases, with interaction through ActiveMQ.
-- **Cloud Version**: Hosted on Amazon Cloud, uses PostgreSQL and DynamoDB databases, with interaction through Amazon SQS.
+- **Cloud Version**: Hosted on Digital Cloud, uses PostgreSQL and MongoDB databases, with interaction through ActiveMQ.
 
 ## Controllers
 - **Login Controller**: Handles user authentication.

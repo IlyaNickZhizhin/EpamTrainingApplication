@@ -34,6 +34,7 @@ services:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_NAME=${DATABASE_NAME}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - INDEX_PAGE=${INDEX_PAGE}
     depends_on:
       - db
     networks:

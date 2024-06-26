@@ -151,6 +151,7 @@ spring:
       ddl-auto: validate
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
+  indexPage: ${INDEX_PAGE}
 server:
   port: ${GYM_PORT}
 springdoc:
