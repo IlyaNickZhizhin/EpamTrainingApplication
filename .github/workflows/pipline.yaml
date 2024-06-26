@@ -36,7 +36,6 @@ jobs:
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY}}
           GYM_PORT: ${{ secrets.GYM_PORT}}
-          INDEX_PAGE: ${{ secrets.INDEX_PAGE}}
       - name: Build REPORT
         run: mvn clean install -Dspring.profiles.active=GitHubActions
         working-directory: ./ReportService
@@ -46,9 +45,14 @@ jobs:
           ACTIVEMQ_USERNAME: ${{ secrets.ACTIVEMQ_USERNAME }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY}}
           REPORT_PORT: ${{ secrets.REPORT_PORT}}
+      - name: Prepare index pade
+        run: |
+          sudo apt-get install pandoc
+          pandoc -s README.md -o README.html
       - name: Prepare packeges for DigitalOcean
         run: |
           mkdir -p ~/app/
+          mkdir -p ~/var/www/html/
           cp -r ./GymService/target/GymService*.jar ~/app
           cp -r ./ReportService/target/ReportService*.jar ~/app
           cp -r ./run.sh ~/app
@@ -56,10 +60,7 @@ jobs:
           cp -r ./DockerfileGymService ~/app
           cp -r ./DockerfileReportService ~/app
           cp -r ./GymService/src/main/resources/db/changelog/db.changelog-master.yaml ~/app
-      - name: Prepare index pade
-        run: |
-          sudo apt-get install pandoc
-          pandoc -s README.md -o README.html
+          cp -r ./README.html /var/www/html
       - name: Copy files to DigitalOcean
         run: |
           mkdir -p ~/.ssh/
@@ -86,7 +87,6 @@ jobs:
           ACTIVEMQ_PORT=${{ secrets.ACTIVEMQ_PORT }}
           MONGO_PORT=${{ secrets.MONGO_PORT }}
           JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-          INDEX_PAGE=$(cat README.html)
           ' > ~/app/.env"
       - name: Start application
         run: |
