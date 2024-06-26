@@ -7,8 +7,12 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Configuration
@@ -16,6 +20,8 @@ public class SwaggerConfiguration {
 
     @Bean
     public OpenAPI api(){
+        Server server = new Server();
+        server.setUrl("https://ilya.zhizhin.xyz");
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes("bearer-jwt", new SecurityScheme()
@@ -24,6 +30,7 @@ public class SwaggerConfiguration {
                                 .bearerFormat("JWT")
                                 .in(SecurityScheme.In.HEADER)
                                 .name("Authorization")))
+                                .servers(List.of(server))
                 .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"))
                 .info(
                 new Info()
