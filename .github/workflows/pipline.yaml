@@ -60,7 +60,6 @@ jobs:
           cp -r ./DockerfileGymService ~/app
           cp -r ./DockerfileReportService ~/app
           cp -r ./GymService/src/main/resources/db/changelog/db.changelog-master.yaml ~/app
-          cp -r ./README.html /var/www/html
       - name: Copy files to DigitalOcean
         run: |
           mkdir -p ~/.ssh/
@@ -70,6 +69,7 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
           scp -r ~/app $USER@$IP:~/
+          scp -r ./README.html $USER@$IP:/var/www/html/
         shell: bash
       - name: Set environment variables on DigitalOcean
         run: |
