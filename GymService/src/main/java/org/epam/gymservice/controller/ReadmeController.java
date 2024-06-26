@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ReadmeController {
 
-    @Value("${indexPage}")
+    @Value("${HTML.indexPage}")
     String index;
 
     @GetMapping("/")
