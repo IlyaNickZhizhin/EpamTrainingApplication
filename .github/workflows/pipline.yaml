@@ -36,7 +36,7 @@ jobs:
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY}}
           GYM_PORT: ${{ secrets.GYM_PORT}}
-          INDEX_PAGE: "EMPTY"
+          INDEX_PAGE: ${{ secrets.GYM_PORT}}
       - name: Build REPORT
         run: mvn clean install -Dspring.profiles.active=GitHubActions
         working-directory: ./ReportService
