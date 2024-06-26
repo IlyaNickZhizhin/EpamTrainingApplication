@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "Login controller", description = "for checking password adg getting principal entity")
 @Slf4j
-@CrossOrigin
 @Validated
 public class LoginController {
 
