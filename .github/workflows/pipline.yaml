@@ -50,6 +50,7 @@ jobs:
           sudo apt-get install pandoc
           pandoc -s README.md -o README.html
           sed -i '1a<link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">' README.html
+          sed -i 's/<title>README<\/title>/<title>Zhizhin Demo API<\/title>/g' README.html
       - name: Prepare packeges for DigitalOcean
         run: |
           mkdir -p ~/app/
