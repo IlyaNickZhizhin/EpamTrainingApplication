@@ -26,8 +26,8 @@ The application has two versions:
 ## Technologies Used
 - Java
 - Spring Boot
-- PostgreSQL
-- MongoDB
+- PostgreSQL (for regular data like passwords, addresses etc)
+- MongoDB (for collecting data about trainings)
 - ActiveMQ
 - Amazon Cloud
 - DynamoDB
