@@ -12,6 +12,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/gymWorkloads
+  kafka:
+    bootstrap-servers: localhost:9092
 ---
 spring:
   config:
@@ -21,3 +23,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://mongo:27017/gymWorkloads
+  kafka:
+    bootstrap-servers: kafka1:9092,kafka2:9093,kafka3:9094
+

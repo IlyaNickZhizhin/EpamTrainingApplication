@@ -20,7 +20,6 @@ import java.util.Set;
 public class WorkloadService {
     private final WorkloadRepository repository;
 
-
     public ReportTrainerWorkloadResponse addWorkload(TrainerWorkloadRequest request) {
         log.info("WorkloadService.change(ReportTrainerWorkloadRequest request) starts ADD workload for trainer {} {}***" +
                 " training on{}", request.getFirstName(), request.getLastName().charAt(0), request.getTrainingDate());
@@ -28,7 +27,6 @@ public class WorkloadService {
         getOrAddTrainingSession(workload.getTrainingSessions(), request.getTrainingDate(), request.getDuration());
         return ReportTrainerWorkloadResponse.of(repository.save(workload));
     }
-
 
     public ReportTrainerWorkloadResponse deleteWorkload(TrainerWorkloadRequest request) {
         log.info("{}.{} starts DELETE workload of trainer {} {}*** training on {}",

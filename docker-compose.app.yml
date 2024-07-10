@@ -21,7 +21,7 @@ services:
       context: .
       dockerfile: DockerfileGymService
       args:
-        - BUILD_PROFILE=docker-test
+        - BUILD_PROFILE=docker
     image: gym-service-image
     ports:
       - "8081:8081"
@@ -38,14 +38,6 @@ services:
       - "8082:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-  activemq:
-    image: apache/activemq-artemis:latest-alpine
-    environment:
-      ARTEMIS_USER: epamtrainee
-      ARTEMIS_PASSWORD: epamtraineepassword
-    ports:
-      - "61616:61616"
-      - "8161:8161"
   mongo:
     image: mongo
     ports:

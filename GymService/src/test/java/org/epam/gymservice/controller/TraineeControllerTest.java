@@ -17,7 +17,7 @@ import org.epam.gymservice.model.User;
 import org.epam.gymservice.model.gymModel.Trainee;
 import org.epam.gymservice.model.gymModel.Training;
 import org.epam.gymservice.service.TraineeService;
-import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
+import org.epam.gymservice.service.asyncMessaging.KafkaProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ public class TraineeControllerTest {
     private TraineeService traineeService;
 
     @Mock
-    ActiveMqService mqService;
+    KafkaProducer KafkaService;
 
     @InjectMocks
     private TraineeController traineeController;

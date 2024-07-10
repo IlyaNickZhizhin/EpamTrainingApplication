@@ -5,39 +5,38 @@ import lombok.extern.slf4j.Slf4j;
 import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.common.dto.TrainerWorkloadResponse;
 import org.epam.reportservice.service.WorkloadService;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
-@RequiredArgsConstructor
+@Service
 @Slf4j
-public class WorkloadReceiver {
+@RequiredArgsConstructor
+public class WorkloadReceiverKafka {
 
     private final WorkloadService workloadService;
-    private final JmsTemplate jmsTemplate;
+    private final KafkaTemplate<String, TrainerWorkloadRequest> kafkaTemplate;
 
+    @KafkaListener(topics = "add-workload-topic", groupId = "add-workload-consumer")
     @Transactional
-    @JmsListener(destination = "addTrainingRequestQueue", containerFactory = "defaultJmsListenerContainerFactory")
     public TrainerWorkloadResponse receiveAddMessage(TrainerWorkloadRequest request){
         log.info("Adding workload of trainer{} {}***", request.getFirstName(), request.getLastName().charAt(0));
         try {
             return workloadService.addWorkload(request);
         } catch (Exception e){
-            jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+            kafkaTemplate.send("add-workload-DLQ-topic", request);
             throw e;
         }
     }
 
-    @Transactional
-    @JmsListener(destination = "deleteTrainingRequestQueue", containerFactory = "defaultJmsListenerContainerFactory")
-    public TrainerWorkloadResponse receiveDeleteMessage(TrainerWorkloadRequest request){
+    @KafkaListener(topics = "delete-workload-topic", groupId = "delete-workload-consumer")
+    public TrainerWorkloadResponse receiveDeleteMessage(TrainerWorkloadRequest request) {
         log.info("Deleting workload of trainer {} {}***", request.getFirstName(), request.getLastName().charAt(0));
         try {
             return workloadService.deleteWorkload(request);
-        } catch (Exception e){
-            jmsTemplate.convertAndSend("DLQ.deleteTrainingRequestQueue", request);
+        } catch (Exception e) {
+            kafkaTemplate.send("delete-workload-DLQ-topic", request);
             throw e;
         }
     }

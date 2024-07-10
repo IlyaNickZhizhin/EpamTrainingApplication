@@ -6,14 +6,15 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.epam.common.dto.MonthDuration;
+import org.epam.common.dto.TrainerWorkloadRequest;
 import org.epam.reportservice.Reader;
 import org.epam.reportservice.dto.ReportTrainerWorkloadRequest;
 import org.epam.reportservice.dto.ReportTrainerWorkloadResponse;
-import org.epam.reportservice.receiver.WorkloadReceiver;
+import org.epam.reportservice.receiver.WorkloadReceiverKafka;
 import org.epam.reportservice.repository.WorkloadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class WorkloadSteps {
 
     @Autowired
-    private WorkloadReceiver receiver;
+    private WorkloadReceiverKafka receiver;
     @Autowired
     private WorkloadRepository repository;
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private KafkaTemplate<String, TrainerWorkloadRequest> kafkaTemplate;
 
     Reader reader = new Reader();
 
@@ -49,31 +50,31 @@ public class WorkloadSteps {
         }
     }
 
-    @When("the WorkloadReceiver processes additional requests")
+    @When("the WorkloadReceiverKafka processes additional requests")
     public void sendAllAddRequests() {
         for(ReportTrainerWorkloadRequest request : requests) {
             receiver.receiveAddMessage(request);
         }
     }
 
-    @When("the WorkloadReceiver processes additional requests that will fail")
+    @When("the WorkloadReceiverKafka processes additional requests that will fail")
     public void sendAllAddRequestsFail() {
         for(ReportTrainerWorkloadRequest request : requests) {
-            jmsTemplate.convertAndSend("DLQ.addTrainingRequestQueue", request);
+            kafkaTemplate.send("add-workload-DLQ-topic", request);
         }
     }
 
-    @When("the WorkloadReceiver processes deletion requests")
+    @When("the WorkloadReceiverKafka processes deletion requests")
     public void sendAllDeleteRequests() {
         for(ReportTrainerWorkloadRequest request : requests) {
             receiver.receiveDeleteMessage(request);
         }
     }
 
-    @When("the WorkloadReceiver processes deletion requests that will fail")
+    @When("the WorkloadReceiverKafka processes deletion requests that will fail")
     public void sendAllDeleteRequestsFail() {
         for(ReportTrainerWorkloadRequest request : requests) {
-            jmsTemplate.convertAndSend("DLQ.deleteTrainingRequestQueue", request);
+            kafkaTemplate.send("add-workload-DLQ-topic", request);
         }
     }
     @Then("{int} workloads should be sent to the MongoDB database")

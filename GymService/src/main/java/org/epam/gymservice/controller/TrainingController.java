@@ -14,7 +14,7 @@ import org.epam.gymservice.dto.trainingDto.GetTrainingTypesResponse;
 import org.epam.gymservice.dto.trainingDto.UpdateTraineeTrainerListRequest;
 import org.epam.gymservice.exceptions.InvalidDataException;
 import org.epam.gymservice.service.TrainingService;
-import org.epam.gymservice.service.asyncMessaging.ActiveMqService;
+import org.epam.gymservice.service.asyncMessaging.KafkaProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,16 +27,15 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Training controller", description = "for creating trainings, and other operations with" +
         " entities related to trainings")
 @Slf4j
-@CrossOrigin
 @Validated
 public class TrainingController {
 
     private final TrainingService trainingService;
-    private final ActiveMqService activeMqService;
+    private final KafkaProducer kafkaProducer;
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or " +
-            "hasAuthority('ROLE_TRAINER') and #request.trainerUsername == principal.username " +
+            "hasAnyAuthority('ROLE_TRAINER', 'TRAINER') and #request.trainerUsername == principal.username " +
             "or hasAuthority('ROLE_TRAINEE') and #request.traineeUsername == principal.username")
     @Operation(summary = "create training", description = "create training and assign trainee and trainer to it",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Training details",
@@ -47,7 +46,7 @@ public class TrainingController {
         log.info("Creating {} training with name: {} on {} at {}", request.getTrainingType().name(), request.getTrainingName(), request.getTrainingDate(), request.getTrainingDuration());
         try {
             AddTrainingRequest response = trainingService.create(request);
-            activeMqService.addWorkload(request);
+            kafkaProducer.addWorkloadKafka(request);
             log.info("{} training with name: {} on {} at {} created successfully", request.getTrainingType().name(), request.getTrainingName(), request.getTrainingDate(), request.getTrainingDuration());
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (InvalidDataException e) {
