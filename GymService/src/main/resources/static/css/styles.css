@@ -1,0 +1,29 @@
+    body {
+        font-family: 'Futura', sans-serif;
+        background-image: url('/img/backgroung.jpg');
+        background-size: cover;
+    }
+
+    .logo-greeting {
+        display: flex;
+        align-items: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .logo {
+        width: 50px;
+        margin-right: 10px;
+    }
+
+    .cover {
+        display: none;
+    }
+
+    .light-text {
+        color: gray;
+    }
+
+    section, footer {
+        padding-left: 200px;
+    }

@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: classpath:secretStoreLocal.yaml
   application:
     name: main-service
   datasource:
@@ -17,13 +15,17 @@ spring:
       ddl-auto: validate
   liquibase:
     change-log: db/changelog/db.test-changelog-master.yaml
-  cloud:
-    openfeign:
-      circuitbreaker:
-        enabled: true
+  config:
+    import: classpath:secretTest.yaml
+JWT:
+  secret-key: ${JWT.secret-key}
 my-props:
   jwt:
     max-attempts: 3
     cold-pause-min: 5
 server:
   port: 8081
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: false
+    config-url: /v3/api-docs

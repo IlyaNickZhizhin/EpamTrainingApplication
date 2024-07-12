@@ -1,0 +1,30 @@
+spring:
+  config:
+    import: classpath:secretLocal.yaml
+  datasource:
+    username: ${datasource.username}
+    password: ${datasource.password}
+    driver-class-name: org.postgresql.Driver
+    url: ${datasource.url}
+  activemq:
+    user: ${activemq.user}
+    password: ${activemq.password}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  mvc:
+    static-path-pattern: static/**
+JWT:
+  secret-key: ${JWT.secret-key}
+my-props:
+  jwt:
+    max-attempts: 5
+    cold-pause-min: 5
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true

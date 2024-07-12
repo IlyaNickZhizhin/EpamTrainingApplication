@@ -34,12 +34,14 @@ public class SecurityConfig{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/img/**", "/js/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/v1/api/trainee/").permitAll()
                         .requestMatchers("/v1/api/trainer/").permitAll()
                         .requestMatchers("/v1/api/login").permitAll()
+                        .requestMatchers("/home").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess ->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
